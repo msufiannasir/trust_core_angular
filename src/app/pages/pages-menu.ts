@@ -2,20 +2,82 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'E-commerce',
-    icon: 'shopping-cart-outline',
+    title: 'Dashboard',
+    icon: 'home-outline',
     link: '/pages/dashboard',
     home: true,
   },
   {
-    title: 'IoT Dashboard',
-    icon: 'home-outline',
-    link: '/pages/iot-dashboard',
+    title: 'Insurance Companies',
+    // icon: 'home-outline',
+    link: '/pages/insurance-companies/20',
+    home: true,
+  }, {
+    title: 'Insurance Types',
+    // icon: 'home-outline',
+    link: '/pages/insurance-types/21',
+    home: true,
+  }, {
+    title: 'Customers',
+    // icon: 'home-outline',
+    link: '/pages/customers',
+    home: true,
+  }, {
+    title: 'Reports',
+    // icon: 'home-outline',
+    link: '/pages/reports',
+    home: true,
+  }, {
+    title: 'Offers',
+    // icon: 'home-outline',
+    link: '/pages/offers',
+    home: true,
+  }, {
+    title: 'Files Management',
+    // icon: 'home-outline',
+    link: '/pages/files-management',
+    home: true,
+  }, {
+    title: 'Contracts',
+    // icon: 'home-outline',
+    link: '/pages/contracts',
+    home: true,
+  }, {
+    title: 'Communication',
+    // icon: 'home-outline',
+    link: '/pages/communication',
+    home: true,
+  }, {
+    title: 'Users',
+    // icon: 'home-outline',
+    link: '/pages/users',
+    home: true,
+  },{
+    title: 'User Roles',
+    // icon: 'home-outline',
+    link: '/pages/user-roles',
+    home: true,
+  },{
+    title: 'Permissions',
+    // icon: 'home-outline',
+    link: '/pages/permissions',
+    home: true,
   },
   {
-    title: 'FEATURES',
-    group: true,
+    title: 'Settings',
+    // icon: 'home-outline',
+    link: '/pages/settings',
+    home: true,
   },
+  // {
+  //   title: 'IoT Dashboard',
+  //   icon: 'home-outline',
+  //   link: '/pages/iot-dashboard',
+  // },
+  // {
+  //   title: 'FEATURES',
+  //   group: true,
+  // },
   {
     title: 'Layout',
     icon: 'layout-outline',

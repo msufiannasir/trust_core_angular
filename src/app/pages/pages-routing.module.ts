@@ -5,6 +5,8 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
+import { CollectionTableComponent } from '../components/collections/collection-table/collection-table.component';
+
 
 const routes: Routes = [{
   path: '',
@@ -14,6 +16,79 @@ const routes: Routes = [{
       path: 'dashboard',
       component: ECommerceComponent,
     },
+    {
+      path: 'insurance-companies/:id',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'insurance-types/:id',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'customers',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'reports',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'offers',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'files-management',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'contracts',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'communication',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'users',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'user-roles',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'permissions',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    {
+      path: 'settings',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+    },
+    
     {
       path: 'iot-dashboard',
       component: DashboardComponent,
