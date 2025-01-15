@@ -17,13 +17,13 @@ const routes: Routes = [{
       component: ECommerceComponent,
     },
     {
-      path: 'insurance-companies/:id',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
     },
     {
-      path: 'insurance-types/:id',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
@@ -41,25 +41,25 @@ const routes: Routes = [{
       component: CollectionTableComponent,
     },
     {
-      path: 'offers',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
     },
     {
-      path: 'files-management',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
     },
     {
-      path: 'contracts',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
     },
     {
-      path: 'communication',
+      path: ':handle',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,

@@ -10,12 +10,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Insurance Companies',
     // icon: 'home-outline',
-    link: '/pages/insurance-companies/20',
+    link: '/pages/insurance-companies',
     home: true,
   }, {
     title: 'Insurance Types',
     // icon: 'home-outline',
-    link: '/pages/insurance-types/21',
+    link: '/pages/insurance-types',
     home: true,
   }, {
     title: 'Customers',
@@ -35,7 +35,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Files Management',
     // icon: 'home-outline',
-    link: '/pages/files-management',
+    link: '/pages/files',
     home: true,
   }, {
     title: 'Contracts',
