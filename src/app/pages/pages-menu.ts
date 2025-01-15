@@ -45,7 +45,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Communication',
     // icon: 'home-outline',
-    link: '/pages/communication',
+    link: '/pages/communications',
     home: true,
   }, {
     title: 'Users',
