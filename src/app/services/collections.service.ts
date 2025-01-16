@@ -27,13 +27,13 @@ export class CollectionsService {
   // Method to update an entry
   updateEntry(handle: string, entryId: string, data: any): Observable<any> {
     const headers = this.createHeaders(); // Use the global method for headers
-    return this.http.put(`${this.apiUrl}/collections/${handle}/entry/${entryId}/update`, data, { headers });
+    return this.http.put(`${this.apiUrl}/collections/${handle}/entry-update/${entryId}`, data, { headers });
   }
 
   // Method to delete an entry
   deleteEntry(handle: string, entryId: string): Observable<any> {
     const headers = this.createHeaders(); // Use the global method for headers
-    return this.http.delete(`${this.apiUrl}/collections/${handle}/entry/${entryId}/delete`, { headers });
+    return this.http.delete(`${this.apiUrl}/collections/${handle}/entry-delete/${entryId}`, { headers });
   }
 
   // Create headers dynamically

@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-header>
-      Smart Table
+      {{ settings.tableTitle || 'Default Title' }} 
     </nb-card-header>
   
     <nb-card-body>
@@ -10,8 +10,8 @@
       (createConfirm)="onCreateConfirm($event)"
       (editConfirm)="onEditConfirm($event)"
       (deleteConfirm)="onDeleteConfirm($event)"
-    >
-    </ng2-smart-table>
+    ></ng2-smart-table>
+    
     
     </nb-card-body>
   </nb-card>
