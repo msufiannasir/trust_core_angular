@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionsService } from '../../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
+import { MENU_ITEMS } from '../../../pages/pages-menu'; 
 
 @Component({
   selector: 'ngx-smart-table',
@@ -9,16 +10,30 @@ import { LocalDataSource } from 'ng2-smart-table';
   styleUrls: ['./collection-table.component.scss'],
 })
 export class CollectionTableComponent implements OnInit {
+  collectionHandle: string | null = null;
   source: LocalDataSource = new LocalDataSource();
-  currentEndpoint: string;
-
-  settings: any = {
-    actions: {
-      add: false,
-      edit: false,
-      delete: true,
+  settings = {
+    add: {
+      addButtonContent: '<i class="nb-plus"></i>',
+      createButtonContent: '<i class="nb-checkmark"></i>',
+      confirmCreate: true,
+      cancelButtonContent: '<i class="nb-close"></i>',
     },
-    columns: {},
+    edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true, 
+    },
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      confirmDelete: true,
+    },
+    tableTitle: '', 
+    columns: {}, // Initially empty, populated dynamically
+    pager: {
+      perPage: 10, // Default items per page
+    },
   };
 
   constructor(
@@ -28,51 +43,30 @@ export class CollectionTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Check if 'handle' exists in the current route
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
-      const currentPath = this.router.url;
-
+      
+      // Ensure only requests with a valid 'handle' are processed
       if (handle) {
-        this.currentEndpoint = this.determineEndpoint(currentPath);
         this.fetchCollectionData(handle);
+        this.setTableTitle(handle);
+      } else {
+        console.warn('No handle provided in the route. Skipping data fetch.');
       }
     });
   }
 
-  determineEndpoint(path: string): string {
-    const endpointMapping: { [key: string]: string } = {
-      '/dashboard': '/api/dashboard',
-      '/pages/insurance-companies': '/collections/show',
-      '/pages/insurance-types': '/collections/show',
-      '/pages/contracts': '/collections/show',
-      '/pages/communication': '/collections/show',
-      '/pages/files': '/collections/show',
-      '/pages/offers': '/collections/show',
-    };
-
-    for (const route in endpointMapping) {
-      if (path.includes(route)) {
-        return endpointMapping[route];  // Return the endpoint without 'handle'
-      }
-    }
-
-    return '/api/collection';
-  }
-
   fetchCollectionData(handle: string): void {
-    const endpointWithHandle = `${this.currentEndpoint}/${handle}`;
-
-    this.collectionsService.getDynamicData(endpointWithHandle).subscribe(
+    const endpoint = `/collections/show/${handle}`;
+    this.collectionsService.getDynamicData(endpoint).subscribe(
       (response) => {
-        // Check if response has data before configuring columns
         if (response && response.columns && Array.isArray(response.columns)) {
-          this.configureTableColumns(response);
-        } else {
-          // Handle empty or malformed response gracefully
-          console.error('Invalid or empty columns in response:', response);
-          this.settings.columns = {}; // Reset columns if data is invalid
+          this.configureTableColumns(response.columns); // Dynamically configure columns
         }
-        this.source.load(response.data || []); // Load data if available, else empty array
+        if (response && response.data && Array.isArray(response.data)) {
+          this.source.load(response.data); // Populate table rows
+        }
       },
       (error) => {
         console.error('Error fetching collection data:', error);
@@ -80,32 +74,140 @@ export class CollectionTableComponent implements OnInit {
     );
   }
 
-  configureTableColumns(response: any): void {
-    // Check if data exists and has the expected structure
-    const dynamicColumns: any = {};
-
-    if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-      response.columns.forEach((column: string) => {
-        dynamicColumns[column] = {
-          title: column.charAt(0).toUpperCase() + column.slice(1),
-          type: typeof response.data[0][column] === 'number' ? 'number' : 'string',
-        };
-      });
-    } else {
-      console.warn('No data available for configuring columns.');
-      // Fallback in case there's no data
-      dynamicColumns['empty'] = { title: 'No Data Available', type: 'string' };
+  setTableTitle(handle: string): void {
+    console.log('Handle:', handle); // Log the handle
+    const menuItem = MENU_ITEMS.find(item => item.link.includes(handle));
+    if (menuItem) {
+      this.settings.tableTitle = menuItem.title;
     }
-
-    this.settings.columns = dynamicColumns; // Update column settings
-    this.source.load(response.data || []); // Set data source directly without resetting it
   }
+  
+  
 
+
+  configureTableColumns(columns: string[]): void {
+    const dynamicColumns: any = {};
+    
+    // // Define a custom column for ID (this will be the sequential number column)
+    // dynamicColumns['ID'] = {
+    //   title: 'ID',
+    //   type: 'string',
+    //   valuePrepareFunction: (cell, row, rowIndex) => {
+    //     // Return the rowIndex + 1 as the sequential number
+    //     return (rowIndex + 1).toString(); // Ensure this returns a string
+    //   },
+    // };
+    
+    columns.forEach((column) => {
+      // Define the columns you want to exclude or hide
+      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at']; // Hide "id" column
+    
+      if (!hiddenColumns.includes(column)) {
+        // Convert column name to human-readable format
+        const formattedTitle = column
+          .replace(/_/g, ' ') // Replace underscores with spaces
+          .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+    
+        dynamicColumns[column] = {
+          title: formattedTitle, // Use formatted title
+          type: 'string', // Default type; customize if necessary
+        };
+      }
+    });
+    
+    // Merge dynamic columns into the existing settings while preserving actions
+    this.settings = {
+      ...this.settings, // Keep existing settings (including actions)
+      columns: dynamicColumns, // Update only columns
+    };
+  }
+  
+  
+  
+  onCreateConfirm(event): void {
+    const handle = this.route.snapshot.paramMap.get('handle'); // Get the collection handle
+    if (handle) {
+      this.collectionsService.createEntry(handle, event.newData).subscribe(
+        (response) => {
+          event.confirm.resolve(response); // Notify the table of success
+  
+          // Show success alert
+          window.alert('Entry created successfully!');
+  
+          // Refresh the table data
+          this.fetchCollectionData(handle);
+        },
+        (error) => {
+          console.error('Error creating entry:', error);
+  
+          // Show error alert
+          window.alert('Failed to create entry. Please try again.');
+  
+          event.confirm.reject(); // Notify the table of failure
+        }
+      );
+    } else {
+      event.confirm.reject(); // No handle, reject the action
+    }
+  }
+  
+  onEditConfirm(event): void {
+    const handle = this.route.snapshot.paramMap.get('handle'); // Get the collection handle
+    const entryId = event.data.id; // Assuming the entry has an `id` field
+    if (handle && entryId) {
+      this.collectionsService.updateEntry(handle, entryId, event.newData).subscribe(
+        (response) => {
+          event.confirm.resolve(response); // Notify the table of success
+  
+          // Show success alert
+          window.alert('Entry updated successfully!');
+  
+          // Refresh the table data
+          this.fetchCollectionData(handle);
+        },
+        (error) => {
+          console.error('Error updating entry:', error);
+  
+          // Show error alert
+          window.alert('Failed to update entry. Please try again.');
+  
+          event.confirm.reject(); // Notify the table of failure
+        }
+      );
+    } else {
+      event.confirm.reject(); // No handle or entry ID, reject the action
+    }
+  }
+  
   onDeleteConfirm(event): void {
-    if (window.confirm('Are you sure you want to delete this collection?')) {
-      event.confirm.resolve();
+    const handle = this.route.snapshot.paramMap.get('handle');
+    const entryId = event.data.id;
+    if (handle && entryId) {
+      this.collectionsService.deleteEntry(handle, entryId).subscribe(
+        (response) => {
+          console.log('Entry deleted successfully:', response);
+          event.confirm.resolve(); // Notify the table of success
+  
+          // Show success alert
+          window.alert('Entry deleted successfully!');
+  
+          // Refresh the table data
+          this.fetchCollectionData(handle);
+        },
+        (error) => {
+          console.error('Error deleting entry:', error);
+  
+          // Show error alert
+          window.alert('Failed to delete entry. Please try again.');
+  
+          event.confirm.reject(); // Notify the table of failure
+        }
+      );
     } else {
       event.confirm.reject();
     }
   }
+  
+  
+
 }

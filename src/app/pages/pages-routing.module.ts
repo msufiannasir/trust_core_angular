@@ -20,9 +20,9 @@ const routes: Routes = [{
     },
     {
       path: ':handle',
+      component: CollectionTableComponent, // Only for ':handle' routes
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
-      component: CollectionTableComponent,
       canActivate: [AuthGuard],
     },
     {
