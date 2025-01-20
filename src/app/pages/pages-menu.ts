@@ -50,7 +50,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Users',
     // icon: 'home-outline',
-    link: '/pages/users',
+    link: '/pages/users/list',
     home: true,
   },{
     title: 'User Roles',

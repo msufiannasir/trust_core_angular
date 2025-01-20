@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { CollectionTableComponent } from '../components/collections/collection-table/collection-table.component';
+import { UsersComponent } from '../components/users/users.component';
 import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [{
@@ -40,10 +41,10 @@ const routes: Routes = [{
       canActivate: [AuthGuard],
     },
     {
-      path: 'users',
+      path: 'users/list',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
-      component: CollectionTableComponent,
+      component: UsersComponent,
       canActivate: [AuthGuard],
 
     },
