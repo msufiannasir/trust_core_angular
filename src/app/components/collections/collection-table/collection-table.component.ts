@@ -88,39 +88,58 @@ export class CollectionTableComponent implements OnInit {
   configureTableColumns(columns: string[]): void {
     const dynamicColumns: any = {};
     
-    // // Define a custom column for ID (this will be the sequential number column)
-    // dynamicColumns['ID'] = {
-    //   title: 'ID',
-    //   type: 'string',
-    //   valuePrepareFunction: (cell, row, rowIndex) => {
-    //     // Return the rowIndex + 1 as the sequential number
-    //     return (rowIndex + 1).toString(); // Ensure this returns a string
-    //   },
-    // };
-    
     columns.forEach((column) => {
       // Define the columns you want to exclude or hide
       const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at']; // Hide "id" column
-    
+  
       if (!hiddenColumns.includes(column)) {
-        // Convert column name to human-readable format
-        const formattedTitle = column
-          .replace(/_/g, ' ') // Replace underscores with spaces
-          .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-    
+        let formattedTitle: string;
+        let fieldType: string = 'string'; // Default type to string
+        // Check for "rel_" columns first (Relation field)
+        if (column.startsWith('rel_')) {
+          fieldType = 'dropdown'; // Set to dropdown type
+          // Remove the "rel_" prefix and handle _col and extra parts
+          let withoutRel = column.replace(/^rel_/, ''); // Remove "rel_" prefix
+          // Remove the "_col" suffix and any extra parts after the last underscore
+          withoutRel = withoutRel.replace(/_col.*$/, ''); // Remove "_col" and anything after it (like "_insurance")
+          // Now we have the core part of the column name (e.g., "insurance_type" instead of "insurance_type_col_insurance")
+          formattedTitle = withoutRel.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()); // Format the title
+        }
+        // Handle other field types
+        else if (column.startsWith('text_')) {
+          fieldType = 'text'; // Set to text field type
+          formattedTitle = column.replace(/^text_/, '').replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('textarea_')) {
+          fieldType = 'textarea'; // Set to textarea field type
+          formattedTitle = column.replace(/^textarea_/, '').replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('file_')) {
+          fieldType = 'files'; // Set to files type
+          formattedTitle = column.replace(/^file_/, '').replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('date_')) {
+          fieldType = 'date'; // Set to date type
+          formattedTitle = column.replace(/^date_/, '').replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        }  else { // Default formatting for other columns
+          formattedTitle = column.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        }
+  
+        // Assign the dynamic column properties
         dynamicColumns[column] = {
           title: formattedTitle, // Use formatted title
-          type: 'string', // Default type; customize if necessary
+          type: fieldType, // Set field type dynamically
         };
       }
     });
-    
+  
     // Merge dynamic columns into the existing settings while preserving actions
     this.settings = {
       ...this.settings, // Keep existing settings (including actions)
       columns: dynamicColumns, // Update only columns
     };
   }
+  
+  
+  
+  
   
   
   
