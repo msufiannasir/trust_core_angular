@@ -62,7 +62,7 @@ export class CollectionTableComponent implements OnInit {
     this.collectionsService.getDynamicData(endpoint).subscribe(
       (response) => {
         if (response && response.columns && Array.isArray(response.columns)) {
-          this.configureTableColumns(response.columns); // Dynamically configure columns
+          this.configureTableColumns(response.columns , response.data); // Dynamically configure columns
         }
         if (response && response.data && Array.isArray(response.data)) {
           this.source.load(response.data); // Populate table rows
@@ -85,42 +85,126 @@ export class CollectionTableComponent implements OnInit {
   
 
 
-  configureTableColumns(columns: string[]): void {
+  configureTableColumns(columns: string[], data: any[]): void {
     const dynamicColumns: any = {};
-    
-    // // Define a custom column for ID (this will be the sequential number column)
-    // dynamicColumns['ID'] = {
-    //   title: 'ID',
-    //   type: 'string',
-    //   valuePrepareFunction: (cell, row, rowIndex) => {
-    //     // Return the rowIndex + 1 as the sequential number
-    //     return (rowIndex + 1).toString(); // Ensure this returns a string
-    //   },
-    // };
-    
+    console.log(data);
+  
     columns.forEach((column) => {
-      // Define the columns you want to exclude or hide
-      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at']; // Hide "id" column
-    
+      // Define columns to exclude or hide
+      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at'];
+  
       if (!hiddenColumns.includes(column)) {
-        // Convert column name to human-readable format
-        const formattedTitle = column
-          .replace(/_/g, ' ') // Replace underscores with spaces
-          .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-    
+        let formattedTitle: string;
+        let fieldType: string = 'string'; // Default field type
+        let editor: any = null; // Default editor is null
+        let valuePrepareFunction: (cell: any, row: any) => string | null = null; // For displaying the value in the table row
+  
+        if (column.startsWith('rel_')) {
+          // Relational dropdown field
+          fieldType = 'dropdown';
+  
+          // Format title by removing the "rel_" prefix and cleaning up
+          const withoutRel = column
+            .replace(/^rel_/, '')
+            .replace(/_col.*$/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+  
+          formattedTitle = withoutRel;
+  
+          const options = data
+          .map((row) => {
+            // Ensure row[column] is valid and an object
+            if (row[column] && typeof row[column] === 'object' && row[column] !== null) {
+              const { id, display } = row[column];
+              return {
+                value: id ? id.toString() : '', // Ensure id is converted to a string or fallback to empty string
+                title: display || (id ? id.toString() : 'Unknown'), // Use display if available, otherwise fallback to id or "Unknown"
+              };
+            }
+            return null; // Fallback for invalid or null entries
+          })
+          .filter((option) => option !== null); // Remove invalid options
+        
+          // Default "Please select an option" as the first dropdown item
+          editor = {
+            type: 'list',
+            config: {
+              list: [
+                { value: '', title: 'Please select an option' }, // Default option
+                ...options, // Add dynamic options
+              ],
+            },
+          };
+  
+          // Display the selected option (or fallback to default if not available)
+          valuePrepareFunction = (cell: any, row: any) => {
+            if (cell && typeof cell === 'object') {
+              return cell.display || cell.id || 'N/A'; // Display the readable name
+            }
+            return 'Please select an option'; // Default for unselected
+          };
+        } else if (column.startsWith('text_')) {
+          // Text field
+          fieldType = 'text';
+          editor = { type: 'input' };
+          formattedTitle = column
+            .replace(/^text_/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('textarea_')) {
+          // Textarea field
+          fieldType = 'textarea';
+          editor = { type: 'textarea' };
+          formattedTitle = column
+            .replace(/^textarea_/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('file_')) {
+          // File field
+          fieldType = 'files';
+          editor = { type: 'file' };
+          formattedTitle = column
+            .replace(/^file_/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        } else if (column.startsWith('date_')) {
+          // Date field
+          fieldType = 'date';
+          editor = { type: 'input' };
+          formattedTitle = column
+            .replace(/^date_/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        } else {
+          // Default case for other columns
+          formattedTitle = column
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        }
+  
+        // Assign column configuration
         dynamicColumns[column] = {
-          title: formattedTitle, // Use formatted title
-          type: 'string', // Default type; customize if necessary
+          title: formattedTitle,
+          type: fieldType,
+          editor: editor,
+          valuePrepareFunction: valuePrepareFunction, // Ensure table rows display readable values
         };
       }
     });
-    
-    // Merge dynamic columns into the existing settings while preserving actions
+  
+    // Merge dynamic columns into existing table settings
     this.settings = {
-      ...this.settings, // Keep existing settings (including actions)
-      columns: dynamicColumns, // Update only columns
+      ...this.settings, // Keep other settings intact
+      columns: dynamicColumns, // Replace or update columns
     };
   }
+  
+  
+  
+  
+  
+  
   
   
   
