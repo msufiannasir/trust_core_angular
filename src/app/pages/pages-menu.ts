@@ -55,7 +55,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },{
     title: 'User Roles',
     // icon: 'home-outline',
-    link: '/pages/user-roles',
+    link: '/pages/roles/all',
     home: true,
   },{
     title: 'Permissions',

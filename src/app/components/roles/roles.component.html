@@ -1,15 +1,12 @@
 <nb-card>
     <nb-card-header>
-      Users
+      Roles
     </nb-card-header>
   
     <nb-card-body>
       <ng2-smart-table 
       [settings]="settings" 
       [source]="source" 
-      (deleteConfirm)="onDeleteConfirm($event)"
-      (createConfirm)="onCreateUpdateConfirm($event)"
-      (editConfirm)="onCreateUpdateConfirm($event)"
       >
       </ng2-smart-table>
     </nb-card-body>

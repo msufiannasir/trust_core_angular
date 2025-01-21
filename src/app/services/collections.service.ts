@@ -39,7 +39,7 @@ export class CollectionsService {
   // Create headers dynamically
   private createHeaders(): HttpHeaders {
     return new HttpHeaders({
-      'Authorization': `Bearer 13|s9rFMB3eFl6wyxfVH3wfUF4W1k1qsyLo1f5nts1u0728d70e`, // Replace with the actual token dynamically
+      'Authorization': `Bearer 15|ZIxXbmQ9eXlaV5t9BKfEdYS7tPrGskvMRj0peya6ed9d4223`, // Replace with the actual token dynamically
       'Content-Type': 'application/json',
     });
   }
