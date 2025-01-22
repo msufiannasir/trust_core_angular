@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionsService } from '../../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { MENU_ITEMS } from '../../../pages/pages-menu'; 
+import { MENU_ITEMS } from '../../../pages/pages-menu';
+import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.component'
+import { NbCardModule } from '@nebular/theme';
+import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
+
 
 @Component({
   selector: 'ngx-smart-table',
@@ -81,9 +85,6 @@ export class CollectionTableComponent implements OnInit {
       this.settings.tableTitle = menuItem.title;
     }
   }
-  
-  
-
 
   configureTableColumns(columns: string[], data: any[]): void {
     const dynamicColumns: any = {};
@@ -99,16 +100,13 @@ export class CollectionTableComponent implements OnInit {
         if (column.startsWith('rel_')) {
           // Relational dropdown field
           fieldType = 'dropdown';
-  
           // Format title by removing the "rel_" prefix and cleaning up
           const withoutRel = column
             .replace(/^rel_/, '')
             .replace(/_col.*$/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
-  
           formattedTitle = withoutRel;
-  
         // Handling options array
         const options: { value: string; title: string }[] = [];
         data.forEach((row) => {
@@ -168,7 +166,12 @@ export class CollectionTableComponent implements OnInit {
         } else if (column.startsWith('file_')) {
           // File field
           fieldType = 'files';
-          editor = { type: 'file' };
+        // File field
+        fieldType = 'file';
+        editor = {
+          type: 'custom', // Use custom editor type
+          component: FileUploadEditorComponent, // Specify editor component
+        };
           formattedTitle = column
             .replace(/^file_/, '')
             .replace(/_/g, ' ')
@@ -176,7 +179,10 @@ export class CollectionTableComponent implements OnInit {
         } else if (column.startsWith('date_')) {
           // Date field
           fieldType = 'date';
-          editor = { type: 'input' };
+          editor = {
+            type: 'custom', // Use custom editor type
+            component: DatepickerComponent, // Use your existing DatepickerComponent here
+          };
           formattedTitle = column
             .replace(/^date_/, '')
             .replace(/_/g, ' ')

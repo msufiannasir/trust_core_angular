@@ -12,6 +12,9 @@ import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
+// import { FileUploadEditorComponent } from './file-upload-editor.component';
+import { FileUploadEditorComponent } from './components/fileupload/file-upload-editor.component';
+
 import {
   NbChatModule,
   NbDatepickerModule,
