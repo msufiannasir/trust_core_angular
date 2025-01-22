@@ -25,7 +25,9 @@
   .nb-tree-grid-header-cell button {
     text-transform: capitalize;
   }
-
+  .ng2-smart-action {
+    display: none !important;
+  }
   @media screen and (min-width: 400px) {
     .nb-column-name,
     .nb-column-size {

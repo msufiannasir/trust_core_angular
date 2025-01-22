@@ -21,6 +21,7 @@ export class UsersService {
    }
   logout(){
     localStorage.setItem('auth_app_token', '');
+    localStorage.setItem('user', '');
     this.router.navigate(['/auth/login']);
   }
   listUsers(endpointWithHandle): Observable<any> {

@@ -15,22 +15,22 @@ export class RolesComponent implements OnInit {
 
   collectionHandle: string | null = null;
   settings = {
-    // add: {
-    //   addButtonContent: '<i class="nb-plus"></i>',
-    //   createButtonContent: '<i class="nb-checkmark"></i>',
-    //   confirmCreate: false,
-    //   cancelButtonContent: '<i class="nb-close"></i>',
-    // },
-    // edit: {
-    //   editButtonContent: '<i class="nb-edit"></i>',
-    //   saveButtonContent: '<i class="nb-checkmark"></i>',
-    //   cancelButtonContent: '<i class="nb-close"></i>',
-    //   confirmSave: false, 
-    // },
-    // delete: {
-    //   deleteButtonContent: '<i class="nb-trash"></i>',
-    //   confirmDelete: false,
-    // },
+    add: {
+      addButtonContent: '',
+      createButtonContent: '',
+      confirmCreate: false,
+      cancelButtonContent: '',
+    },
+    edit: {
+      editButtonContent: '',
+      saveButtonContent: '',
+      cancelButtonContent: '',
+      confirmSave: false, 
+    },
+    delete: {
+      deleteButtonContent: '',
+      confirmDelete: false,
+    },
     tableTitle: '', 
     columns: {}, // Initially empty, populated dynamically
     pager: {
