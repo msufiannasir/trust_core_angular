@@ -3,6 +3,7 @@ import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeServ
 
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
+import { UsersService } from '../../../services/users.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -16,6 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
+  currentuser=localStorage.getItem('user');
 
   themes = [
     {
@@ -45,16 +47,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private themeService: NbThemeService,
               private userService: UserData,
               private layoutService: LayoutService,
+              private usersService: UsersService,
               private breakpointService: NbMediaBreakpointsService) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
+    var currentuser=JSON.parse(this.currentuser);
     this.userService.getUsers()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
-
+      .subscribe((users: any) => {this.user = users.nick});
+    this.user=currentuser;
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
@@ -69,6 +72,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+       // Listen for menu item clicks
+        this.menuService.onItemClick()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(({ item }) => {
+          if (item.title === 'Log out') {
+            this.usersService.logout(); // Call the logout method
+          }
+        });
   }
 
   ngOnDestroy() {

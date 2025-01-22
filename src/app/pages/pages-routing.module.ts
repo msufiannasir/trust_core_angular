@@ -6,7 +6,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { CollectionTableComponent } from '../components/collections/collection-table/collection-table.component';
-
+import { UsersComponent } from '../components/users/users.component';
+import { RolesComponent } from '../components/roles/roles.component';
+import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [{
   path: '',
@@ -15,35 +17,45 @@ const routes: Routes = [{
     {
       path: 'dashboard',
       component: ECommerceComponent,
+      canActivate: [AuthGuard],
     },
     {
       path: ':handle',
       component: CollectionTableComponent, // Only for ':handle' routes
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
+      canActivate: [AuthGuard],
     },
     {
       path: 'customers',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
+      component: CollectionTableComponent,
+      canActivate: [AuthGuard],
+
     },
     {
       path: 'reports',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
+      canActivate: [AuthGuard],
     },
     {
-      path: 'users',
+      path: 'users/list',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
-      component: CollectionTableComponent,
+      component: UsersComponent,
+      canActivate: [AuthGuard],
+
     },
     {
-      path: 'user-roles',
+      path: 'roles/all',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
-      component: CollectionTableComponent,
+      component: RolesComponent,
+      canActivate: [AuthGuard],
+
     },
     {
       path: 'permissions',
@@ -56,6 +68,8 @@ const routes: Routes = [{
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
+      canActivate: [AuthGuard],
+
     },
     
     {

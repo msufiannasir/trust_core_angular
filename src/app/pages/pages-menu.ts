@@ -50,12 +50,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Users',
     // icon: 'home-outline',
-    link: '/pages/users',
+    link: '/pages/users/list',
     home: true,
   },{
     title: 'User Roles',
     // icon: 'home-outline',
-    link: '/pages/user-roles',
+    link: '/pages/roles/all',
     home: true,
   },{
     title: 'Permissions',

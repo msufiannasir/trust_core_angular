@@ -12,6 +12,8 @@ import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
+import { NbPasswordAuthStrategy } from '@nebular/auth';
+
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -61,7 +63,22 @@ import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy
             class: NbAuthSimpleToken,
             key: 'token', // Key in your API response that holds the token
           },
+          errors: {
+            getter: (response: any) => {
+              // Custom logic to extract errors from API response
+              return response.error ? response.error.message : 'Something went wrong';
+            },
+          },
+          messages: {
+            getter: (response: any) => {
+              // Custom logic to extract success messages
+              return response.message || 'Login successful';
+            },
+          },
         }),
+        // NbPasswordAuthStrategy.setup({
+        //   name: 'email', // Match the name from your custom strategy
+        // }),
       ],
       forms: {
         login: {
@@ -75,7 +92,9 @@ import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy
       },
     }),
   ],
-  providers: [CustomPasswordAuthStrategy], // Provide your custom strategy
+  providers: [
+    { provide: NbPasswordAuthStrategy, useClass: CustomPasswordAuthStrategy },
+  ], // Provide your custom strategy
   bootstrap: [AppComponent],
 })
 export class AppModule {}
