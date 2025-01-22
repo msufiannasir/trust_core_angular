@@ -87,12 +87,9 @@ export class CollectionTableComponent implements OnInit {
 
   configureTableColumns(columns: string[], data: any[]): void {
     const dynamicColumns: any = {};
-    console.log(data);
-  
     columns.forEach((column) => {
       // Define columns to exclude or hide
-      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at'];
-  
+      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at']; 
       if (!hiddenColumns.includes(column)) {
         let formattedTitle: string;
         let fieldType: string = 'string'; // Default field type
@@ -112,38 +109,46 @@ export class CollectionTableComponent implements OnInit {
   
           formattedTitle = withoutRel;
   
-          const options = data
-          .map((row) => {
-            // Ensure row[column] is valid and an object
-            if (row[column] && typeof row[column] === 'object' && row[column] !== null) {
-              const { id, display } = row[column];
-              return {
-                value: id ? id.toString() : '', // Ensure id is converted to a string or fallback to empty string
-                title: display || (id ? id.toString() : 'Unknown'), // Use display if available, otherwise fallback to id or "Unknown"
-              };
+        // Handling options array
+        const options: { value: string; title: string }[] = [];
+        data.forEach((row) => {
+          if (row[column] && typeof row[column] === 'object') {
+            const { allOptions } = row[column];
+            if (Array.isArray(allOptions)) {
+              allOptions.forEach((option) => {
+                options.push({
+                  value: option.id.toString(),
+                  title: option.display,
+                });
+              });
             }
-            return null; // Fallback for invalid or null entries
-          })
-          .filter((option) => option !== null); // Remove invalid options
-        
-          // Default "Please select an option" as the first dropdown item
-          editor = {
-            type: 'list',
-            config: {
-              list: [
-                { value: '', title: 'Please select an option' }, // Default option
-                ...options, // Add dynamic options
-              ],
-            },
-          };
-  
-          // Display the selected option (or fallback to default if not available)
-          valuePrepareFunction = (cell: any, row: any) => {
-            if (cell && typeof cell === 'object') {
-              return cell.display || cell.id || 'N/A'; // Display the readable name
+          }
+        });
+        // Remove duplicates from options
+        const uniqueOptions = Array.from(
+          new Map(options.map((option) => [option.value, option])).values()
+        );
+        // Default "Please select an option" as the first dropdown item
+        editor = {
+          type: 'list',
+          config: {
+            list: [
+              { value: '', title: 'Please select an option' }, // Default option
+              ...uniqueOptions, // Add dynamic options
+            ],
+          },
+        };
+        valuePrepareFunction = (cell: any, row: any) => {          
+          // Check if cell is an object with a 'selected' property
+          if (cell && typeof cell === 'object' && cell.selected) {            
+            // Return the 'display' from the 'selected' property
+            if (cell.selected && cell.selected.display) {
+              return cell.selected.display; // Return the 'display' property
             }
-            return 'Please select an option'; // Default for unselected
-          };
+          }
+          // If no valid 'display' value is found, fallback to 'N/A'
+          return 'N/A';
+        };   
         } else if (column.startsWith('text_')) {
           // Text field
           fieldType = 'text';
@@ -188,8 +193,8 @@ export class CollectionTableComponent implements OnInit {
           title: formattedTitle,
           type: fieldType,
           editor: editor,
-          valuePrepareFunction: valuePrepareFunction, // Ensure table rows display readable values
-        };
+          valuePrepareFunction: valuePrepareFunction,
+          };
       }
     });
   
