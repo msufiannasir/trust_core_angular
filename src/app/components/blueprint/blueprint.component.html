@@ -1,0 +1,7 @@
+<ng2-smart-table
+  [settings]="settings"
+  [source]="source"
+  (editConfirm)="onFieldTypeChange($event, $event.data)"
+  (createConfirm)="onCreateField($event, $event.data)"
+  (deleteConfirm)="onDeleteField($event, $event.data)"
+></ng2-smart-table>

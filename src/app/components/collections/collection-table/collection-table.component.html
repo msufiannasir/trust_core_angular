@@ -1,6 +1,9 @@
 <nb-card>
     <nb-card-header>
       {{ settings.tableTitle || 'Default Title' }} 
+      <button nbButton status="primary" (click)="navigateToBlueprint()">
+        Edit Blueprint
+      </button>
     </nb-card-header>
   
     <nb-card-body>

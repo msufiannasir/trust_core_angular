@@ -8,6 +8,7 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { CollectionTableComponent } from '../components/collections/collection-table/collection-table.component';
 import { UsersComponent } from '../components/users/users.component';
 import { RolesComponent } from '../components/roles/roles.component';
+import { BlueprintComponent } from '../components/blueprint/blueprint.component';
 import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [{
@@ -24,6 +25,13 @@ const routes: Routes = [{
       component: CollectionTableComponent, // Only for ':handle' routes
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
+      canActivate: [AuthGuard],
+    },
+    {
+      path: ':handle/blueprint',
+      loadChildren: () => import('../components/collections/tables.module')
+      .then(m => m.TablesModule),
+      component: BlueprintComponent, // Only for ':handle' routes
       canActivate: [AuthGuard],
     },
     {

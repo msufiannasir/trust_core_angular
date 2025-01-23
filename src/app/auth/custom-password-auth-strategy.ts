@@ -35,6 +35,7 @@ export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
         const token = this.createToken(this.getOption('token.class'), response[this.getOption('token.key')]);
         // const token=response.token;
         localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('AuthToken', response.token);
         // if (token.isValid()) {
           // this.getTokenService().set(token); // Dynamically get and use NbTokenService
           return new NbAuthResult(

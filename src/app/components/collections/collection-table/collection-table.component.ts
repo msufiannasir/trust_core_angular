@@ -303,6 +303,20 @@ export class CollectionTableComponent implements OnInit {
     }
   }
   
+  navigateToBlueprint(): void {
+    const currentUrl = this.route.snapshot.url.map(segment => segment.path).join('/');
+    console.log("currentUrl: " + currentUrl);
+  
+    const blueprintUrl = `/pages/${currentUrl}/blueprint`; // Construct the correct URL explicitly
+    console.log("blueprintUrl: " + blueprintUrl);
+  
+    // Navigate to the constructed absolute path
+    this.router.navigateByUrl(blueprintUrl).catch((error) => {
+      console.error('Navigation error:', error);
+    });
+  }
+  
+  
   
 
 }

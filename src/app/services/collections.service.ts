@@ -38,8 +38,9 @@ export class CollectionsService {
 
   // Create headers dynamically
   private createHeaders(): HttpHeaders {
+    const authToken = localStorage.getItem('AuthToken'); // Get the token from local storage
     return new HttpHeaders({
-      'Authorization': `Bearer 15|ZIxXbmQ9eXlaV5t9BKfEdYS7tPrGskvMRj0peya6ed9d4223`, // Replace with the actual token dynamically
+      'Authorization': `Bearer ${authToken}`, // Replace with the actual token dynamically
       'Content-Type': 'application/json',
     });
   }

@@ -35,7 +35,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Files Management',
     // icon: 'home-outline',
-    link: '/pages/files management',
+    link: '/pages/files',
     home: true,
   }, {
     title: 'Contracts',
