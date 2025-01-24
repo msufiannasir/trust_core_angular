@@ -6,6 +6,7 @@ import { LayoutService } from '../../../@core/utils';
 import { UsersService } from '../../../services/users.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-header',
@@ -48,7 +49,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private userService: UserData,
               private layoutService: LayoutService,
               private usersService: UsersService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService, 
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -58,6 +60,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((users: any) => {this.user = users.nick});
     this.user=currentuser;
+    this.user.name=currentuser.meta.text_first_name+' '+ currentuser.meta.text_last_name;
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
@@ -78,6 +81,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         .subscribe(({ item }) => {
           if (item.title === 'Log out') {
             this.usersService.logout(); // Call the logout method
+          }
+          if (item.title === 'Profile') {
+            this.router.navigate(['pages/user/profile']);
           }
         });
   }

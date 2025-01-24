@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class UsersService {
   apiUrl=environment.baseEndpoint;
   httpOptions:any;
+  currentUser=JSON.parse(localStorage.getItem('user'));
   constructor(private http: HttpClient, private router: Router) {
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -32,6 +33,14 @@ export class UsersService {
     console.log(fullUrl, 'fullUrl');
     return this.http.get(fullUrl, { headers });
   }
+  getUser(endpointWithHandle): Observable<any> {
+    const headers = this.createHeaders();
+
+    // Combine base API URL with the endpoint (handle dynamic API calls)
+    const fullUrl = `${this.apiUrl}`+endpointWithHandle; // Full URL to the backend
+    console.log(fullUrl, 'fullUrl');
+    return this.http.get(fullUrl, { headers });
+  }
   listRoles(endpointWithHandle): Observable<any> {
     const headers = this.createHeaders();
 
@@ -42,13 +51,17 @@ export class UsersService {
   }
   createEntry( data: any): Observable<any> {
     const headers = this.createHeaders(); // Use the global method for headers
-    return this.http.post(`${this.apiUrl}/user/register`, data, { headers });
+    return this.http.post(`${this.apiUrl}user/register`, data, { headers });
+  }
+  updateUserProfile( data: any): Observable<any> {
+    const headers = this.createHeaders(); // Use the global method for headers
+    return this.http.post(`${this.apiUrl}user/edit/`+this.currentUser.id, data, { headers });
   }
 
   // Method to delete an entry
   deleteEntry(handle: string, entryId: string): Observable<any> {
     const headers = this.createHeaders(); // Use the global method for headers
-    return this.http.delete(`${this.apiUrl}/user/delete/${entryId}`, { headers });
+    return this.http.delete(`${this.apiUrl}user/delete/${entryId}`, { headers });
   }
   private createHeaders(): HttpHeaders {
     return new HttpHeaders({

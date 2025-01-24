@@ -5,6 +5,7 @@
       <!-- <nb-card-body> -->
         <input nbInput
                placeholder="Select Date"
+               (blur)="onDateChange($event)"
                [nbDatepicker]="formpicker">
         <nb-datepicker #formpicker></nb-datepicker>
       <!-- </nb-card-body> -->

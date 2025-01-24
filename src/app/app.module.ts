@@ -12,12 +12,13 @@ import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
-import { NbPasswordAuthStrategy } from '@nebular/auth';
 import { FormsModule } from '@angular/forms';
+import { NbPasswordAuthStrategy } from '@nebular/auth';
 import { BlueprintComponent } from './components/blueprint/blueprint.component'; // Import your custom strategy
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 // import { FileUploadEditorComponent } from './file-upload-editor.component';
 import { FileUploadEditorComponent } from './components/fileupload/file-upload-editor.component';
+import { DatepickerComponent } from './components/datepicker/datepicker.component';
 
 import {
   NbChatModule,
@@ -30,11 +31,13 @@ import {
 
 } from '@nebular/theme';
 import { NbAuthModule, NbAuthJWTToken, NbAuthSimpleToken } from '@nebular/auth';
-import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy'; // Import your custom strategy
+import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy';
+import { ReplacePipe } from './replace.pipe'; // Import your custom strategy
 
 
 @NgModule({
-  declarations: [AppComponent, BlueprintComponent],
+  exports: [ReplacePipe],
+  declarations: [AppComponent, ReplacePipe, DatepickerComponent, BlueprintComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -44,6 +47,7 @@ import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy
     AppRoutingModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
+    FormsModule,
     NbDatepickerModule.forRoot(),
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
@@ -60,19 +64,21 @@ import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy
           name: 'email', // Name of the strategy
           baseEndpoint: environment.baseEndpoint, // Base endpoint (optional)
           login: {
-            endpoint: '/login', // Login endpoint relative to baseEndpoint
+            endpoint: 'login', // Login endpoint relative to baseEndpoint
             method: 'post', // HTTP method
             redirect: {
               success: '/dashboard', // Redirect URL on successful login
               failure: null, // Stay on the same page on failure
             },
           },
+          
           token: {
             class: NbAuthSimpleToken,
             key: 'token', // Key in your API response that holds the token
           },
           errors: {
             getter: (response: any) => {
+              console.log(response, ';response getter');
               // Custom logic to extract errors from API response
               return response.error ? response.error.message : 'Something went wrong';
             },
@@ -97,6 +103,22 @@ import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy
           },
           strategy: 'email', // Use the custom strategy
         },
+        forgotPassword: {
+          endpoint: '/forgot-password',  // Your custom forgot password endpoint
+          method: 'post',  // HTTP method
+          redirect: {
+            success: '/auth/login',  // Redirect after success
+            failure: null,  // Stay on the same page on failure
+          },
+          showMessages: {
+            success: true,
+            error: true,  // Enable showing error messages
+          },
+        },
+        register: {
+          // No need to configure this as the route can be disabled
+        },
+        
       },
     }),
   ],

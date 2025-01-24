@@ -41,10 +41,14 @@ export const routes: Routes = [
         component: NbRequestPasswordComponent,
       },
       {
-        path: 'reset-password',
+        path: 'password-reset',
         component: NbResetPasswordComponent,
       },
     ],
+  },
+  {
+    path: 'password-reset',
+    component: NbResetPasswordComponent,
   },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },

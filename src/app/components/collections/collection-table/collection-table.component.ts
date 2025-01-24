@@ -62,7 +62,7 @@ export class CollectionTableComponent implements OnInit {
   }
 
   fetchCollectionData(handle: string): void {
-    const endpoint = `/collections/show/${handle}`;
+    const endpoint = `collections/show/${handle}`;
     this.collectionsService.getDynamicData(endpoint).subscribe(
       (response) => {
         if (response && response.columns && Array.isArray(response.columns)) {
