@@ -14,8 +14,6 @@ export class BlueprintComponent implements OnInit {
   currentEndpoint: string;
   collectionHandle: string | null = null;
   allCollections: any[] = []; // Store all collections
-  
-
   settings = {
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -63,6 +61,7 @@ export class BlueprintComponent implements OnInit {
             list: [], // Dynamically set in `setLinkTypeOptions`
           },
         },
+        // addable: false,
         editable: false, // Initial state
       },
       old_field_name: {
@@ -151,9 +150,8 @@ export class BlueprintComponent implements OnInit {
   } 
 
   onFieldTypeChange(event: any): void {
-    const updatedField = event.data;
+    const updatedField = event.newData; // Use `newData` to access the updated field values
     const newFieldType = event.newData.fieldType;
-
     if (newFieldType === 'Relational') {
       this.settings.columns.linkType.editable = true;
       this.setLinkTypeOptions(); // Update `linkType` options dynamically
@@ -203,14 +201,14 @@ export class BlueprintComponent implements OnInit {
   updateField(updatedField: any): void {
     const handle = this.collectionHandle || '';
     const payload: any = {
-      old_field_name: updatedField.old_fieldName,
+      old_field_name: updatedField.old_field_name,
       new_field_name: updatedField.fieldName,
       field_type: updatedField.fieldType,
-      status: 'active', // Adjust if needed
+      // status: 'active', // Adjust if needed
     };
   
     // Handle relational fields
-    if (updatedField.fieldType === 'Relational') {
+    if (updatedField.fieldType === 'relational') {
       if (updatedField.linkType === 'user') {
         payload['link_type'] = 'user';
       } else {
@@ -231,7 +229,7 @@ export class BlueprintComponent implements OnInit {
 
   onDeleteField(event: any): void {
     const handle = this.collectionHandle;
-    const fieldName = event.data.fieldName;
+    const fieldName = event.data.old_field_name;
   
     if (!handle || !fieldName) {
       console.error('Handle or fieldName is missing.');
@@ -288,11 +286,11 @@ formatFieldName(fieldName: string): string {
 }
 
   getFieldType(fieldName: string): string {
-    if (fieldName.startsWith('rel_')) return 'Relational';
-    if (fieldName.startsWith('text_')) return 'Text';
-    if (fieldName.startsWith('file_')) return 'File';
-    if (fieldName.startsWith('date_')) return 'Date';
-    if (fieldName.startsWith('textarea_')) return 'Textarea';
+    if (fieldName.startsWith('rel_')) return 'relational';
+    if (fieldName.startsWith('text_')) return 'text';
+    if (fieldName.startsWith('file_')) return 'file';
+    if (fieldName.startsWith('date_')) return 'date';
+    if (fieldName.startsWith('textarea_')) return 'textarea';
     return 'Unknown';
   }
 
