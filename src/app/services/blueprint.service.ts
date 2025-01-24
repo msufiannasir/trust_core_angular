@@ -9,35 +9,28 @@ import { environment } from '../../environments/environment'; // Import the envi
 })
 export class BlueprintService {
   private apiUrl = environment.baseEndpoint;
-
   constructor(private http: HttpClient) {}
-
   // Fetch collection fields
   getCollectionFields(handle: string): Observable<any> {
     const headers = this.createHeaders();
     return this.http.get(`${this.apiUrl}/collections/${handle}/get-fields`, { headers });
   }
-
-  // Create a new field
-  createField(handle: string, data: any): Observable<any> {
-    const headers = this.createHeaders();
-    return this.http.post(`${this.apiUrl}/collections/${handle}/add-field`, data, { headers });
+  createField(handle: string, payload: any): Observable<any> {
+    const headers = this.createHeaders(); // Use the global method for headers
+    return this.http.post(`${this.apiUrl}/collections/${handle}/add-field`, payload , { headers });
   }
-
-  // Delete a field
-  deleteField(handle: string, fieldName: string): Observable<any> {
-    const headers = this.createHeaders();
-    return this.http.request('delete', `${this.apiUrl}/collections/${handle}/fields/delete`, {
-      headers,
-      body: { field_name: fieldName },
-    });
+  
+  updateField(handle: string, payload: any): Observable<any> {
+    const headers = this.createHeaders(); // Use the global method for headers
+    return this.http.put(`${this.apiUrl}/collections/${handle}/fields/edit`, payload , {headers});
   }
+  
+  deleteField(handle: string, payload: any): Observable<any> {
+    const headers = this.createHeaders(); // Use the global method for headers
 
-  // Update a field
-  updateField(handle: string, data: any): Observable<any> {
-    const headers = this.createHeaders();
-    return this.http.put(`${this.apiUrl}/collections/${handle}/fields/edit`, data, { headers });
+    return this.http.delete(`${this.apiUrl}/collections/${handle}/fields/delete`, { body: payload , headers });
   }
+  
 
   private createHeaders(): HttpHeaders {
     const authToken = localStorage.getItem('AuthToken');

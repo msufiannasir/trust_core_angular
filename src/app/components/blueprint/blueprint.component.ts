@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BlueprintService } from '../../services/blueprint.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { DatepickerComponent } from '../../pages/forms/datepicker/datepicker.component';
-import { FileUploadEditorComponent } from '../fileupload/file-upload-editor.component';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -16,6 +14,8 @@ export class BlueprintComponent implements OnInit {
   currentEndpoint: string;
   collectionHandle: string | null = null;
   allCollections: any[] = []; // Store all collections
+  
+
   settings = {
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -27,13 +27,12 @@ export class BlueprintComponent implements OnInit {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true, 
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmCreate: true,
+      confirmDelete: true,
     },
-    tableTitle: '',
     columns: {
       fieldName: {
         title: 'Field Name',
@@ -46,11 +45,11 @@ export class BlueprintComponent implements OnInit {
           type: 'list',
           config: {
             list: [
-              { value: 'Text', title: 'Text' },
-              { value: 'File', title: 'File' },
-              { value: 'Date', title: 'Date' },
-              { value: 'Textarea', title: 'Textarea' },
-              { value: 'Relational', title: 'Relational' },
+              { value: 'text', title: 'Text' },
+              { value: 'file', title: 'File' },
+              { value: 'date', title: 'Date' },
+              { value: 'textarea', title: 'Textarea' },
+              { value: 'relational', title: 'Relational' },
             ],
           },
         },
@@ -61,10 +60,17 @@ export class BlueprintComponent implements OnInit {
         editor: {
           type: 'list',
           config: {
-            list: [], // This will be updated dynamically
+            list: [], // Dynamically set in `setLinkTypeOptions`
           },
         },
-        editable: false, // Initially disabled
+        editable: false, // Initial state
+      },
+      old_field_name: {
+        title: 'Old Field Name', // This will store the original field name
+        type: 'string',
+        editable: false, // Make it read-only
+        addable: false, // Exclude from Add operation
+        hidden: true, // Hide this column in the UI
       },
     },
     pager: {
@@ -74,160 +80,223 @@ export class BlueprintComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private BlueprintService: BlueprintService,
-    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
-
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
+      console.log(handle);
       if (handle) {
+        this.collectionHandle = handle;  // Save it to collectionHandle
         this.fetchCollectionFields(handle);
       }
     });
-  
-    // Set the initial state of the linkType field
-    this.settings.columns.linkType.editable = false; // Initially disabled
   }
 
   fetchCollectionFields(handle: string): void {
     this.BlueprintService.getCollectionFields(handle).subscribe(
       (response) => {
-        console.log('API Response:', response);
         const fields = response.fields || [];
-        const collectionStatus = response.collection.status;
-  
-        // Store all collections
         this.allCollections = response.allCollections || [];
-        console.log('All Collections:', this.allCollections);
-  
+
         const hiddenFields = ['id', 'collection_id', 'created_at', 'updated_at'];
         const filteredFields = fields.filter((field: string) => !hiddenFields.includes(field));
-  
+
         const tableData = filteredFields.map((field: string) => {
+          const formattedFieldName = this.formatFieldName(field); // Declare the variable here
           return {
-            fieldName: field,
+            fieldName: formattedFieldName,
             fieldType: this.getFieldType(field),
             linkType: this.getLinkType(field),
-            status: collectionStatus,
+            old_field_name: field,
           };
         });
-  
+
         this.source.load(tableData);
-  
-        // Set the linkType options directly in the settings
         this.setLinkTypeOptions();
-  
-        // Force change detection
         this.cdr.detectChanges();
       },
-      (error) => {
-        console.error('Error fetching fields:', error);
-      }
+      (error) => console.error('Error fetching fields:', error)
     );
   }
 
   setLinkTypeOptions(): void {
     const staticOptions = [
-      { value: 'User  ', title: 'User  ' },
-      { value: 'Columns', title: 'Columns' },
+      { value: 'user', title: 'User' },
     ];
-  
-    // Map allCollections to the desired format
-    const dynamicOptions = this.allCollections.map(collection => ({
-      value: collection.id, // Use the collection ID as the value
-      title: collection.name, // Use the collection name as the title
+    const dynamicOptions = this.allCollections.map((collection) => ({
+      value: collection.id,
+      title: collection.name,
     }));
   
-    // Combine static and dynamic options
-    this.settings.columns.linkType.editor = {
-      type: 'list',
-      config: {
-        list: [...staticOptions, ...dynamicOptions],
+    this.settings = {
+      ...this.settings, // Keep existing settings
+      columns: {
+        ...this.settings.columns,
+        linkType: {
+          ...this.settings.columns.linkType,
+          editor: {
+            type: 'list',
+            config: {
+              list: [...staticOptions, ...dynamicOptions],
+            },
+          },
+        },
       },
     };
   
-    console.log('Link Type Options:', this.settings.columns.linkType.editor.config.list); // Log the options
-  }
-  getFieldType(fieldName: string): string {
-    if (fieldName.startsWith('rel_')) {
-      return 'Relation';
-    } else if (fieldName.startsWith('text_')) {
-      return 'Text';
-    } else if (fieldName.startsWith('file_')) {
-      return 'File';
-    } else if (fieldName.startsWith('date_')) {
-      return 'Date';
-    } else if (fieldName.startsWith('textarea_')) {
-      return 'TextArea';
-    }
-    return 'Unknown';
-  }
+    console.log('Updated Settings:', this.settings);
+  } 
 
-  getLinkType(fieldName: string): string {
-    if (fieldName.startsWith('rel_')) {
-      return 'Link';
-    }
-    return 'None';
-  }
+  onFieldTypeChange(event: any): void {
+    const updatedField = event.data;
+    const newFieldType = event.newData.fieldType;
 
-  onFieldTypeChange(event: any, row: any): void {
-    const selectedFieldType = event.newValue;
-  
-    // Check if the selected field type is 'Relational'
-    if (selectedFieldType === 'Relational') {
-      this.settings.columns.linkType.editable = true; // Enable linkType
+    if (newFieldType === 'Relational') {
+      this.settings.columns.linkType.editable = true;
+      this.setLinkTypeOptions(); // Update `linkType` options dynamically
     } else {
-      this.settings.columns.linkType.editable = false; // Disable linkType
+      this.settings.columns.linkType.editable = false;
+    }
+
+    this.updateField(updatedField);
+  }
+
+  // Create operation
+  onCreateField(event: any): void {
+    const handle = this.collectionHandle || '';
+    const fieldData = event.newData;
+  
+    const payload = {
+      field_name: fieldData.fieldName,
+      field_type: fieldData.fieldType,
+      status: 'active',
+    };
+  
+    // Handle relational fields
+    if (fieldData.fieldType === 'relational') {
+      if (fieldData.linkType === 'user') {
+        payload['link_type'] = 'user';
+      } else {
+        payload['link_type'] = 'collection';
+        payload['collection_id'] = fieldData.linkType; // Collection ID
+      }
     }
   
-    // Update the row in the source with the new editable state
-    this.source.update(row, { linkType: selectedFieldType === 'Relational' ? '' : 'None' })
-      .then(() => {
-        // Optionally handle success
-      })
-      .catch((error) => {
-        console.error('Error updating row:', error);
-      });
-  }
-  // Create a new field
-  onCreateField(handle: string, fieldData: any): void {
-    this.BlueprintService.createField(handle, fieldData).subscribe(
+    this.BlueprintService.createField(handle, payload).subscribe(
       (response) => {
         console.log('Field created successfully:', response);
         this.fetchCollectionFields(handle);
+        event.confirm.resolve(); // Resolve creation
       },
       (error) => {
         console.error('Error creating field:', error);
+        event.confirm.reject(); // Reject creation
       }
     );
   }
+  
 
-  // Delete a field
-  onDeleteField(handle: string, fieldName: string): void {
-    this.BlueprintService.deleteField(handle, fieldName).subscribe(
-      (response) => {
-        console.log('Field deleted successfully:', response);
-        this.fetchCollectionFields(handle);
-      },
-      (error) => {
-        console.error('Error deleting field:', error);
+  // Update operation
+  updateField(updatedField: any): void {
+    const handle = this.collectionHandle || '';
+    const payload: any = {
+      old_field_name: updatedField.old_fieldName,
+      new_field_name: updatedField.fieldName,
+      field_type: updatedField.fieldType,
+      status: 'active', // Adjust if needed
+    };
+  
+    // Handle relational fields
+    if (updatedField.fieldType === 'Relational') {
+      if (updatedField.linkType === 'user') {
+        payload['link_type'] = 'user';
+      } else {
+        payload['link_type'] = 'collection';
+        payload['collection_id'] = updatedField.linkType; // Collection ID
       }
-    );
-  }
-
-  // Update a field
-  updateField(handle: string, fieldData: any): void {
-    this.BlueprintService.updateField(handle, fieldData).subscribe(
+    }
+  
+    this.BlueprintService.updateField(handle, payload).subscribe(
       (response) => {
         console.log('Field updated successfully:', response);
         this.fetchCollectionFields(handle);
       },
+      (error) => console.error('Error updating field:', error)
+    );
+  }
+  
+
+  onDeleteField(event: any): void {
+    const handle = this.collectionHandle;
+    const fieldName = event.data.fieldName;
+  
+    if (!handle || !fieldName) {
+      console.error('Handle or fieldName is missing.');
+      return;
+    }
+  
+    const payload: any = {
+      field_name: fieldName,
+    };
+  
+    this.BlueprintService.deleteField(handle, payload).subscribe(
+      (response) => {
+        console.log('Field deleted successfully:', response);
+        this.fetchCollectionFields(handle);
+        event.confirm.resolve(); // Resolve deletion
+      },
       (error) => {
-        console.error('Error updating field:', error);
+        console.error('Error deleting field:', error);
+        event.confirm.reject(); // Reject deletion
       }
     );
+  }
+  
+  
+  // Function to format the field name
+// Function to format the field name
+// Function to format the field name
+formatFieldName(fieldName: string): string {
+  // Define the prefixes to remove
+  const prefixes = ['rel_', 'col_', 'text_', 'file_', 'date_', 'textarea_'];
+
+  // Remove any specified prefixes
+  for (const prefix of prefixes) {
+    if (fieldName.startsWith(prefix)) {
+      fieldName = fieldName.substring(prefix.length); // Remove the prefix
+    }
+  }
+
+  // Remove everything after 'col_' (including 'col_')
+  const colIndex = fieldName.indexOf('col_');
+  if (colIndex !== -1) {
+    fieldName = fieldName.substring(0, colIndex); // Keep only the part before 'col_'
+  }
+
+  // Split by underscores and filter out empty strings
+  const parts = fieldName.split('_').filter(part => part.length > 0);
+
+  // Capitalize the first letter of each part and join them with a space
+  const formattedName = parts
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+
+  return formattedName;
+}
+
+  getFieldType(fieldName: string): string {
+    if (fieldName.startsWith('rel_')) return 'Relational';
+    if (fieldName.startsWith('text_')) return 'Text';
+    if (fieldName.startsWith('file_')) return 'File';
+    if (fieldName.startsWith('date_')) return 'Date';
+    if (fieldName.startsWith('textarea_')) return 'Textarea';
+    return 'Unknown';
+  }
+
+  getLinkType(fieldName: string): string {
+    return fieldName.startsWith('rel_') ? 'Link' : 'None';
   }
 }
