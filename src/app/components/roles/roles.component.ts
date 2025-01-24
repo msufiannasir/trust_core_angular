@@ -15,6 +15,7 @@ export class RolesComponent implements OnInit {
 
   collectionHandle: string | null = null;
   settings = {
+    actions: false,
     add: {
       addButtonContent: '',
       createButtonContent: '',
@@ -58,8 +59,8 @@ export class RolesComponent implements OnInit {
 
   determineEndpoint(path: string): string {
     const endpointMapping: { [key: string]: string } = {
-      '/dashboard': '/api/dashboard',
-      '/roles/all': '/roles',
+      '/dashboard': 'api/dashboard',
+      '/roles/all': 'roles',
     };
 
     for (const route in endpointMapping) {

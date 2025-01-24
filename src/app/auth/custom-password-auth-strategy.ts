@@ -35,6 +35,7 @@ export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
         const token = this.createToken(this.getOption('token.class'), response[this.getOption('token.key')]);
         // const token=response.token;
         localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
         // if (token.isValid()) {
           // this.getTokenService().set(token); // Dynamically get and use NbTokenService
           return new NbAuthResult(
@@ -62,6 +63,47 @@ export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
         return of(
           new NbAuthResult(false, error, null, errorMessages, ['Login failed'])
         );
+      })
+    );
+  }
+  // Now implement the custom forgotPassword method
+  requestPassword(data: any): Observable<NbAuthResult> {
+    const endpoint =environment.baseEndpoint +'request-pass';  // Custom forgot password endpoint
+    const method = 'post';  // HTTP method for forgot password
+    return this.http.request(method, endpoint, { body: data }).pipe(
+      map((response: any) => {
+        console.log(response, 'response');
+        if (response) {
+          return new NbAuthResult(true, response, '/auth/login', [], []);
+        }
+        return new NbAuthResult(false, response.status, null, ['Failed to send password reset link'], []);
+      }),
+      catchError((error) => {
+        
+        return of(new NbAuthResult(false, error, null, [error.error.message], []));
+      })
+    );
+  }
+  resetPassword(data: any): Observable<NbAuthResult> {
+    const endpoint = environment.baseEndpoint +'reset-password'; // Your custom endpoint for resetting the password
+    const method = 'post'; // HTTP method
+    var userdata=JSON.parse(localStorage.getItem('user'));
+    data.token=localStorage.getItem('token');
+    data.email=userdata.email;
+    data.password_confirmation=data.confirmPassword;
+    return this.http.request(method, endpoint, { body: data }).pipe(
+      map((response: any) => {
+        // Check for the success of the password reset request
+        if (response.success) {
+          return new NbAuthResult(true, response, '/auth/login', [], []);
+        }
+
+        // If the reset password request failed, return the appropriate error messages
+        return new NbAuthResult(false, response, null, ['Failed to reset password'], []);
+      }),
+      catchError((error) => {
+        // Handle any error that occurs during the API request
+        return of(new NbAuthResult(false, error, null, ['Failed to reset password'], []));
       })
     );
   }

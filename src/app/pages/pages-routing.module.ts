@@ -50,6 +50,14 @@ const routes: Routes = [{
 
     },
     {
+      path: 'user/profile',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: UsersComponent,
+      canActivate: [AuthGuard],
+
+    },
+    {
       path: 'roles/all',
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),

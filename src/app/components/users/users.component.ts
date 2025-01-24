@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { MENU_ITEMS } from '../../pages/pages-menu'; 
+import { MENU_ITEMS } from '../../pages/pages-menu';
+import { ReplacePipe } from '../../replace.pipe';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { FileUploadEditorComponent } from '../fileupload/file-upload-editor.component';
 
 @Component({
   selector: 'ngx-smart-table',
@@ -10,10 +13,17 @@ import { MENU_ITEMS } from '../../pages/pages-menu';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-  source: LocalDataSource = new LocalDataSource();
+  source: LocalDataSource = new LocalDataSource(); // Data source for the smart table
   currentEndpoint: string;
+  currentPath: string;
+  user_paths = { profile: '', listings: '' }; // Paths for user navigation
+  singleuserdata = [];
+  metaArray: { key: string; value: any }[] = []; // Holds user metadata
+  formData: { key: string; value: any }[] = []; // Form data for user profile updates
+  password = ''; // Password field for profile updates
 
   collectionHandle: string | null = null;
+
   settings = {
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -25,14 +35,14 @@ export class UsersComponent implements OnInit {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true, 
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
     },
-    tableTitle: '', 
-    columns: {}, // Initially empty, populated dynamically
+    tableTitle: '', // Table title
+    columns: {}, // Dynamically populated table columns
     pager: {
       perPage: 10, // Default items per page
     },
@@ -45,152 +55,159 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Dynamically change input types to "date"
+    const intervalId = setInterval(() => {
+      const dateElements = document.querySelectorAll('[ng-reflect-name^="meta_date"]');
+      dateElements.forEach((element) => {
+        const inputElement = element as HTMLInputElement;
+        if (inputElement.type === 'text') {
+          inputElement.type = 'date';
+        }
+      });
+    }, 2000);
+
+    this.user_paths.profile = '/pages/user/profile';
+    this.user_paths.listings = '/pages/users/list';
+
+    // Handle route parameter changes
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
-      const currentPath = this.router.url;
-
-      // if (handle) {
-        this.currentEndpoint = this.determineEndpoint(currentPath);
-        this.fetchUserData();
-      // }
+      this.currentPath = this.router.url;
+      this.currentEndpoint = this.determineEndpoint(this.currentPath);
+      this.fetchUserData();
     });
   }
 
+  // Capture field values for updates
+  captureFieldValue(value: string, index: any): void {
+    if (index === 'password') {
+      this.password = value;
+    } else {
+      if (!this.formData[index]) {
+        this.formData[index] = { ...this.metaArray[index] };
+      }
+      this.formData[index].value = value;
+    }
+  }
+
+  // Check if a field should be hidden
+  isHidden(key: string): boolean {
+    const hiddenFields = ['id', 'user_id', 'created_at', 'updated_at', 'last_login', 'employee_assigned', 'settings'];
+    return hiddenFields.includes(key);
+  }
+
+  // Map route paths to API endpoints
   determineEndpoint(path: string): string {
     const endpointMapping: { [key: string]: string } = {
-      '/dashboard': '/api/dashboard',
-      '/users': '/user/all',
+      '/dashboard': 'api/dashboard',
+      '/pages/users/list': 'user/all',
+      '/pages/user/profile': `user/detail/${this.usersService.currentUser.id}`,
     };
 
     for (const route in endpointMapping) {
       if (path.includes(route)) {
-        return endpointMapping[route];  // Return the endpoint without 'handle'
+        return endpointMapping[route];
       }
     }
 
     return '/api/collection';
   }
 
+  // Fetch user data from API
   fetchUserData(): void {
-    const endpointWithHandle = `${this.currentEndpoint}`;
-    console.log(endpointWithHandle, 'endpointWithHandle');
-    this.usersService.listUsers(endpointWithHandle).subscribe(
+    this.usersService.listUsers(this.currentEndpoint).subscribe(
       (response) => {
-        if (response && response.columns && Array.isArray(response.columns)) {
-          this.configureTableColumns(response.columns); // Dynamically configure columns
+        if (this.currentPath === this.user_paths.listings) {
+          if (response?.columns) {
+            this.configureTableColumns(response.columns, response.data);
+          }
+          if (response?.data && Array.isArray(response.data)) {
+            this.source.load(response.data);
+          }
         }
-        if (response && response.data && Array.isArray(response.data)) {
-          this.source.load(response.data); // Populate table rows
+
+        if (this.currentPath === this.user_paths.profile) {
+          this.metaArray = Object.entries(response.data[0]).map(([key, value]) => ({
+            key,
+            value,
+          }));
+
+          const excludedFields = [
+            'name', 'created_at', 'updated_at', 'roles_id', 'roles_name', 'last_login',
+            'remember_token', 'email_verified_at', 'settings', 'id', 'meta_employee_assigned',
+          ];
+
+          this.metaArray = this.metaArray.filter((field) => !excludedFields.includes(field.key));
+          this.metaArray = this.metaArray.map((field) => ({
+            ...field,
+            displayKey: field.key.replace('meta_', ''),
+          }));
         }
       },
       (error) => {
-        console.error('Error fetching collection data:', error);
+        console.error('Error fetching data:', error);
       }
     );
   }
 
-  configureTableColumns(columns: string[]): void {
+  // Configure table columns dynamically
+  configureTableColumns(columns: { [key: string]: string }, data: any[]): void {
     const dynamicColumns: any = {};
-    
-    // // Define a custom column for ID (this will be the sequential number column)
-    // dynamicColumns['ID'] = {
-    //   title: 'ID',
-    //   type: 'string',
-    //   valuePrepareFunction: (cell, row, rowIndex) => {
-    //     // Return the rowIndex + 1 as the sequential number
-    //     return (rowIndex + 1).toString(); // Ensure this returns a string
-    //   },
-    // };
-    
-    columns.forEach((column) => {
-      // Define the columns you want to exclude or hide
-      const hiddenColumns = ['id', 'collection_id', 'roles_created_at', 'roles_updated_at','roles_name', 'settings', 'meta_last_login', 'meta_id', 'meta_user_id','meta_settings','email_verified_at','meta_created_at','meta_updated_at', 'created_at','updated_at']; // Hide "id" column
-    
-      if (!hiddenColumns.includes(column)) {
-        // Convert column name to human-readable format
-        const formattedTitle = column
-          .replace(/_/g, ' ') .replace(/meta/g, ' ') .replace(/roles/g, 'role') // Replace underscores with spaces
-          .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-    
-        dynamicColumns[column] = {
-          title: formattedTitle, // Use formatted title
-          type: 'string', // Default type; customize if necessary
-        };
+    const hiddenColumns = ['name', 'id', 'collection_id', 'roles_created_at', 'roles_updated_at', 'settings'];
+
+    Object.keys(columns).forEach((columnKey) => {
+      if (!hiddenColumns.includes(columnKey)) {
+        let formattedTitle = columnKey.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        dynamicColumns[columnKey] = { title: formattedTitle, type: 'string' };
       }
     });
-    dynamicColumns['password']={title:'Password', type: 'string'};
-    // Merge dynamic columns into the existing settings while preserving actions
-    this.settings = {
-      ...this.settings, // Keep existing settings (including actions)
-      columns: dynamicColumns, // Update only columns
+
+    dynamicColumns['password'] = {
+      title: 'Password',
+      type: 'string',
+      filter: false,
     };
+
+    this.settings = { ...this.settings, columns: dynamicColumns };
   }
 
+  // Handle delete confirmation
   onDeleteConfirm(event): void {
     const handle = this.route.snapshot.paramMap.get('handle');
     const entryId = event.data.id;
-    if (entryId) {
-      if(confirm("Are you sure to delete user "+event.data.name)) {
-        this.usersService.deleteEntry(handle, entryId).subscribe(
-          (response) => {
-            console.log('User deleted successfully:', response);
-            event.confirm.resolve(); // Notify the table of success
-    
-            // Show success alert
-            window.alert('User deleted successfully!');
-    
-            // Refresh the table data
-            this.fetchUserData();
-          },
-          (error) => {
-            console.error('Error deleting entry:', error);
-    
-            // Show error alert
-            window.alert('Failed to delete entry. Please try again.');
-    
-            event.confirm.reject(); // Notify the table of failure
-          }
-        );
-      }
+
+    if (entryId && confirm(`Are you sure to delete user ${event.data.name}`)) {
+      this.usersService.deleteEntry(handle, entryId).subscribe(
+        () => {
+          event.confirm.resolve();
+          alert('User deleted successfully!');
+          this.fetchUserData();
+        },
+        (error) => {
+          console.error('Error deleting entry:', error);
+          alert('Failed to delete entry.');
+          event.confirm.reject();
+        }
+      );
     } else {
       event.confirm.reject();
     }
   }
-  onCreateUpdateConfirm(event): void {
-    const handle = this.route.snapshot.paramMap.get('handle'); // Get the collection handle
-    // if (handle) {
-      this.usersService.createEntry(event.newData).subscribe(
-        (response) => {
-          event.confirm.resolve(response); // Notify the table of success
-  
-          // Show success alert
-          window.alert(response.message);
-  
-          // Refresh the table data
-          this.fetchUserData();
-        },
-        (error) => {
-          console.log('Error creating entry:', error);
-  
-          // Show error alert
-          var errorslist='';
-          var current_errors=error.error.errors;
-          for (const key in current_errors) {
-            if (current_errors.hasOwnProperty(key)) {
-                // Loop through the child array (the error messages)
-                current_errors[key].forEach(message => {
-                  errorslist+=`${key}: ${message}`;
-                    console.log(`${key}: ${message}`);
-                });
-            }
-        }
-          window.alert('Failed to create entry.'+ errorslist);
-  
-          event.confirm.reject(); // Notify the table of failure
-        }
-      );
-    // } else {
-    //   event.confirm.reject(); // No handle, reject the action
-    // }
+
+  // Handle profile update
+  updateProfile(): void {
+    const updatedProfileData = this.formData.reduce((acc, field) => {
+      acc[field.key] = field.value;
+      return acc;
+    }, {});
+    updatedProfileData['password'] = this.password;
+
+    this.usersService.updateUserProfile(updatedProfileData).subscribe(
+      () => alert('Profile updated successfully!'),
+      (error) => {
+        console.error('Error updating profile:', error);
+        alert('Failed to update profile.');
+      }
+    );
   }
 }

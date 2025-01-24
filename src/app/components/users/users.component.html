@@ -1,4 +1,4 @@
-<nb-card>
+<nb-card *ngIf="currentPath==user_paths.listings">
     <nb-card-header>
       Users
     </nb-card-header>
@@ -12,6 +12,58 @@
       (editConfirm)="onCreateUpdateConfirm($event)"
       >
       </ng2-smart-table>
+    </nb-card-body>
+  </nb-card>
+  <nb-card *ngIf="currentPath==user_paths.profile">
+    <nb-card-header>Your Profile</nb-card-header>
+    <nb-card-body>
+      <form class="form-horizontal" >
+        <!-- <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputFirstName" class="label">Name</label>
+              <input type="text" nbInput fullWidth id="inputFirstName" placeholder="Your full name" [value]="singleuserdata.name">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputEmail" class="label">Email</label>
+              <input type="email" nbInput fullWidth id="inputEmail" placeholder="Email" [value]="singleuserdata.email">
+            </div>
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col-sm-6" *ngFor="let field of metaArray; let i = index">
+            <div class="form-group">
+              <label [hidden]="isHidden(field.key)" [for]="field.key" class="label">{{ field.displayKey  | titlecase }}</label>
+              <input nbInput fullWidth 
+              type="text"
+              nbInput
+              fullWidth
+              [id]="field.key"
+              [placeholder]="'Enter ' + field.key | titlecase"
+              [value]="field.value"
+              [hidden]="isHidden(field.key)"
+              (blur)="captureFieldValue($event.target.value, i)"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="label">Change your password</label>
+              <input nbInput fullWidth id="inputWebsite"
+              type="password"
+              nbInput
+              fullWidth
+              (blur)="captureFieldValue($event.target.value,'password')"
+              >
+            </div>
+          </div>
+        </div>
+        <button type="button" nbButton status="success" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="updateProfile()">Submit</button>
+    </form>
     </nb-card-body>
   </nb-card>
   

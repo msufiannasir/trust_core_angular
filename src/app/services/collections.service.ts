@@ -17,6 +17,11 @@ export class CollectionsService {
     const fullUrl = `${this.apiUrl}${endpoint}`; // Full URL to the backend
     return this.http.get(fullUrl, { headers });
   }
+  getCollections(): Observable<any> {
+    const headers = this.createHeaders(); // Use the global method for headers
+    const fullUrl = `${this.apiUrl}collections/all`; // Full URL to the backend
+    return this.http.get(fullUrl, { headers });
+  }
 
   // Method to create an entry
   createEntry(handle: string, data: any): Observable<any> {
