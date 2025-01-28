@@ -1,6 +1,9 @@
 <nb-card *ngIf="currentPath==user_paths.listings">
     <nb-card-header>
-      Users
+      Users 
+      <button nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
+        Edit Blueprint
+      </button>
     </nb-card-header>
   
     <nb-card-body>

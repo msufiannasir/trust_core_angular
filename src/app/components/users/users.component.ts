@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
+import { CollectionsService } from '../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { MENU_ITEMS } from '../../pages/pages-menu'; 
 import { ReplacePipe } from '../../replace.pipe'; 
@@ -22,6 +23,7 @@ export class UsersComponent implements OnInit {
   formData: { key: string; value: any }[] = []; // New array to hold form data
   password='';
   roles:any;
+  collectionlist:any;
   collectionHandle: string | null = null;
   settings = {
     add: {
@@ -50,7 +52,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private collectionsService: CollectionsService
   ) {}
 
   ngOnInit(): void {
@@ -75,18 +78,29 @@ export class UsersComponent implements OnInit {
       const handle = params.get('handle');
       const currentPath = this.currentPath=this.router.url;
       console.log(currentPath);
+      this.usersService.listRoles('roles').subscribe(
+        (response) => {
+         this.roles=response;
+         console.log(this.roles, 'this.roles');
+        },
+        (error) => {
+          console.error('Error fetching collection data:', error);
+        }
+      );
+      this.collectionsService.getCollections().subscribe(
+        (response) => {
+         this.collectionlist=response;
+         console.log(this.collectionlist, 'this.collections');
+        },
+        (error) => {
+          console.error('Error fetching collection data:', error);
+        }
+      );
       this.currentEndpoint = this.determineEndpoint(currentPath);
       this.fetchUserData();
     });
-     this.usersService.listRoles('roles').subscribe(
-      (response) => {
-       this.roles=response;
-       console.log(this.roles, 'this.roles');
-      },
-      (error) => {
-        console.error('Error fetching collection data:', error);
-      }
-    );
+    
+    
   }
 
   // ... existing code ...
@@ -211,6 +225,7 @@ export class UsersComponent implements OnInit {
             list: []
           },
         };
+        console.log(columnKey, 'columnKey');
         data.forEach((row) => {
             // Check if the row has a relevant field
             if (columnKey.indexOf('col_users')>-1 ) {
@@ -218,14 +233,10 @@ export class UsersComponent implements OnInit {
                     value: row.meta_user_id, // Use roles_id as the value
                     title: row.meta_text_first_name+" "+row.meta_text_last_name // Use roles_name as the title
                 });
-            }else {
-                options.push({
-                    value: row.meta_id, // Use roles_id as the value
-                    title: row.roles_text_title// Use roles_name as the title
-                });
             }
         });
         if (columnKey.indexOf('roles_id')>-1 ) {
+          console.log('herer',columnKey.indexOf('roles_id'));
             options = []; // reset options data if its roles column
             this.roles.data.forEach((row) => {
               // Check if the row has a relevant field
@@ -236,6 +247,18 @@ export class UsersComponent implements OnInit {
                  
           });
         }
+        if (columnKey.indexOf('col_user')<0 && columnKey.indexOf('roles_id')<0) {
+          // execeutes when the rel field is neither roles nor users. could be a collection
+          options = []; // reset options data if its roles column
+          this.collectionlist.collection.forEach((row) => {
+            // Check if the row has a relevant field
+                options.push({
+                    value: row.id, // Use roles_id as the value
+                    title: row.name// Use roles_name as the title
+                });
+               
+        });
+      }
         filter.config.list=options;
         
         // Remove duplicates from options
@@ -244,6 +267,7 @@ export class UsersComponent implements OnInit {
         );
           // Format title by removing the "rel_" prefix and cleaning up
           const withoutRel = columnKey
+            .replace(/^meta_rel/, '')
             .replace(/^rel_/, '')
             .replace(/_col.*$/, '')
             .replace(/_/g, ' ')
@@ -261,13 +285,16 @@ export class UsersComponent implements OnInit {
           };
          
           valuePrepareFunction = (cell: any, row: any) => {
+            console.log(uniqueOptions, 'uniqueOptions');
             // Check if the cell has a value and return it
             if (cell) {
+              console.log('is cell');
               // Find the option that matches the cell value
               const selectedOption = uniqueOptions.find(option => option.value == cell);
               // Return the title of the selected option, or fallback to 'N/A' if not found
               return selectedOption ? selectedOption.title : 'N/A';
             }else{
+              console.log('is not cell');
               return uniqueOptions[0]?.value;
             }
           };  
@@ -449,5 +476,9 @@ export class UsersComponent implements OnInit {
       }
     );
   }
+  navigateToBlueprint(): void {
+    this.router.navigate(['/pages/user/blueprint']); 
+  }
+  
   
 }

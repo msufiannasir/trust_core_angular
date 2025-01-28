@@ -6,6 +6,7 @@ import { MENU_ITEMS } from '../../../pages/pages-menu';
 import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.component'
 import { NbCardModule } from '@nebular/theme';
 import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
+import { UsersService } from '../../../services/users.service';
 
 
 @Component({
@@ -15,6 +16,8 @@ import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.c
 })
 export class CollectionTableComponent implements OnInit {
   collectionHandle: string | null = null;
+  roles:any;
+  userslist:any;
   source: LocalDataSource = new LocalDataSource();
   settings = {
     add: {
@@ -43,7 +46,8 @@ export class CollectionTableComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private collectionsService: CollectionsService
+    private collectionsService: CollectionsService,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +63,23 @@ export class CollectionTableComponent implements OnInit {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
     });
+    this.usersService.listRoles('roles').subscribe(
+      (response) => {
+       this.roles=response;
+       console.log(this.roles, 'this.roles');
+      },
+      (error) => {
+        console.error('Error fetching collection data:', error);
+      }
+    );
+    this.usersService.listUsers('user/all').subscribe(
+      (response) => {
+       this.userslist=response;
+      },
+      (error) => {
+        console.error('Error fetching collection data:', error);
+      }
+    );
   }
 
   fetchCollectionData(handle: string): void {
@@ -87,6 +108,7 @@ export class CollectionTableComponent implements OnInit {
   }
 
   configureTableColumns(columns: string[], data: any[]): void {
+    let filter: any=true;
     const dynamicColumns: any = {};
     columns.forEach((column) => {
       // Define columns to exclude or hide
@@ -115,7 +137,7 @@ export class CollectionTableComponent implements OnInit {
             if (Array.isArray(allOptions)) {
               allOptions.forEach((option) => {
                 options.push({
-                  value: option.id.toString(),
+                  value: option.id,
                   title: option.display,
                 });
               });
@@ -136,18 +158,128 @@ export class CollectionTableComponent implements OnInit {
             ],
           },
         };
-        valuePrepareFunction = (cell: any, row: any) => {          
-          // Check if cell is an object with a 'selected' property
-          if (cell && typeof cell === 'object' && cell.selected) {            
-            // Return the 'display' from the 'selected' property
-            if (cell.selected && cell.selected.display) {
-              return cell.selected.display; // Return the 'display' property
+        // valuePrepareFunction = (cell: any, row: any) => {  
+        //   console.log(uniqueOptions, 'cell.selected');        
+        //   // Check if cell is an object with a 'selected' property
+        //   if (cell && typeof cell === 'object' && cell.selected) {            
+        //     // Return the 'display' from the 'selected' property
+        //     if (cell.selected && cell.selected.display) {
+        //       return cell.selected.display; // Return the 'display' property
+        //     }
+        //   }else{
+        //     return uniqueOptions[0]?.value;
+        //   }
+        //   // If no valid 'display' value is found, fallback to 'N/A'
+        // };   
+        valuePrepareFunction = (cell: any, row: any) => {
+          // Check if the cell has a value and return it
+          console.log(uniqueOptions, 'uniqueOptions');
+          const selectedOption = uniqueOptions.find(option => option.value == cell.selected.id);
+          if (cell) {
+          //   // Find the option that matches the cell value
+          //   // Return the title of the selected option, or fallback to 'N/A' if not found
+          //   return selectedOption ? selectedOption.title : 'N/A';
+          // }else{
+            if(typeof selectedOption !='undefined'){
+              return selectedOption.title;
+            }
+            return 'N/A';
+          }else{
+            console.log(selectedOption, 'else cell.selectedOption.id');
+            if(typeof selectedOption !='undefined'){
+              return selectedOption.value;
             }
           }
-          // If no valid 'display' value is found, fallback to 'N/A'
-          return 'N/A';
-        };   
-        } else if (column.startsWith('text_')) {
+        };  
+
+        
+        }
+        
+        
+        if (column.startsWith('meta_rel_') || column.startsWith('roles_id')) {
+          // Relational dropdown field
+          fieldType = 'dropdown';
+        
+        // Handling options array
+        var options: { value: string; title: string }[] = [];
+        // const options = [];
+        filter= {
+          type: 'list', // Specify filter type as 'list' for dropdown
+          config: {
+            selectText: 'Select option', // Placeholder text
+            list: []
+          },
+        };
+        this.userslist.data.forEach((row) => {
+          options = []; // reset options data if its roles column
+          // Check if the row has a relevant field
+            if (column.indexOf('col_users')>-1 ) {
+                options.push({
+                    value: row.id, // Use roles_id as the value
+                    title: row.meta_text_first_name+" "+row.meta_text_last_name // Use roles_name as the title
+                });
+            }else {
+                options.push({
+                    value: row.meta_id, // Use roles_id as the value
+                    title: row.roles_text_title// Use roles_name as the title
+                });
+            }
+        });
+        if (column.indexOf('roles_id')>-1 ) {
+            options = []; // reset options data if its roles column
+            this.roles.data.forEach((row) => {
+              // Check if the row has a relevant field
+                  options.push({
+                      value: row.id, // Use roles_id as the value
+                      title: row.name// Use roles_name as the title
+                  });
+                 
+          });
+        }
+        filter.config.list=options;
+        
+        // Remove duplicates from options
+        const uniqueOptions = Array.from(
+          new Map(options.map((option) => [option.value, option])).values()
+        );
+          // Format title by removing the "rel_" prefix and cleaning up
+          const withoutRel = column
+            .replace(/^rel_/, '')
+            .replace(/_col.*$/, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+          formattedTitle = withoutRel;
+          // Default "Please select an option" as the first dropdown item
+          editor = {
+            type: 'list',
+            config: {
+              list: [
+                { value: '', title: 'Please select an option' }, // Default option
+                ...uniqueOptions, // Add dynamic options
+              ],
+            },
+          };
+         console.log(uniqueOptions, 'uniqueOptions');
+          valuePrepareFunction = (cell: any, row: any) => {
+            const selectedOption = uniqueOptions.find(option => option.value == cell);
+            console.log(selectedOption, 'selectedOption');
+            // Check if the cell has a value and return it
+            if (cell) {
+              // Find the option that matches the cell value
+              // Return the title of the selected option, or fallback to 'N/A' if not found
+              return selectedOption ? selectedOption.title : 'N/A';
+            }else{
+              return uniqueOptions[0]?.value;
+            }
+          };  
+          
+        }
+        
+        
+        
+        
+        
+        else if (column.startsWith('text_')) {
           // Text field
           fieldType = 'text';
           editor = { type: 'input' };

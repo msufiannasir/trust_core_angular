@@ -17,7 +17,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   }, {
     title: 'Insurance Types',
     // icon: 'home-outline',
-    link: '/pages/insurance-types',
+    link: '/pages/insurance-type',
     home: true,
   }, {
     title: 'Customers',
