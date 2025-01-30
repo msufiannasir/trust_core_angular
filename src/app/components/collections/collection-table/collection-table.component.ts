@@ -42,7 +42,7 @@ export class CollectionTableComponent implements OnInit {
       perPage: 10, // Default items per page
     },
   };
-
+  showBlueprintButton: boolean = true;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -59,6 +59,7 @@ export class CollectionTableComponent implements OnInit {
       if (handle) {
         this.fetchCollectionData(handle);
         this.setTableTitle(handle);
+        this.checkRouteForBlueprintButton();
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
@@ -448,6 +449,19 @@ export class CollectionTableComponent implements OnInit {
     });
   }
   
+    // Check the route and decide if the blueprint button should be shown
+    checkRouteForBlueprintButton(): void {
+      const currentUrl = this.router.url; 
+      // Define an array of routes where the button should be hidden
+      const hiddenRoutes = [
+        'pages/settings',  // Example route where button should be hidden
+        'pages/permissions',  // Another example route
+        'pages/reports',  // Another route
+      ];  
+      // Check if the current URL contains any of the hidden routes
+      this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
+    }
+    
   
   
 
