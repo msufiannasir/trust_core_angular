@@ -62,15 +62,9 @@ export class BlueprintComponent implements OnInit {
           },
         },
         // addable: false,
-        editable: false, // Initial state
-      },
-      old_field_name: {
-        title: 'Old Field Name', // This will store the original field name
-        type: 'string',
-        editable: false, // Make it read-only
-        addable: false, // Exclude from Add operation
-        hidden: true, // Hide this column in the UI
-      },
+        // editable: false, // Initial state
+      }
+
     },
     pager: {
       perPage: 10,
@@ -131,7 +125,7 @@ export class BlueprintComponent implements OnInit {
     }));
   
     this.settings = {
-      ...this.settings, // Keep existing settings
+      ...this.settings,
       columns: {
         ...this.settings.columns,
         linkType: {
@@ -147,16 +141,16 @@ export class BlueprintComponent implements OnInit {
     };
   
     console.log('Updated Settings:', this.settings);
-  } 
+  }
 
   onFieldTypeChange(event: any): void {
     const updatedField = event.newData; // Use `newData` to access the updated field values
     const newFieldType = event.newData.fieldType;
     if (newFieldType === 'Relational') {
-      this.settings.columns.linkType.editable = true;
+      // this.settings.columns.linkType.editable = true;
       this.setLinkTypeOptions(); // Update `linkType` options dynamically
     } else {
-      this.settings.columns.linkType.editable = false;
+      // this.settings.columns.linkType.editable = false;
     }
 
     this.updateField(updatedField);
@@ -295,6 +289,22 @@ formatFieldName(fieldName: string): string {
   }
 
   getLinkType(fieldName: string): string {
-    return fieldName.startsWith('rel_') ? 'Link' : 'None';
+    if (fieldName.startsWith('rel_')) {
+      // let valuePrepareFunction: (cell: any, row: any) => string | null = null; // For displaying the value in the table row
+
+      console.log("fieldName", fieldName);
+      
+      // Remove 'rel_' prefix and '_col' and anything after it, then replace underscores with spaces
+      const collectionName = fieldName
+        .replace(/^rel_/, '')  // Remove the 'rel_' prefix
+        .replace(/_col.*$/, '') // Remove '_col' and everything after it
+        .replace(/_/g, ' ')     // Replace underscores with spaces
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of each word
+      
+      return collectionName; // Return the cleaned up collection name
+    }
+    return 'N/A'; // Return 'None' if not a relational field
   }
+  
+  
 }
