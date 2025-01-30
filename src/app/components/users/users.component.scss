@@ -1,4 +1,7 @@
 @import '../../@theme/styles/themes';
+.action-btns{
+  margin-left: 10px;;
+}
 @include nb-install-component() {
   button[nbTreeGridRowToggle] {
     background: transparent;

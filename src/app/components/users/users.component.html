@@ -1,9 +1,21 @@
 <nb-card *ngIf="currentPath==user_paths.listings">
     <nb-card-header>
-      Users 
+      <h2>Users</h2> 
       <button nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
         Edit Blueprint
       </button>
+      <button mat-button nbbutton (click)="exportToPdf()" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
+        Download PDF
+      </button>
+      <button mat-button nbbutton (click)="exportToExcel()" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
+        Download Excel
+      </button>
+      <!-- <button nbButton status="primary" (click)="exportaction('excel')" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
+         Excel 
+      </button>
+      <button nbButton status="primary" (click)="exportaction('pdf')" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
+         PDF 
+      </button> -->
     </nb-card-header>
   
     <nb-card-body>

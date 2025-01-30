@@ -5,8 +5,13 @@ import { CollectionsService } from '../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { MENU_ITEMS } from '../../pages/pages-menu'; 
 import { ReplacePipe } from '../../replace.pipe'; 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { DatepickerComponent } from '../datepicker/datepicker.component'
 import { FileUploadEditorComponent } from '../fileupload/file-upload-editor.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'ngx-smart-table',
@@ -285,16 +290,17 @@ export class UsersComponent implements OnInit {
           };
          
           valuePrepareFunction = (cell: any, row: any) => {
-            console.log(uniqueOptions, 'uniqueOptions');
+            console.log(uniqueOptions, ' uniqueOptions ', cell);
             // Check if the cell has a value and return it
             if (cell) {
-              console.log('is cell');
+              
               // Find the option that matches the cell value
               const selectedOption = uniqueOptions.find(option => option.value == cell);
               // Return the title of the selected option, or fallback to 'N/A' if not found
+              console.log('is cell'+ selectedOption.title );
               return selectedOption ? selectedOption.title : 'N/A';
             }else{
-              console.log('is not cell');
+              console.log('is not cell'+ uniqueOptions[0]?.value);
               return uniqueOptions[0]?.value;
             }
           };  
@@ -478,6 +484,47 @@ export class UsersComponent implements OnInit {
   }
   navigateToBlueprint(): void {
     this.router.navigate(['/pages/user/blueprint']); 
+  }
+  async exportToPdf() {
+    const doc = new jsPDF();
+    try {
+      const tableData = await this.source.getAll(); // Await the promise here
+      const headers = ['ID', 'Name', 'Email', 'Role']; // Define your table headers
+
+      const data = tableData.map(item => [
+        item.id,
+        item.name,
+        item.email,
+        item.role,
+      ]);
+
+      autoTable(doc, {
+        head: [headers],
+        body: data,
+      });
+
+      doc.save('users.pdf');
+    } catch (error) {
+      console.error('Error exporting to PDF:', error);
+    }
+  }
+
+  // Export to Excel
+  async exportToExcel() {
+    try {
+      const tableData = await this.source.getAll(); // Await the promise here
+      const ws = XLSX.utils.json_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Users');
+      const excelFile = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      saveAs(new Blob([excelFile]), 'users.xlsx');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+    }
+  }
+  exportaction(){
+    
+    window.location.href=environment.baseEndpoint+"users/downloads/excel";
   }
   
   
