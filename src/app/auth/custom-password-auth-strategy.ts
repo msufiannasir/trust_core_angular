@@ -75,7 +75,7 @@ export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
       map((response: any) => {
         console.log(response, 'response');
         if (response) {
-          return new NbAuthResult(true, response, '/auth/login', [], []);
+          return new NbAuthResult(true, response, null, [],['Password reset link send successfully. Please check your inbox.']);
         }
         return new NbAuthResult(false, response.status, null, ['Failed to send password reset link'], []);
       }),

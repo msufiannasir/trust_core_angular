@@ -143,6 +143,12 @@ const routes: Routes = [{
         .then(m => m.MiscellaneousModule),
     },
     {
+      path: 'password-reset/:handle',
+      loadChildren: () => import('../components/collections/tables.module')
+          .then(m => m.TablesModule),
+        component: UsersComponent,
+    },
+    {
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',

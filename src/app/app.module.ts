@@ -106,10 +106,7 @@ import { ReplacePipe } from './replace.pipe'; // Import your custom strategy
         forgotPassword: {
           endpoint: '/forgot-password',  // Your custom forgot password endpoint
           method: 'post',  // HTTP method
-          redirect: {
-            success: '/auth/login',  // Redirect after success
-            failure: null,  // Stay on the same page on failure
-          },
+          redirect: false,
           showMessages: {
             success: true,
             error: true,  // Enable showing error messages

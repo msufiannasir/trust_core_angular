@@ -1,6 +1,7 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './auth.guard';
+import { UsersComponent } from './components/users/users.component';
 import {
   NbAuthComponent,
   NbLoginComponent,
@@ -16,6 +17,7 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pages.module')
       .then(m => m.PagesModule),
   },
+  
   {
     path: 'auth',
     component: NbAuthComponent,
@@ -46,10 +48,7 @@ export const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'password-reset',
-    component: NbResetPasswordComponent,
-  },
+
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 ];

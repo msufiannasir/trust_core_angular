@@ -121,6 +121,13 @@ export class CollectionTableComponent implements OnInit {
         let valuePrepareFunction: (cell: any, row: any) => string | null = null; // For displaying the value in the table row
   
         if (column.startsWith('rel_')) {
+          filter= {
+            type: 'list', // Specify filter type as 'list' for dropdown
+            config: {
+              selectText: 'Select option', // Placeholder text
+              list: []
+            },
+          };
           // Relational dropdown field
           fieldType = 'dropdown';
           // Format title by removing the "rel_" prefix and cleaning up
@@ -149,6 +156,7 @@ export class CollectionTableComponent implements OnInit {
         const uniqueOptions = Array.from(
           new Map(options.map((option) => [option.value, option])).values()
         );
+        filter.config.list=uniqueOptions;
         // Default "Please select an option" as the first dropdown item
         editor = {
           type: 'list',
@@ -332,6 +340,7 @@ export class CollectionTableComponent implements OnInit {
           title: formattedTitle,
           type: fieldType,
           editor: editor,
+          filter: filter,
           valuePrepareFunction: valuePrepareFunction,
           };
       }

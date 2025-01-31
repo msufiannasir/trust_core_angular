@@ -62,6 +62,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    alert('yez');
     // a JS workaround to dynamicaly make inpit type date 
     const intervalId = setInterval(() => {
         // Select all elements with IDs starting with 'meta_date'
@@ -129,20 +130,35 @@ export class UsersComponent implements OnInit {
     return hiddenFields.includes(key);
   }
   determineEndpoint(path: string): string {
-    const endpointMapping: { [key: string]: string } = {
+    const endpointMapping: { [key: string]: string | ((match: RegExpMatchArray) => string) } = {
       '/dashboard': 'api/dashboard',
       '/pages/users/list': 'user/all',
-      '/pages/user/profile': 'user/detail/'+this.usersService.currentUser.id,
+      '/pages/user/profile': () => `user/detail/${this.usersService.currentUser.id}`,
+      '/pages/password-reset/:hash': (match) => `password-reset/${match[1]}`, // Handle dynamic routes
     };
-
+  
+    // First, check for exact matches
     for (const route in endpointMapping) {
-      if (path.includes(route)) {
-        return endpointMapping[route];  // Return the endpoint without 'handle'
+      if (path === route) {
+        const value = endpointMapping[route];
+        return typeof value === 'function' ? value(['']) : value;
       }
     }
-
+  
+    // Check for dynamic routes
+    for (const route in endpointMapping) {
+      const regex = new RegExp('^' + route.replace(/:([^/]+)/g, '([^/]+)') + '$'); // Convert :param to regex
+      const match = path.match(regex);
+      if (match) {
+        const value = endpointMapping[route];
+        return typeof value === 'function' ? value(match) : value;
+      }
+    }
+  
+    // Default fallback
     return '/api/collection';
   }
+  
 
   fetchUserData(): void {
     const endpointWithHandle = `${this.currentEndpoint}`;
@@ -251,25 +267,34 @@ export class UsersComponent implements OnInit {
                   });
                  
           });
-        }
-        if (columnKey.indexOf('col_user')<0 && columnKey.indexOf('roles_id')<0) {
-          // execeutes when the rel field is neither roles nor users. could be a collection
+        } else if (columnKey.indexOf('col_users')<0) {
+          var tempcol=columnKey+'_relationalDetails';
           options = []; // reset options data if its roles column
-          this.collectionlist.collection.forEach((row) => {
-            // Check if the row has a relevant field
-                options.push({
-                    value: row.id, // Use roles_id as the value
-                    title: row.name// Use roles_name as the title
-                });
-               
-        });
+          // columnKey=columnKey+'_relationalDetails';
+          data.forEach((row) => {
+            if(typeof row[tempcol] !='undefined'){
+              // if (row[columnKey] && typeof row[columnKey] === 'object') {
+                const { allOptions } = row[tempcol].allOptions;
+                // if (Array.isArray(allOptions)) {
+                  row[tempcol].allOptions.forEach((option) => {
+
+                    options.push({
+                      value: option.id,
+                      title: option.display,
+                    });
+                  });
+                // }
+              // }
+            }
+            
+          });
       }
-        filter.config.list=options;
         
         // Remove duplicates from options
         const uniqueOptions = Array.from(
           new Map(options.map((option) => [option.value, option])).values()
         );
+        filter.config.list=uniqueOptions;
           // Format title by removing the "rel_" prefix and cleaning up
           const withoutRel = columnKey
             .replace(/^meta_rel/, '')
@@ -290,18 +315,18 @@ export class UsersComponent implements OnInit {
           };
          
           valuePrepareFunction = (cell: any, row: any) => {
-            console.log(uniqueOptions, ' uniqueOptions ', cell);
+            // console.log(uniqueOptions, ' uniqueOptions ', cell);
             // Check if the cell has a value and return it
             if (cell) {
               
               // Find the option that matches the cell value
               const selectedOption = uniqueOptions.find(option => option.value == cell);
               // Return the title of the selected option, or fallback to 'N/A' if not found
-              console.log('is cell'+ selectedOption.title );
+              // console.log('is cell'+ selectedOption.title );
               return selectedOption ? selectedOption.title : 'N/A';
             }else{
-              console.log('is not cell'+ uniqueOptions[0]?.value);
-              return uniqueOptions[0]?.value;
+              // console.log('is not cell'+ uniqueOptions[0]?.value);
+              return 'N/A';
             }
           };  
           
