@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     },
   ];
 
-  currentTheme = 'default';
+  currentTheme = this.getStoredTheme() || 'default';
 
   userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
 
@@ -60,7 +60,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((users: any) => {this.user = users.nick});
     this.user=currentuser;
-    this.user.name=currentuser.meta.text_first_name+' '+ currentuser.meta.text_last_name;
+    this.user.name=currentuser.name+' '+ currentuser.meta.text_last_name;
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
@@ -87,15 +87,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }
         });
   }
+  getStoredTheme(): string | null {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (parsedUser.meta && parsedUser.meta.settings) {
+        const settings = JSON.parse(parsedUser.meta.settings);
+        console.log(settings.theme_setting );
+        return settings.theme_setting || null;
+      }
+    }
+    return null;
+  }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  changeTheme(themeName: string) {
-    this.themeService.changeTheme(themeName);
-  }
+  // changeTheme(themeName: string) {
+  //   this.themeService.changeTheme(themeName);
+  // }
 
   toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');

@@ -18,6 +18,11 @@ export class CollectionTableComponent implements OnInit {
   collectionHandle: string | null = null;
   roles:any;
   userslist:any;
+  currentPath: string;
+  user_paths={offers:'', contracts:''};
+  singleuserdata=[];
+  metaArray: { key: string; value: any }[] = [];
+  formData: { key: string; value: any }[] = []; // New array to hold form data
   source: LocalDataSource = new LocalDataSource();
   settings = {
     add: {
@@ -42,6 +47,9 @@ export class CollectionTableComponent implements OnInit {
       perPage: 10, // Default items per page
     },
   };
+  handle: string | null = null; // Store handle globally
+  allowedHandles = ['offers', 'contracts', 'settings']; // Define allowed handles
+
   showBlueprintButton: boolean = true;
   constructor(
     private route: ActivatedRoute,
@@ -54,12 +62,24 @@ export class CollectionTableComponent implements OnInit {
     // Check if 'handle' exists in the current route
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
-      
+      this.currentPath = this.router.url.split('?')[0]; // Remove query params
+      // Define valid paths
+      this.user_paths = {
+        offers: '/pages/offers',
+        contracts: '/pages/contracts'
+      };
+      console.log("Current Path:", this.currentPath);
       // Ensure only requests with a valid 'handle' are processed
       if (handle) {
+        if(handle == 'collections'){
+          this.fetchAllCollection(handle);
+          this.setTableTitle(handle);
+          this.checkRouteForBlueprintButton();
+        }else{
         this.fetchCollectionData(handle);
         this.setTableTitle(handle);
         this.checkRouteForBlueprintButton();
+        }
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
@@ -83,6 +103,41 @@ export class CollectionTableComponent implements OnInit {
     );
   }
 
+  fetchAllCollection(handle: string): void {
+    this.collectionsService.getCollections().subscribe((response) => {
+      if (response && response.collection && Array.isArray(response.collection)) {
+        const formattedData = response.collection.map((item: any) => ({
+          name: item.name,
+          link: `/pages/${item.handle}`, // Generating the correct link
+          handle: item.handle, // Storing handle separately for link creation
+        }));
+        this.source.load(formattedData); // Load formatted data into the table
+        // Update table settings dynamically
+        this.settings = {
+          ...this.settings,
+          columns: {
+            name: {
+              title: 'Collection Name',
+              type: 'html', // This allows rendering HTML
+              valuePrepareFunction: (cell, row) => {
+                return `<a href="${row.link}" target="">${cell}</a>`; 
+              }
+            },
+            // handle: {
+            //   title: 'Handle',
+            //   type: 'text',
+            // },
+          },
+        };
+      } else {
+        console.warn('Invalid response format:', response);
+      }
+    }, (error) => {
+      console.error('Error fetching collections:', error);
+    });
+  }
+  
+
   fetchCollectionData(handle: string): void {
     const endpoint = `collections/show/${handle}`;
     this.collectionsService.getDynamicData(endpoint).subscribe(
@@ -92,6 +147,19 @@ export class CollectionTableComponent implements OnInit {
         }
         if (response && response.data && Array.isArray(response.data)) {
           this.source.load(response.data); // Populate table rows
+        }
+        // Use includes() to check path instead of direct comparison
+        if (this.currentPath.includes(this.user_paths.offers)) {
+          console.log("Current path matches offers section.");
+          this.metaArray = Object.entries(response.data[0]).map(([key, value]) => ({
+            key,
+            value,
+          }));
+          this.metaArray = this.metaArray.filter(field => field.key);
+          this.metaArray = this.metaArray.map(field => ({
+            ...field,
+            displayKey: field.key.replace('meta_', ''),
+          }));
         }
       },
       (error) => {
@@ -458,6 +526,10 @@ export class CollectionTableComponent implements OnInit {
     });
   }
   
+  isHidden(key: string): boolean {
+    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings'];
+    return hiddenFields.includes(key);
+  }
     // Check the route and decide if the blueprint button should be shown
     checkRouteForBlueprintButton(): void {
       const currentUrl = this.router.url; 
@@ -465,11 +537,29 @@ export class CollectionTableComponent implements OnInit {
       const hiddenRoutes = [
         'pages/settings',  // Example route where button should be hidden
         'pages/permissions',  // Another example route
-        'pages/reports',  // Another route
+        'pages/reports', 
+        'pages/collections',  // Another route
       ];  
       // Check if the current URL contains any of the hidden routes
       this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
     }
+    onAddEntry(event: any) {
+      const handle = this.route.snapshot.paramMap.get('handle'); // Get handle dynamically
+      console.log('Handle at execution:', handle);
+    
+      if (handle && this.allowedHandles.includes(handle)) {
+        this.router.navigate([`/pages/${handle}/entry`]);
+      }
+    }
+    
+    onEditEntry(event: any) {
+      const handle = this.route.snapshot.paramMap.get('handle'); // Get handle dynamically
+      console.log('Handle at execution:', handle);   
+      if (handle && this.allowedHandles.includes(handle)) {
+        const entryId = event.data.id;
+        this.router.navigate([`/pages/${handle}/entry/${entryId}`]);
+      }
+    }    
     
   
   

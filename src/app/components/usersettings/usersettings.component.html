@@ -1,0 +1,19 @@
+<nb-card >
+  <nb-card-header>
+    <h2>Users Setting</h2> 
+  <nb-card-header>
+    <nb-card-body>
+    <div class="header-container">
+      <label for="theme-select" class="mx-2">Select Theme: </label>
+      <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
+        <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
+      </nb-select>
+    </div>
+    <nb-card-body>
+<nb-card >
+  
+
+
+
+
+

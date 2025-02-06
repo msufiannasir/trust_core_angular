@@ -62,7 +62,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    alert('yez');
+    // alert('yez');
     // a JS workaround to dynamicaly make inpit type date 
     const intervalId = setInterval(() => {
         // Select all elements with IDs starting with 'meta_date'

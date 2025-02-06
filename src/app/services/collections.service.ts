@@ -41,6 +41,31 @@ export class CollectionsService {
     return this.http.delete(`${this.apiUrl}collections/${handle}/entry-delete/${entryId}`, { headers });
   }
 
+
+   // Fetch entry details by handle
+   getEntryDetail(handle: string, entryId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}collections/${handle}/entry-detail/${entryId}`, { headers: this.createHeaders() });
+  }
+  
+
+  // Create a new collection
+  createCollection(data: { name: string }): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.post(`${this.apiUrl}collections/create`, data , { headers });
+  }
+
+  // Update an existing collection
+  updateCollection(data: { name: string }, collectionHandle: string): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.put(`${this.apiUrl}collections/edit/${collectionHandle}`, data , { headers });
+  }
+
+  // Delete a collection
+  deleteCollection(collectionHandle: string): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.delete(`${this.apiUrl}collections/delete/${collectionHandle}` , { headers });
+  }
+
   // Create headers dynamically
   private createHeaders(): HttpHeaders {
     const authToken = localStorage.getItem('AuthToken'); // Get the token from local storage

@@ -8,70 +8,53 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'home-outline',
     link: '/pages/dashboard',
     home: true,
-  },
+  },  
   {
-    title: 'Insurance Companies',
+    title: 'Collections',
     // icon: 'home-outline',
-    link: '/pages/insurance-companies',
+    link: '/pages/collections/all',
     home: true,
-  }, {
-    title: 'Insurance Types',
-    // icon: 'home-outline',
-    link: '/pages/insurance-type',
-    home: true,
-  }, {
-    title: 'Customers',
-    // icon: 'home-outline',
-    link: '/pages/customers',
-    home: true,
-  }, {
-    title: 'Offers',
-    // icon: 'home-outline',
-    link: '/pages/offers',
-    home: true,
-  }, {
-    title: 'Files Management',
-    // icon: 'home-outline',
-    link: '/pages/files',
-    home: true,
-  }, {
-    title: 'Contracts',
-    // icon: 'home-outline',
-    link: '/pages/contracts',
-    home: true,
-  }, {
-    title: 'Communication',
-    // icon: 'home-outline',
-    link: '/pages/communications',
-    home: true,
-  }, {
+  },
+  // 
+   {
     title: 'Users',
     // icon: 'home-outline',
     link: '/pages/users/list',
     home: true,
-  }
-  , {
-    title: 'Reports',
-    // icon: 'home-outline',
-    link: '/pages/reports',
-    home: true,
-  }
-  ,{
-    title: 'User Roles',
-    // icon: 'home-outline',
-    link: '/pages/roles/all',
-    home: true,
-  },{
-    title: 'Permissions',
-    // icon: 'home-outline',
-    link: '/pages/permissions',
-    home: true,
   },
+  // , {
+  //   title: 'Reports',
+  //   // icon: 'home-outline',
+  //   link: '/pages/reports',
+  //   home: true,
+  // }
+  // ,{
+  //   title: 'User Roles',
+  //   // icon: 'home-outline',
+  //   link: '/pages/roles/all',
+  //   home: true,
+  // },
+  // {
+  //   title: 'Permissions',
+  //   // icon: 'home-outline',
+  //   link: '/pages/permissions',
+  //   home: true,
+  // },
   {
     title: 'Settings',
     // icon: 'home-outline',
-    link: '/pages/settings',
+    // link: '/pages/settings',
     home: true,
+    children: [
+          {
+            title: 'Site Setting',
+            link: '/pages/settings/site',
+          },
+          {
+            title: 'User Setting',
+            link: '/pages/settings/user',
+          }
+    ]
   },
   // {
   //   title: 'IoT Dashboard',

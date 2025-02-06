@@ -1,0 +1,57 @@
+
+<div class="card p-5">
+<div class="row mb-3">
+    <button class="btn btn-success mx-3 " (click)="showAddField()">Add New Field</button>
+    <button class="btn btn-danger" (click)="showDeleteField()">Delete Field</button>
+</div>
+<!-- Form for Adding New Field -->
+<div *ngIf="addingField">
+  <label>Enter Field Name:</label>
+  <input type="text" class="form-control" placeholder="Enter Field Name" [(ngModel)]="newFieldName" />
+  <div class="row mt-3">
+    <button class="btn btn-primary mx-2" (click)="addNewField()">Confirm Add</button>
+    <button class="btn btn-secondary" (click)="cancelOperation()">Cancel</button>
+  </div>
+</div>
+
+<!-- Form for Deleting Field -->
+<div *ngIf="deletingField">
+  <label>Select Field to Delete:</label>
+  <select class="form-control" [(ngModel)]="fieldToDelete">
+    <option *ngFor="let key of objectKeys(settingsData)" [value]="key">{{ toTitleCase(key) }}</option>
+  </select>
+  <div class="row mt-3">
+    <button class="btn btn-danger mx-2" (click)="deleteField()">Confirm Delete</button>
+    <button class="btn btn-secondary " (click)="cancelOperation()">Cancel</button>
+  </div>
+  
+</div>
+
+<!-- Existing Settings Form -->
+<form *ngIf="!addingField && !deletingField" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+  <div *ngFor="let key of objectKeys(settingsData)">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>{{ toTitleCase(key) }}</label>
+        
+        <!-- File input -->
+        <div *ngIf="getInputType(key) === 'file'">
+          <div *ngIf="settingsData[key]" class="mb-2">
+            <img [src]="getFullImageUrl(settingsData[key])" alt="Uploaded Image" class="img-thumbnail" width="100" height="100" />
+          </div>
+          <label>Upload New File</label>
+          <input type="file" class="form-control" (change)="onFileChange($event, key)" />
+        </div>
+
+        <!-- Other input fields -->
+        <input *ngIf="getInputType(key) !== 'file'" 
+               [type]="getInputType(key)" 
+               class="form-control" 
+               [formControlName]="key" />
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3">Update Settings</button>
+</form>
+</div>

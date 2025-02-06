@@ -12,7 +12,7 @@ import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
-import { FormsModule } from '@angular/forms';
+import {ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NbPasswordAuthStrategy } from '@nebular/auth';
 import { BlueprintComponent } from './components/blueprint/blueprint.component'; // Import your custom strategy
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -32,22 +32,26 @@ import {
 } from '@nebular/theme';
 import { NbAuthModule, NbAuthJWTToken, NbAuthSimpleToken } from '@nebular/auth';
 import { CustomPasswordAuthStrategy } from './auth/custom-password-auth-strategy';
-import { ReplacePipe } from './replace.pipe'; // Import your custom strategy
+import { ReplacePipe } from './replace.pipe';
+import { SitesettingsComponent } from './components/sitesettings/sitesettings.component'; // Import your custom strategy
+// import { UsersettingsComponent } from './components/usersettings/usersettings.component'; // Import your custom strategy
+
 
 
 @NgModule({
   exports: [ReplacePipe],
-  declarations: [AppComponent, ReplacePipe, DatepickerComponent, BlueprintComponent],
+  declarations: [AppComponent, ReplacePipe, DatepickerComponent, BlueprintComponent, SitesettingsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     Ng2SmartTableModule,
     FormsModule, // Add this line
+    ReactiveFormsModule,
     AppRoutingModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
-    FormsModule,
+    // FormsModule,
     NbDatepickerModule.forRoot(),
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),

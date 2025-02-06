@@ -63,9 +63,19 @@ export class UsersService {
     const headers = this.createHeaders(); // Use the global method for headers
     return this.http.delete(`${this.apiUrl}user/delete/${entryId}`, { headers });
   }
+
+
+  getUserSettings(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.apiUrl}user/detail`, { headers });
+  }
+  
+  
+
   private createHeaders(): HttpHeaders {
+    const authToken = localStorage.getItem('AuthToken'); // Get the token from local storage
     return new HttpHeaders({
-      'Authorization': `Bearer 15|ZIxXbmQ9eXlaV5t9BKfEdYS7tPrGskvMRj0peya6ed9d4223`, // Replace with the actual token dynamically
+      'Authorization': `Bearer ${authToken}`, // Replace with the actual token dynamically
       'Content-Type': 'application/json',
     });
   }

@@ -6,9 +6,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { CollectionTableComponent } from '../components/collections/collection-table/collection-table.component';
+import { CollectionListingComponent } from '../components/collections/collection-listing/collection-listing.component';
 import { UsersComponent } from '../components/users/users.component';
 import { RolesComponent } from '../components/roles/roles.component';
 import { BlueprintComponent } from '../components/blueprint/blueprint.component';
+import { EditEntry} from '../components/entryedit/entry.component';
+import { SitesettingsComponent } from '../components/sitesettings/sitesettings.component';
+import { UsersettingsComponent } from '../components/usersettings/usersettings.component';
 import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [{
@@ -18,6 +22,29 @@ const routes: Routes = [{
     {
       path: 'dashboard',
       component: ECommerceComponent,
+      canActivate: [AuthGuard],
+    },
+    {
+      path: 'collections/all',
+      component: CollectionListingComponent, // Only for ':handle' routes
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      canActivate: [AuthGuard],
+    },
+
+        // Static routes should come first
+    {
+      path: 'settings/site',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: SitesettingsComponent,
+      canActivate: [AuthGuard],
+    },
+    {
+      path: 'settings/user',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: UsersettingsComponent,
       canActivate: [AuthGuard],
     },
     {
@@ -34,6 +61,15 @@ const routes: Routes = [{
       component: BlueprintComponent, // Only for ':handle' routes
       canActivate: [AuthGuard],
     },
+
+    {
+      path: ':handle/entry/:entryId',
+      loadChildren: () => import('../components/collections/tables.module')
+      .then(m => m.TablesModule),
+      component: EditEntry, // Only for ':handle' routes
+      canActivate: [AuthGuard],
+    },
+
     {
       path: 'customers',
       loadChildren: () => import('../components/collections/tables.module')
@@ -78,14 +114,6 @@ const routes: Routes = [{
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
-    },
-    {
-      path: 'settings',
-      loadChildren: () => import('../components/collections/tables.module')
-        .then(m => m.TablesModule),
-      component: CollectionTableComponent,
-      canActivate: [AuthGuard],
-
     },
     
     {
