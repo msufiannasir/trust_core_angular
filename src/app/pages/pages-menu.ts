@@ -9,13 +9,64 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/dashboard',
     home: true,
   },  
+  // {
+  //   title: 'Collections',
+  //   // icon: 'home-outline',
+  //   link: '/pages/collections/all',
+  //   home: true,
+  // },{
   {
-    title: 'Collections',
+    title: 'Insurance Companies',
     // icon: 'home-outline',
-    link: '/pages/collections/all',
+    link: '/pages/insurance-companies',
+    home: true,
+  }, {
+    title: 'Insurance Types',
+    // icon: 'home-outline',
+    link: '/pages/insurance-type',
+    home: true,
+  }, {
+    title: 'Customers',
+    // icon: 'home-outline',
+    link: '/pages/customers',
+    home: true,
+  }, {
+    title: 'Offers',
+    // icon: 'home-outline',
+    link: '/pages/offers',
+    home: true,
+  }, {
+    title: 'Files Management',
+    // icon: 'home-outline',
+    link: '/pages/files',
+    home: true,
+  }, {
+    title: 'Contracts',
+    // icon: 'home-outline',
+    link: '/pages/contracts',
+    home: true,
+  }, {
+    title: 'Communication',
+    // icon: 'home-outline',
+    link: '/pages/communications',
+    home: true,
+  }, {
+    title: 'Reports',
+    // icon: 'home-outline',
+    link: '/pages/reports',
+    home: true,
+  }
+  ,{
+    title: 'User Roles',
+    // icon: 'home-outline',
+    link: '/pages/roles/all',
+    home: true,
+  },{
+    title: 'Permissions',
+    // icon: 'home-outline',
+    link: '/pages/permissions',
     home: true,
   },
-  // 
    {
     title: 'Users',
     // icon: 'home-outline',
