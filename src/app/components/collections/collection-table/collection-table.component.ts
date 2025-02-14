@@ -19,14 +19,19 @@ export class CollectionTableComponent implements OnInit {
   roles:any;
   userslist:any;
   currentPath: string;
-  user_paths={offers:'', contracts:''};
+  user_paths={offers:'', contracts:'', templates:''};
   singleuserdata=[];
   metaArray: { key: string; value: any }[] = [];
   formData: { key: string; value: any }[] = []; // New array to hold form data
   source: LocalDataSource = new LocalDataSource();
   settings = {
+    actions: {
+      add: true,
+      edit: true,
+      delete: true, // Keep delete off if not needed
+    },
     add: {
-      addButtonContent: '<i class="nb-plus"></i>',
+      addButtonContent: '<i class="nb-plus "></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
       confirmCreate: true,
       cancelButtonContent: '<i class="nb-close"></i>',
@@ -46,10 +51,11 @@ export class CollectionTableComponent implements OnInit {
     pager: {
       perPage: 10, // Default items per page
     },
+    mode: 'inline', // Default mode (will update in ngOnInit)
   };
   handle: string | null = null; // Store handle globally
-  allowedHandles = ['offers', 'contracts', 'settings']; // Define allowed handles
-
+  allowedHandles = ['offers', 'contracts', 'templates']; // Define allowed handles
+   // Dynamically set mode based on route
   showBlueprintButton: boolean = true;
   constructor(
     private route: ActivatedRoute,
@@ -66,7 +72,8 @@ export class CollectionTableComponent implements OnInit {
       // Define valid paths
       this.user_paths = {
         offers: '/pages/offers',
-        contracts: '/pages/contracts'
+        contracts: '/pages/contracts',
+        templates: '/pages/templates'
       };
       console.log("Current Path:", this.currentPath);
       // Ensure only requests with a valid 'handle' are processed
@@ -83,6 +90,15 @@ export class CollectionTableComponent implements OnInit {
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
+      // Dynamically update mode based on handle
+      if (this.allowedHandles.includes(handle)) {
+        this.settings.mode = 'external';
+        
+      } else {
+        this.settings.mode = 'inline';
+      }
+      // Force table refresh
+      this.settings = { ...this.settings, mode: this.settings.mode };
     });
     this.usersService.listRoles('roles').subscribe(
       (response) => {
@@ -123,10 +139,6 @@ export class CollectionTableComponent implements OnInit {
                 return `<a href="${row.link}" target="">${cell}</a>`; 
               }
             },
-            // handle: {
-            //   title: 'Handle',
-            //   type: 'text',
-            // },
           },
         };
       } else {
@@ -235,28 +247,11 @@ export class CollectionTableComponent implements OnInit {
             ],
           },
         };
-        // valuePrepareFunction = (cell: any, row: any) => {  
-        //   console.log(uniqueOptions, 'cell.selected');        
-        //   // Check if cell is an object with a 'selected' property
-        //   if (cell && typeof cell === 'object' && cell.selected) {            
-        //     // Return the 'display' from the 'selected' property
-        //     if (cell.selected && cell.selected.display) {
-        //       return cell.selected.display; // Return the 'display' property
-        //     }
-        //   }else{
-        //     return uniqueOptions[0]?.value;
-        //   }
-        //   // If no valid 'display' value is found, fallback to 'N/A'
-        // };   
         valuePrepareFunction = (cell: any, row: any) => {
           // Check if the cell has a value and return it
           console.log(row[column].selected.id, 'row.column');
           const selectedOption = uniqueOptions.find(option => option.value == cell.selected.id);
           if (cell) {
-          //   // Find the option that matches the cell value
-          //   // Return the title of the selected option, or fallback to 'N/A' if not found
-          //   return selectedOption ? selectedOption.title : 'N/A';
-          // }else{
             if(typeof selectedOption !='undefined'){
               return selectedOption.title;
             }
@@ -267,95 +262,8 @@ export class CollectionTableComponent implements OnInit {
                   return row[column].selected.id;
                 // }
               }
-          };  
-
-        
+          };       
         }
-        
-        
-        // if (column.startsWith('meta_rel_') || column.startsWith('roles_id')) {
-        //   // Relational dropdown field
-        //   fieldType = 'dropdown';
-        
-        // // Handling options array
-        // var options: { value: string; title: string }[] = [];
-        // // const options = [];
-        // filter= {
-        //   type: 'list', // Specify filter type as 'list' for dropdown
-        //   config: {
-        //     selectText: 'Select option', // Placeholder text
-        //     list: []
-        //   },
-        // };
-        // this.userslist.data.forEach((row) => {
-        //   options = []; // reset options data if its roles column
-        //   // Check if the row has a relevant field
-        //     if (column.indexOf('col_users')>-1 ) {
-        //         options.push({
-        //             value: row.id, // Use roles_id as the value
-        //             title: row.meta_text_first_name+" "+row.meta_text_last_name // Use roles_name as the title
-        //         });
-        //     }else {
-        //         options.push({
-        //             value: row.meta_id, // Use roles_id as the value
-        //             title: row.roles_text_title// Use roles_name as the title
-        //         });
-        //     }
-        // });
-        // if (column.indexOf('roles_id')>-1 ) {
-        //     options = []; // reset options data if its roles column
-        //     this.roles.data.forEach((row) => {
-        //       // Check if the row has a relevant field
-        //           options.push({
-        //               value: row.id, // Use roles_id as the value
-        //               title: row.name// Use roles_name as the title
-        //           });
-                 
-        //   });
-        // }
-        // filter.config.list=options;
-        
-        // // Remove duplicates from options
-        // const uniqueOptions = Array.from(
-        //   new Map(options.map((option) => [option.value, option])).values()
-        // );
-        //   // Format title by removing the "rel_" prefix and cleaning up
-        //   const withoutRel = column
-        //     .replace(/^rel_/, '')
-        //     .replace(/_col.*$/, '')
-        //     .replace(/_/g, ' ')
-        //     .replace(/\b\w/g, (char) => char.toUpperCase());
-        //   formattedTitle = withoutRel;
-        //   // Default "Please select an option" as the first dropdown item
-        //   editor = {
-        //     type: 'list',
-        //     config: {
-        //       list: [
-        //         { value: '', title: 'Please select an option' }, // Default option
-        //         ...uniqueOptions, // Add dynamic options
-        //       ],
-        //     },
-        //   };
-        //  console.log(uniqueOptions, 'uniqueOptions');
-        //   valuePrepareFunction = (cell: any, row: any) => {
-        //     const selectedOption = uniqueOptions.find(option => option.value == cell);
-        //     console.log(selectedOption, 'selectedOption');
-        //     // Check if the cell has a value and return it
-        //     if (cell) {
-        //       // Find the option that matches the cell value
-        //       // Return the title of the selected option, or fallback to 'N/A' if not found
-        //       return selectedOption ? selectedOption.title : 'N/A';
-        //     }else{
-        //       return uniqueOptions[0]?.value;
-        //     }
-        //   };  
-          
-        // }
-        
-        
-        
-        
-        
         else if (column.startsWith('text_')) {
           // Text field
           fieldType = 'text';
@@ -420,15 +328,6 @@ export class CollectionTableComponent implements OnInit {
       columns: dynamicColumns, // Replace or update columns
     };
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
   onCreateConfirm(event): void {
     const handle = this.route.snapshot.paramMap.get('handle'); // Get the collection handle
     if (handle) {
@@ -535,7 +434,7 @@ export class CollectionTableComponent implements OnInit {
       const currentUrl = this.router.url; 
       // Define an array of routes where the button should be hidden
       const hiddenRoutes = [
-        'pages/settings',  // Example route where button should be hidden
+        'pages/settings',  // Example route where Blueprint button should be hidden
         'pages/permissions',  // Another example route
         'pages/reports', 
         'pages/collections',  // Another route
@@ -543,25 +442,21 @@ export class CollectionTableComponent implements OnInit {
       // Check if the current URL contains any of the hidden routes
       this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
     }
-    onAddEntry(event: any) {
-      const handle = this.route.snapshot.paramMap.get('handle'); // Get handle dynamically
-      console.log('Handle at execution:', handle);
-    
-      if (handle && this.allowedHandles.includes(handle)) {
-        this.router.navigate([`/pages/${handle}/entry`]);
-      }
-    }
-    
-    onEditEntry(event: any) {
-      const handle = this.route.snapshot.paramMap.get('handle'); // Get handle dynamically
-      console.log('Handle at execution:', handle);   
-      if (handle && this.allowedHandles.includes(handle)) {
-        const entryId = event.data.id;
-        this.router.navigate([`/pages/${handle}/entry/${entryId}`]);
-      }
-    }    
-    
-  
-  
 
+     // Override Create button behavior
+  onCreate(event: any) {
+    this.handle = this.route.snapshot.paramMap.get('handle');
+    if (this.handle && this.allowedHandles.includes(this.handle)) {
+      this.router.navigate([`/pages/${this.handle}/create`]);
+    }
+  }
+
+  // Override Edit button behavior
+  onEdit(event: any) {
+    this.handle = this.route.snapshot.paramMap.get('handle');
+    if (this.handle && this.allowedHandles.includes(this.handle)) {
+      const entryId = event.data.id;
+      this.router.navigate([`/pages/${this.handle}/entry/${entryId}`]);
+    }
+  }
 }

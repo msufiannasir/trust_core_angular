@@ -40,7 +40,7 @@ import { SitesettingsComponent } from './components/sitesettings/sitesettings.co
 
 @NgModule({
   exports: [ReplacePipe],
-  declarations: [AppComponent, ReplacePipe, DatepickerComponent, BlueprintComponent, SitesettingsComponent],
+  declarations: [AppComponent, ReplacePipe, DatepickerComponent, BlueprintComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -42,7 +42,7 @@ export const routedComponents = [
   EditEntry,
   CollectionListingComponent,
   UsersettingsComponent,
-  // SitesettingsComponent,
+  SitesettingsComponent,
   RolesComponent
   // SmartTableComponent,
   // TreeGridComponent,

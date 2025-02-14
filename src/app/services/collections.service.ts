@@ -47,6 +47,11 @@ export class CollectionsService {
     return this.http.get(`${this.apiUrl}collections/${handle}/entry-detail/${entryId}`, { headers: this.createHeaders() });
   }
   
+  // Get fields from meta collection table
+  getCollectionsFields(handle: string): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.apiUrl}collections/${handle}/get-fields`, { headers });
+  }
 
   // Create a new collection
   createCollection(data: { name: string }): Observable<any> {

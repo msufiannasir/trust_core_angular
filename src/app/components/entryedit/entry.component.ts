@@ -1,20 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbCardModule } from '@nebular/theme';
 import { UsersService } from '../../services/users.service';
 import { CollectionsService } from '../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { MENU_ITEMS } from '../../pages/pages-menu'; 
-import { ReplacePipe } from '../../replace.pipe'; 
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
-import { DatepickerComponent } from '../datepicker/datepicker.component';
-import { FileUploadEditorComponent } from '../fileupload/file-upload-editor.component';
-import { environment } from '../../../environments/environment';
-import { ChangeDetectorRef } from '@angular/core';
-
+import { Location } from '@angular/common'; 
 
 @Component({
   selector: 'ngx-smart-table',
@@ -23,174 +12,217 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class EditEntry implements OnInit {
   source: LocalDataSource = new LocalDataSource();
-  currentEndpoint: string;
   currentPath: string;
-  user_paths = { offers: '', contracts: '' };
-  singleuserdata = [];
-  metaArray: { key: string; value: any }[] = [];
-  formData: { key: string; value: any }[] = []; // New array to hold form data
-  password = '';
-  roles: any;
-  collectionlist: any;
   collectionHandle: string | null = null;
   entryId: string | null = null;
-  settings = {
-    add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      confirmCreate: true,
-      cancelButtonContent: '<i class="nb-close"></i>',
-    },
-    edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true, 
-    },
-    delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-    },
-    tableTitle: '', 
-    columns: {}, // Initially empty, populated dynamically
-    pager: {
-      perPage: 10, // Default items per page
-    },
-  };
-
+  metaArray: { key: string; value: any }[] = [];
+  formData: { key: string; value: any }[] = [];
+  additionalForms: any[] = []; 
+  showRedirectButton: boolean = false; 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private usersService: UsersService,
     private collectionsService: CollectionsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) {}
-
+  goBack(): void {
+    this.location.back();  // Navigate to the previous page
+  }
   ngOnInit(): void {
-    this.currentPath = this.router.url.split('?')[0]; // Remove query params
+    this.currentPath = this.router.url.split('?')[0]; 
     console.log("Current Path:", this.currentPath);
-
-    // Dynamically change input type to date
-    const intervalId = setInterval(() => {
-      const dateElements = document.querySelectorAll('[ng-reflect-name^="meta_date"]');
-      dateElements.forEach((element) => {
-        const inputElement = element as HTMLInputElement;
-        if (inputElement.type === 'text') {
-          inputElement.type = 'date';
-        }
-      });
-    }, 2000);
-
-    this.user_paths.contracts = '/pages/contracts/entry/';
-    this.user_paths.offers = '/pages/offers/entry';
-
     this.route.paramMap.subscribe((params) => {
       this.collectionHandle = params.get('handle');
       this.entryId = params.get('entryId');
-      console.log('Collection Handle:', this.collectionHandle);
-      console.log('Entry ID:', this.entryId);
-
+      console.log("this.collectionHandle:", this.collectionHandle);
+      console.log(" this.entryId",  this.entryId);
       if (this.collectionHandle && this.entryId) {
         this.fetchEntryData();
+      }else if (this.collectionHandle){
+        this.fetchEntryFields();
       }
     });
-
-    this.collectionsService.getCollections().subscribe(
-      (response) => {
-        this.collectionlist = response;
-        console.log(this.collectionlist, 'this.collections');
-      },
-      (error) => {
-        console.error('Error fetching collection data:', error);
-      }
-    );
   }
-
   isHidden(key: string): boolean {
-    const hiddenFields = ['id', 'user_id','collection_id', 'created_at', 'updated_at', 'last_login', 'employee_assigned', 'settings'];
+    const hiddenFields = ['id', 'user_id', 'collection_id', 'created_at', 'updated_at', 'last_login', 'employee_assigned', 'settings'];
     return hiddenFields.includes(key);
   }
-
   fetchEntryData(): void {
     if (this.collectionHandle && this.entryId) {
       this.collectionsService.getEntryDetail(this.collectionHandle, this.entryId).subscribe(
         (response) => {
           console.log('API Response:', response);
-          // Extract the entry object from the response
-          const entry = response.entry;
-          console.log("entry "+ entry);
-          // Dynamically generate form fields
-          this.metaArray = Object.entries(entry).map(([key, value]) => ({
-            key,
-            value,
-            displayKey: key.replace(/_/g, ' '), // Replace underscores with spaces for display
-          }));
-  
+          // Map response to metaArray
+          this.metaArray = Object.entries(response.entry).map(([key, value]) => {
+            if (this.isDropdownField(key) && typeof value === 'object' && value !== null) {
+              const val = value as any; // Bypass TypeScript's strict checks
+              return {
+                key,
+                value: val.selected ? val.selected.id : '', // Access selected ID safely
+                displayKey: key.replace(/_/g, ' '),
+                allOptions: val.allOptions || [] // Ensure allOptions exist
+              };
+            }
+
           
-          console.log('Form Fields:', this.metaArray);
+  
+            return {
+              key,
+              value: value ?? '', // Default to empty string if value is null
+              displayKey: key.replace(/_/g, ' '),
+              allOptions: [] // Empty array for non-dropdown fields
+            };
+          });
+          this.showRedirectButton = this.collectionHandle === "templates";
+          console.log('Updated Meta Array:', this.metaArray);
           this.cdr.detectChanges();
         },
         (error) => {
           console.error('Error fetching entry data:', error);
+          this.showRedirectButton = false; // Hide the button if API call fails
         }
+
       );
     }
   }
-
-  captureFieldValue(value: string, index): void {
-    console.log(value, 'captureFieldValue');
-    // Update formData array based on input field changes
-      if (!this.formData[index]) {
-        this.formData[index] = { ...this.metaArray[index] }; // Initialize if not already present
-      }
-      this.formData[index].value = value;
-      console.log(this.formData, 'Current Form Data');
-  }
-  onSubmit(event): void {
-    const handle = this.route.snapshot.paramMap.get('handle'); // Get the collection handle
-    const entryId = this.route.snapshot.paramMap.get('entryId');; // Fetch the entry ID if needed (could be from a route or other source)
-  
-    // Create an object with the form data
-    const updatedData = {};
-    this.metaArray.forEach(field => {
-      updatedData[field.key] = field.value; // Collect key-value pairs from the form fields
-    });
-  
-    // Check if handle and entryId are available
-    if (handle && entryId) {
-      this.collectionsService.updateEntry(handle, entryId, updatedData).subscribe(
+  fetchEntryFields(): void {
+    if (this.collectionHandle) {
+      this.collectionsService.getCollectionsFields(this.collectionHandle).subscribe(
         (response) => {
-          // Resolve the event (successful update)
-          event.confirm.resolve(response);
-          
-          // Show success alert
-          window.alert('Entry updated successfully!');
-          
-          // Optionally refresh the collection data after update
-          // this.fetchCollectionData(handle);
+          console.log('API Response:', response);
+          // Map response to metaArray
+          this.metaArray = Object.entries(response.fields).map(([key, value]) => {
+            if (this.isDropdownField(key) && typeof value === 'object' && value !== null) {
+              const val = value as any; // Bypass TypeScript's strict checks
+              return {
+                key,
+                value: val.selected ? val.selected.id : '', // Access selected ID safely
+                displayKey: key.replace(/_/g, ' '),
+                allOptions: val.allOptions || [] // Ensure allOptions exist
+              };
+            }
+            return {
+              key,
+              value: value ?? '', // Default to empty string if value is null
+              displayKey: key.replace(/_/g, ' '),
+              allOptions: [] // Empty array for non-dropdown fields
+            };
+          });
+          this.showRedirectButton = this.collectionHandle === "templates";
+          console.log('Updated Meta Array:', this.metaArray);
+          this.cdr.detectChanges();
         },
         (error) => {
-          // Log and handle error
-          console.error('Error updating entry:', error);
-          
-          // Show error alert
-          window.alert('Failed to update entry. Please try again.');
-          
-          // Reject the event on failure
-          event.confirm.reject();
+          console.error('Error fetching entry fields:', error);
+          this.showRedirectButton = false;
         }
       );
-    } else {
-      // Reject if handle or entryId is missing
-      event.confirm.reject();
+    }
+  } 
+  onDropdownChange(fieldKey: string, selectedValue: any): void {
+    console.log("Dropdown changed:", { fieldKey, selectedValue });
+    if (!fieldKey || selectedValue === undefined) {
+      console.error("Error: fieldKey or selectedValue is undefined!", { fieldKey, selectedValue });
+      return;
+    }
+    const match = fieldKey.match(/^rel_.*_col_(\w+)$/);
+    if (match && match[1] === 'templates') {
+      this.collectionHandle = 'templates';  // Set the collection to "templates"
+      this.entryId = selectedValue;  // Set the entry ID to selected value
+      console.log(`Updated collectionHandle: ${this.collectionHandle}, entryId: ${this.entryId}`);
+      if (this.collectionHandle && this.entryId) {
+        this.fetchEntryData(); // Now, it should send the request to the correct "templates" URL
+      }
     }
   }
-  
-  // Utility function to get the entry ID (you can fetch it based on your specific logic)
-  getEntryId(): string {
-    // Logic to get the entry ID (e.g., from route, form, or other sources)
-    return "some-entry-id"; // Example placeholder
+  captureFieldValue(value: string, index: number): void {
+    if (!this.formData[index]) {
+      this.formData[index] = { ...this.metaArray[index] };
+    }
+    this.formData[index].value = value;
   }
-  
-  
+  handleFileUpload(event: Event, key: string, index: number): void {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.formData[index] = {
+        key,
+        value: fileInput.files[0] // Store the uploaded file
+      };
+    }
+  }
+  onSubmit(event: Event, redirect: boolean = false): void {
+    event.preventDefault();
+    if (!this.collectionHandle) {
+      console.error('Missing collection handle or entry ID.');
+      return;
+    }
+    const updatedData = {};
+    this.metaArray.forEach(field => updatedData[field.key] = field.value);
+    if (this.currentPath.startsWith('/pages/templates/entry/') || this.currentPath.startsWith('/pages/offers/entry/') || this.currentPath.startsWith('/pages/offers/create/') || this.currentPath.startsWith('/pages/templates/create/')) {
+      if (redirect) {
+        this.sendDataToAnotherUrl();
+      }
+    }
+    if (this.entryId) {
+    this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
+      (response) => {
+        console.log('Update Response:', response);
+        window.alert(response.message || 'Entry updated successfully!');
+        this.fetchEntryData(); 
+      },
+      (error) => {
+        console.error('Error updating entry:', error);
+        window.alert('Failed to update entry. Please try again.');
+      }
+    );
+  } else {
+    this.collectionsService.createEntry(this.collectionHandle, updatedData).subscribe(
+      (response) => {
+        // event.confirm.resolve(response); // Notify the table of success
+
+        // Show success alert
+        window.alert('Entry created successfully!');
+
+        // Refresh the table data
+        // this.fetchCollectionData(handle);
+      },
+      (error) => {
+        console.error('Error creating entry:', error);
+
+        // Show error alert
+        window.alert('Failed to create entry. Please try again.');
+
+      }
+    );
+
+  }
+  }
+  sendDataToAnotherUrl(): void {
+    const queryParams = new URLSearchParams();
+    this.metaArray.forEach(field => {
+      if (!this.isHidden(field.key)) { 
+        queryParams.append(field.key, field.value);
+      }
+    });
+    const targetUrl = `http://localhost:4200/api/receive-data?${queryParams.toString()}`;
+    console.log('Generated URL:', targetUrl); 
+    // Open the URL in a new tab
+    window.open(targetUrl, '_blank');
+  }
+  isTextField(key: string): boolean {
+    return key.startsWith('text_');
+  }
+  isDateField(key: string): boolean {
+    return key.startsWith('date_');
+  }
+  isTextareaField(key: string): boolean {
+    return key.startsWith('textarea_');
+  }
+  isFileField(key: string): boolean {
+    return key.startsWith('image_') || key.startsWith('file_');
+  }
+  isDropdownField(key: string): boolean {
+    return key.startsWith('rel_');
+  }
 }

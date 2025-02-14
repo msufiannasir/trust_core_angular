@@ -10,11 +10,12 @@
       <ng2-smart-table
       [settings]="settings"
       [source]="source"
+      (create)="onCreate($event)"
+      (edit)="onEdit($event)"
+      (delete)="onDeleteConfirm($event)"
       (createConfirm)="onCreateConfirm($event)"
       (editConfirm)="onEditConfirm($event)"
       (deleteConfirm)="onDeleteConfirm($event)"
-      (userRowSelect)="onAddEntry($event)"
-      (userRowSelect)="onEditEntry($event)"
     ></ng2-smart-table>
     
     

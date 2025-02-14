@@ -14,7 +14,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   //   // icon: 'home-outline',
   //   link: '/pages/collections/all',
   //   home: true,
-  // },{
+  // },
   {
     title: 'Insurance Companies',
     // icon: 'home-outline',
@@ -40,17 +40,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
     // icon: 'home-outline',
     link: '/pages/files',
     home: true,
-  }, {
-    title: 'Contracts',
+  }, 
+  {
+    title: 'Templates',
     // icon: 'home-outline',
-    link: '/pages/contracts',
+    link: '/pages/templates',
     home: true,
-  }, {
-    title: 'Communication',
-    // icon: 'home-outline',
-    link: '/pages/communications',
-    home: true,
-  }, {
+  }, 
+  // {
+  //   title: 'Communication',
+  //   // icon: 'home-outline',
+  //   link: '/pages/communications',
+  //   home: true,
+  // }, 
+  {
     title: 'Reports',
     // icon: 'home-outline',
     link: '/pages/reports',

@@ -1,31 +1,105 @@
+<nb-card>
+  <nb-card-header> 
+    <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="goBack()">← Back</button>
+    Edit Entry 
+  </nb-card-header>
+  <nb-card-body>
+    <form>
+      <div class="row row-cols-md-2"> 
+        <ng-container *ngFor="let field of metaArray; let i = index">
+          <div class="col" *ngIf="!isHidden(field.key)">
+            <div class="form-group">
+              <label [for]="field.key" class="label">
+                {{ field.displayKey | titlecase }}
+              </label>
 
-  <form class="form-horizontal">
-    <div class="row">
-      <div class="col-sm-6" *ngFor="let field of metaArray; let i = index">
-        <div class="form-group">
-          <label [for]="field.key" *ngIf="!isHidden(field.key)" class="label">
-            {{ field.displayKey | titlecase }}
-          </label>
-          <input
-              nbInput
-              fullWidth
-              [id]="field.key"
-              [name]="field.key"
-              [placeholder]="'Enter ' + field.displayKey | titlecase"
+              <!-- Text Input -->
+              <input *ngIf="isTextField(field.key)"
+                type="text"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+                (blur)="captureFieldValue($event.target.value, i)"
+              />
+
+              <!-- Textarea -->
+              <textarea *ngIf="isTextareaField(field.key)"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+                (blur)="captureFieldValue($event.target.value, i)">
+              </textarea>
+
+              <!-- File Input -->
+              <input *ngIf="isFileField(field.key)"
+                type="file"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                (change)="handleFileUpload($event, field.key, i)"
+              />
+
+              <!-- Dropdown Select -->
+              <select
+              *ngIf="isDropdownField(field.key)"
+              class="form-control"
               [(ngModel)]="field.value"
-              [hidden]="isHidden(field.key)"
-              (blur)="captureFieldValue($event.target.value, i)"
-            />
-        </div>
+              (ngModelChange)="onDropdownChange(field.key, $event)"
+              [name]="field.key"
+            >
+              <option value="">Select an option</option>
+              <option *ngFor="let option of field.allOptions" [value]="option.id" [selected]="option.id === field.value">
+                {{ option.display }}
+              </option>
+            </select>
+            
+
+              <!-- Date Input -->
+              <input *ngIf="isDateField(field.key)"
+              type="date"
+              class="form-control"
+              [(ngModel)]="field.value"
+              [name]="field.key"
+              (ngModelChange)="captureFieldValue($event, i)">
+            
+              <!-- Default Text Input (fallback for unknown fields) -->
+              <input *ngIf="!isTextField(field.key) && !isTextareaField(field.key) && !isFileField(field.key) && !isDropdownField(field.key) && !isDateField(field.key)"
+                type="text"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+              />
+            </div>
+          </div>
+        </ng-container>
       </div>
-    </div>
-    <button
-      type="button"
-      nbButton
-      status="success"
-      class="appearance-filled size-medium shape-rectangle status-basic nb-transition"
-      (click)="onSubmit($event)"
-    >
-      Submit
-    </button>
-  </form>
+
+      <button
+        type="button"
+        nbButton
+        status="success"
+        class="appearance-filled size-medium shape-rectangle status-basic nb-transition mt-3"
+        (click)="onSubmit($event, false)"
+      >
+        Submit
+      </button>
+              <!-- Submit & Redirect Button -->
+              <button
+              *ngIf="showRedirectButton"
+              type="button"
+              nbButton
+              status="primary"
+              class="appearance-filled size-medium shape-rectangle status-basic nb-transition mt-3 ml-2"
+              (click)="onSubmit($event, true)"
+            >
+              Submit and GO
+            </button>
+    </form>
+  </nb-card-body>
+</nb-card>

@@ -69,6 +69,13 @@ const routes: Routes = [{
       component: EditEntry, // Only for ':handle' routes
       canActivate: [AuthGuard],
     },
+    {
+      path: ':handle/create',
+      loadChildren: () => import('../components/collections/tables.module')
+      .then(m => m.TablesModule),
+      component: EditEntry, // Only for ':handle' routes
+      canActivate: [AuthGuard],
+    },
 
     {
       path: 'customers',
