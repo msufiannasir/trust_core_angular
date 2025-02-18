@@ -91,12 +91,14 @@ export class BlueprintComponent implements OnInit {
   fetchCollectionFields(handle: string): void {
     this.BlueprintService.getCollectionFields(handle).subscribe(
       (response) => {
-        const fields = response.fields || [];
+        console.log("API Response:", response);
+        const fields = response.fields ? Object.keys(response.fields) : [];
         this.allCollections = response.allCollections || [];
 
         const hiddenFields = ['id', 'collection_id', 'created_at', 'updated_at'];
         const filteredFields = fields.filter((field: string) => !hiddenFields.includes(field));
 
+        console.log("filteredFields " + filteredFields);
         const tableData = filteredFields.map((field: string) => {
           const formattedFieldName = this.formatFieldName(field); // Declare the variable here
           return {
@@ -106,7 +108,7 @@ export class BlueprintComponent implements OnInit {
             old_field_name: field,
           };
         });
-
+        console.log("Processed Table Data:", tableData); // Debugging
         this.source.load(tableData);
         this.setLinkTypeOptions();
         this.cdr.detectChanges();

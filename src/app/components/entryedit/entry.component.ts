@@ -4,6 +4,7 @@ import { UsersService } from '../../services/users.service';
 import { CollectionsService } from '../../services/collections.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Location } from '@angular/common'; 
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-smart-table',
@@ -24,7 +25,8 @@ export class EditEntry implements OnInit {
     private router: Router,
     private collectionsService: CollectionsService,
     private cdr: ChangeDetectorRef,
-    private location: Location
+    private location: Location,
+    private http: HttpClient
   ) {}
   goBack(): void {
     this.location.back();  // Navigate to the previous page
@@ -159,11 +161,11 @@ export class EditEntry implements OnInit {
     }
     const updatedData = {};
     this.metaArray.forEach(field => updatedData[field.key] = field.value);
-    if (this.currentPath.startsWith('/pages/templates/entry/') || this.currentPath.startsWith('/pages/offers/entry/') || this.currentPath.startsWith('/pages/offers/create/') || this.currentPath.startsWith('/pages/templates/create/')) {
+    // if (this.currentPath.startsWith('/pages/templates/entry/') || this.currentPath.startsWith('/pages/offers/entry/') || this.currentPath.startsWith('/pages/offers/create/') || this.currentPath.startsWith('/pages/templates/create/')) {
       if (redirect) {
         this.sendDataToAnotherUrl();
       }
-    }
+    // }
     if (this.entryId) {
     this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
       (response) => {
@@ -198,18 +200,33 @@ export class EditEntry implements OnInit {
 
   }
   }
+  // sendDataToAnotherUrl(): void {
+  //   const queryParams = new URLSearchParams();
+  //   this.metaArray.forEach(field => {
+  //     if (!this.isHidden(field.key)) { 
+  //       queryParams.append(field.key, field.value);
+  //     }
+  //   });
+  //   const targetUrl = `http://localhost:4200/api/receive-data?${queryParams.toString()}`;
+  //   console.log('Generated URL:', targetUrl); 
+  //   // Open the URL in a new tab
+  //   window.open(targetUrl, '_blank');
+  // }
+
+
   sendDataToAnotherUrl(): void {
-    const queryParams = new URLSearchParams();
-    this.metaArray.forEach(field => {
-      if (!this.isHidden(field.key)) { 
-        queryParams.append(field.key, field.value);
-      }
+    const postData = this.metaArray
+      .filter(field => !this.isHidden(field.key)) // Remove hidden fields
+      .reduce((acc, field) => ({ ...acc, [field.key]: field.value }), {}); // Convert to object
+
+    const targetUrl = 'http://localhost:4200/api/send-data'; // Replace with actual API URL
+
+    // Send POST request without subscribing (ignoring response)
+    this.http.post(targetUrl, postData).subscribe({
+      complete: () => console.log('POST request sent successfully.') // Optional log
     });
-    const targetUrl = `http://localhost:4200/api/receive-data?${queryParams.toString()}`;
-    console.log('Generated URL:', targetUrl); 
-    // Open the URL in a new tab
-    window.open(targetUrl, '_blank');
   }
+
   isTextField(key: string): boolean {
     return key.startsWith('text_');
   }
