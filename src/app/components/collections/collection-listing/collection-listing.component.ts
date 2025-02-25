@@ -88,11 +88,21 @@ export class CollectionListingComponent implements OnInit {
   fetchAllCollection(handle: string): void {
     this.collectionsService.getCollections().subscribe((response) => {
       if (response && response.collection && Array.isArray(response.collection)) {
-        const formattedData = response.collection.map((item: any) => ({
-          name: item.name,
-          link: `/pages/${item.handle}`, // Generating the correct link
-          handle: item.handle, // Storing handle separately for link creation
-        }));
+        const isTemplateRoute = this.router.url.includes('templates');
+
+              // Filter collections based on the route
+      const filteredData = response.collection.filter((item: any) => {
+        return isTemplateRoute ? item.handle.startsWith('template_') : !item.handle.startsWith('template_');
+      });
+
+      const formattedData = filteredData.map((item: any) => ({
+        name: item.name,
+        link: item.handle.startsWith('template_') 
+          ? `/pages/${item.handle}/create` 
+          : `/pages/${item.handle}`, 
+        handle: item.handle,
+      }));
+      
         this.source.load(formattedData); // Load formatted data into the table
         // Update table settings dynamically
         this.settings = {
@@ -131,7 +141,14 @@ export class CollectionListingComponent implements OnInit {
   
 // Create Collection
 onCreateConfirm(event): void {
-  this.collectionsService.createCollection({ name: event.newData.name }).subscribe(
+  // Check if the current route contains 'templates'
+    const isTemplateCollection = this.router.url.includes('templates');
+    // Prepare the request payload
+    const requestData = {
+      name: event.newData.name,
+      is_template_collection: isTemplateCollection, // Append the template flag
+    };
+    this.collectionsService.createCollection(requestData).subscribe(
     (response) => {
       event.confirm.resolve(response);
       window.alert(response.message); // Show API response message
@@ -148,7 +165,14 @@ onCreateConfirm(event): void {
 // Update Collection
 onEditConfirm(event): void {
   const collectionHandle = event.newData.handle;
-  this.collectionsService.updateCollection({ name: event.newData.name }, collectionHandle).subscribe(
+   // Check if the current route contains 'templates'
+   const isTemplateCollection = this.router.url.includes('templates');
+   // Prepare the request payload
+   const requestData = {
+     name: event.newData.name,
+     is_template_collection: isTemplateCollection, // Append the template flag
+   };
+  this.collectionsService.updateCollection(requestData, collectionHandle).subscribe(
     (response) => {
       event.confirm.resolve(response);
       window.alert(response.message); // Show API response message

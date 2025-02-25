@@ -25,6 +25,13 @@ const routes: Routes = [{
       canActivate: [AuthGuard],
     },
     {
+      path: 'collections/templates/all',
+      component: CollectionListingComponent, // Only for ':handle' routes
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      canActivate: [AuthGuard],
+    },
+    {
       path: 'collections/all',
       component: CollectionListingComponent, // Only for ':handle' routes
       loadChildren: () => import('../components/collections/tables.module')

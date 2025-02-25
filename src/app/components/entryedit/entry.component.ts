@@ -242,4 +242,29 @@ export class EditEntry implements OnInit {
   isDropdownField(key: string): boolean {
     return key.startsWith('rel_');
   }
+
+  navigateToBlueprint(): void {
+    // Get the full URL path as an array of segments
+    const urlSegments = this.route.snapshot.url.map(segment => segment.path);
+    console.log("URL Segments: ", urlSegments);
+  
+    // Find the segment that starts with "template_" (assuming template handles start with "template_")
+    const basePath = urlSegments.find(segment => segment.startsWith('template_'));
+  
+    if (!basePath) {
+      console.error("Template handle not found in URL!");
+      return;
+    }
+  
+    // Construct the correct blueprint URL
+    const blueprintUrl = `/pages/${basePath}/blueprint`;
+    console.log("Navigating to: " + blueprintUrl);
+  
+    // Navigate to the constructed URL
+    this.router.navigateByUrl(blueprintUrl).catch((error) => {
+      console.error('Navigation error:', error);
+    });
+  }
+  
+  
 }

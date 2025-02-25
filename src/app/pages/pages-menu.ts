@@ -9,12 +9,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/dashboard',
     home: true,
   },  
-  // {
-  //   title: 'Collections',
-  //   // icon: 'home-outline',
-  //   link: '/pages/collections/all',
-  //   home: true,
-  // },
+  {
+    title: 'Templates',
+    // icon: 'home-outline',
+    link: '/pages/collections/templates/all',
+    home: true,
+  },
+  {
+    title: 'Collections',
+    // icon: 'home-outline',
+    link: '/pages/collections/all',
+    home: true,
+  },
   {
     title: 'Insurance Companies',
     // icon: 'home-outline',
