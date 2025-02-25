@@ -5,6 +5,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { TablesRoutingModule, routedComponents } from './tables-routing.module';
 import { FormsModule , ReactiveFormsModule } from '@angular/forms';
+import { CustomLinkRenderComponent } from './collection-listing/custom-link-render.component';
 // import { FsIconComponent } from './tree-grid/tree-grid.component';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { FormsModule , ReactiveFormsModule } from '@angular/forms';
   ],
   declarations: [
     ...routedComponents,
+    CustomLinkRenderComponent
     // FsIconComponent,
   ],
 })

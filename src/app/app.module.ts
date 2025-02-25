@@ -19,6 +19,8 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 // import { FileUploadEditorComponent } from './file-upload-editor.component';
 import { FileUploadEditorComponent } from './components/fileupload/file-upload-editor.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { CustomLinkRenderComponent } from './components/collections/collection-listing/custom-link-render.component';
+
 
 import {
   NbChatModule,

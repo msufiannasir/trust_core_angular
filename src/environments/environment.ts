@@ -10,5 +10,6 @@
 
 export const environment = {
   production: false,
-  baseEndpoint: 'http://127.0.0.1:8000/api/',
+  baseEndpoint: 'https://cp.techsolsint.com/cp-backend/public/api/',
+  backendbaseEndpoint: 'https://cp.techsolsint.com/cp-backend/public/',
 };

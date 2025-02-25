@@ -7,6 +7,8 @@ import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.
 import { NbCardModule } from '@nebular/theme';
 import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
 import { UsersService } from '../../../services/users.service';
+import { CustomLinkRenderComponent } from './custom-link-render.component';
+
 
 
 @Component({
@@ -100,10 +102,9 @@ export class CollectionListingComponent implements OnInit {
           columns: {
             name: {
               title: 'Collection Name',
-              type: 'html', // This allows rendering HTML
-              valuePrepareFunction: (cell, row) => {
-                return `<a href="${row.link}" target="">${cell}</a>`; 
-              }
+              // type: 'html', // This allows rendering HTML
+              type: 'custom',
+              renderComponent: CustomLinkRenderComponent,
             },
             // collectionHandle: {
             //   title: 'Collection Handle',
@@ -119,7 +120,9 @@ export class CollectionListingComponent implements OnInit {
     });
   }
   
-
+  openlink(url){
+    this.router.navigateByUrl(url);
+  }
   setTableTitle(handle: string): void {
     console.log('Handle:', handle); // Log the handle
     const menuItem = MENU_ITEMS.find(item => item.link.includes(handle));
