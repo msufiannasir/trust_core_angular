@@ -54,6 +54,27 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       canActivate: [AuthGuard],
     },
+    // {
+    //   path: 'templates/create/blueprint',
+    //   component: CollectionTableComponent, // Only for ':handle' routes
+    //   loadChildren: () => import('../components/collections/tables.module')
+    //     .then(m => m.TablesModule),
+    //   canActivate: [AuthGuard],
+    // },
+    // {
+    //   path: 'templates/list',
+    //   component: CollectionTableComponent, // Only for ':handle' routes
+    //   loadChildren: () => import('../components/collections/tables.module')
+    //     .then(m => m.TablesModule),
+    //   canActivate: [AuthGuard],
+    // },
+    // {
+    //   path: 'templates/list',
+    //   component: CollectionTableComponent, // Only for ':handle' routes
+    //   loadChildren: () => import('../components/collections/tables.module')
+    //     .then(m => m.TablesModule),
+    //   canActivate: [AuthGuard],
+    // },
     {
       path: ':handle/blueprint',
       loadChildren: () => import('../components/collections/tables.module')

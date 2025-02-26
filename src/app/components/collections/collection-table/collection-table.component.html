@@ -2,7 +2,7 @@
     <nb-card-header>
       {{ settings.tableTitle || 'Default Title' }} 
       <button *ngIf="showBlueprintButton" nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
-        Edit Blueprint
+        {{ settings.blueprintButtonTitle  }} 
       </button>
     </nb-card-header>
   

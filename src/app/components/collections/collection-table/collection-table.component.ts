@@ -47,6 +47,7 @@ export class CollectionTableComponent implements OnInit {
       confirmDelete: true,
     },
     tableTitle: '', 
+    blueprintButtonTitle: 'Edit Blueprint', 
     columns: {}, // Initially empty, populated dynamically
     pager: {
       perPage: 10, // Default items per page
@@ -82,7 +83,14 @@ export class CollectionTableComponent implements OnInit {
           this.fetchAllCollection(handle);
           this.setTableTitle(handle);
           this.checkRouteForBlueprintButton();
-        }else{
+        }
+        if(handle == 'templates'){
+          // this.fetchAllCollection(handle);
+          this.setTableTitle(handle);
+          this.setButtonTitle(handle);
+          // this.checkRouteForBlueprintButton();
+        }
+        else{
         this.fetchCollectionData(handle);
         this.setTableTitle(handle);
         this.checkRouteForBlueprintButton();
@@ -118,7 +126,13 @@ export class CollectionTableComponent implements OnInit {
       }
     );
   }
-
+  setButtonTitle(handle: string): void {
+    console.log('Handle:', handle); // Log the handle
+    // const menuItem = MENU_ITEMS.find(item => item.link.includes(handle));
+    // if (menuItem) {
+    this.settings.blueprintButtonTitle = 'Create '+handle;
+    // }
+  }
   fetchAllCollection(handle: string): void {
     this.collectionsService.getCollections().subscribe((response) => {
       if (response && response.collection && Array.isArray(response.collection)) {
