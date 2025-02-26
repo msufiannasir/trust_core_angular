@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BlueprintService } from '../../services/blueprint.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { ChangeDetectorRef } from '@angular/core';
+import { Location } from '@angular/common'; 
 
 @Component({
   selector: 'app-blueprint',
@@ -63,7 +64,14 @@ export class BlueprintComponent implements OnInit {
         },
         // addable: false,
         // editable: false, // Initial state
-      }
+      },
+      isRequired: {
+        title: 'Required',
+        type: 'boolean',
+        editor: {
+          type: 'checkbox',
+        },
+      },
 
     },
     pager: {
@@ -74,7 +82,8 @@ export class BlueprintComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private BlueprintService: BlueprintService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -167,6 +176,7 @@ export class BlueprintComponent implements OnInit {
       field_name: fieldData.fieldName,
       field_type: fieldData.fieldType,
       status: 'active',
+      is_required: fieldData.isRequired || false,
     };
   
     // Handle relational fields
@@ -200,6 +210,7 @@ export class BlueprintComponent implements OnInit {
       old_field_name: updatedField.old_field_name,
       new_field_name: updatedField.fieldName,
       field_type: updatedField.fieldType,
+      is_required: updatedField.isRequired || false,
       // status: 'active', // Adjust if needed
     };
   
@@ -308,5 +319,7 @@ formatFieldName(fieldName: string): string {
     return 'N/A'; // Return 'None' if not a relational field
   }
   
-  
+  goBack(): void {
+    this.location.back();  // Navigate to the previous page
+  }
 }

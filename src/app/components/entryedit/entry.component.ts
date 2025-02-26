@@ -20,6 +20,7 @@ export class EditEntry implements OnInit {
   formData: { key: string; value: any }[] = [];
   additionalForms: any[] = []; 
   showRedirectButton: boolean = false; 
+  showBlueprintButton: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -39,7 +40,9 @@ export class EditEntry implements OnInit {
       this.entryId = params.get('entryId');
       console.log("this.collectionHandle:", this.collectionHandle);
       console.log(" this.entryId",  this.entryId);
-      if (this.collectionHandle && this.entryId) {
+       // Check if any segment starts with "template_"
+       this.showBlueprintButton = this.collectionHandle?.startsWith('template_') || false;
+       if (this.collectionHandle && this.entryId) {
         this.fetchEntryData();
       }else if (this.collectionHandle){
         this.fetchEntryFields();
@@ -265,6 +268,12 @@ export class EditEntry implements OnInit {
       console.error('Navigation error:', error);
     });
   }
-  
+  // chunkArray(array: any[], chunkSize: number): any[][] {
+  //   const result = [];
+  //   for (let i = 0; i < array.length; i += chunkSize) {
+  //     result.push(array.slice(i, i + chunkSize));
+  //   }
+  //   return result;
+  // }
   
 }

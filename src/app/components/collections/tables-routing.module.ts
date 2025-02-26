@@ -10,6 +10,7 @@ import { FormsModule , ReactiveFormsModule } from '@angular/forms';
 import { SitesettingsComponent } from '../sitesettings/sitesettings.component';
 import { CollectionListingComponent } from '../collections/collection-listing/collection-listing.component';
 import { UsersettingsComponent } from '../usersettings/usersettings.component';
+import { BlueprintComponent } from '../blueprint/blueprint.component';
 
 // import { SmartTableComponent } from './smart-table/smart-table.component';
 // import { TreeGridComponent } from './tree-grid/tree-grid.component';
@@ -43,7 +44,8 @@ export const routedComponents = [
   CollectionListingComponent,
   UsersettingsComponent,
   SitesettingsComponent,
-  RolesComponent
+  RolesComponent,
+  BlueprintComponent
   // SmartTableComponent,
   // TreeGridComponent,
 ];

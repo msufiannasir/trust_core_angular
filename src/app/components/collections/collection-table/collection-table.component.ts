@@ -7,6 +7,7 @@ import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.
 import { NbCardModule } from '@nebular/theme';
 import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
 import { UsersService } from '../../../services/users.service';
+import { Location } from '@angular/common'; 
 
 
 @Component({
@@ -61,7 +62,8 @@ export class CollectionTableComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private collectionsService: CollectionsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -458,5 +460,8 @@ export class CollectionTableComponent implements OnInit {
       const entryId = event.data.id;
       this.router.navigate([`/pages/${this.handle}/entry/${entryId}`]);
     }
+  }
+  goBack(): void {
+    this.location.back();  // Navigate to the previous page
   }
 }

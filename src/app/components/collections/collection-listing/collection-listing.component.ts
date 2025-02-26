@@ -7,7 +7,7 @@ import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.
 import { NbCardModule } from '@nebular/theme';
 import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
 import { UsersService } from '../../../services/users.service';
-
+import { LinkRenderComponent } from '../../link-render/link-render.component';
 
 @Component({
   selector: 'ngx-smart-table',
@@ -98,7 +98,7 @@ export class CollectionListingComponent implements OnInit {
       const formattedData = filteredData.map((item: any) => ({
         name: item.name,
         link: item.handle.startsWith('template_') 
-          ? `/pages/${item.handle}/create` 
+          ? `/pages/${item.handle}` 
           : `/pages/${item.handle}`, 
         handle: item.handle,
       }));
@@ -110,15 +110,9 @@ export class CollectionListingComponent implements OnInit {
           columns: {
             name: {
               title: 'Collection Name',
-              type: 'html', // This allows rendering HTML
-              valuePrepareFunction: (cell, row) => {
-                return `<a href="${row.link}" target="">${cell}</a>`; 
-              }
+              type: 'custom', // Use custom component
+              renderComponent: LinkRenderComponent, // Use the custom link component
             },
-            // collectionHandle: {
-            //   title: 'Collection Handle',
-            //   type: 'text',
-            // },
           },
         };
       } else {
