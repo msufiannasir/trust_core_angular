@@ -65,7 +65,9 @@ export class EditEntry implements OnInit {
               return {
                 key,
                 value: val.selected ? val.selected.id : '', // Access selected ID safely
-                displayKey: key.replace(/_/g, ' '),
+                displayKey: this.formatDisplayKey(key), // Call the separate function
+                // displayKey: key.replace(/_/g, ' '),
+                isRequiredField: this.isRequiredField(key),
                 allOptions: val.allOptions || [] // Ensure allOptions exist
               };
             }
@@ -75,7 +77,9 @@ export class EditEntry implements OnInit {
             return {
               key,
               value: value ?? '', // Default to empty string if value is null
-              displayKey: key.replace(/_/g, ' '),
+              displayKey: this.formatDisplayKey(key), // Call the separate function
+              // displayKey: key.replace(/_/g, ' '),
+              isRequiredField: this.isRequiredField(key),
               allOptions: [] // Empty array for non-dropdown fields
             };
           });
@@ -103,14 +107,18 @@ export class EditEntry implements OnInit {
               return {
                 key,
                 value: val.selected ? val.selected.id : '', // Access selected ID safely
-                displayKey: key.replace(/_/g, ' '),
+                displayKey: this.formatDisplayKey(key), // Call the separate function
+                isRequiredField: this.isRequiredField(key),
+                // displayKey: key.replace(/_/g, ' '),
                 allOptions: val.allOptions || [] // Ensure allOptions exist
               };
             }
             return {
               key,
               value: value ?? '', // Default to empty string if value is null
-              displayKey: key.replace(/_/g, ' '),
+              displayKey: this.formatDisplayKey(key), // Call the separate function
+              isRequiredField: this.isRequiredField(key),
+              // displayKey: key.replace(/_/g, ' '),
               allOptions: [] // Empty array for non-dropdown fields
             };
           });
@@ -132,14 +140,17 @@ export class EditEntry implements OnInit {
       return;
     }
     const match = fieldKey.match(/^rel_.*_col_(\w+)$/);
-    if (match && match[1] === 'templates') {
-      this.collectionHandle = 'templates';  // Set the collection to "templates"
-      this.entryId = selectedValue;  // Set the entry ID to selected value
+    console.log("match " + match);
+    // const match = rel_templates_col_collections;
+    // if (match === "rel_templates_col_collections") {
+      this.collectionHandle = selectedValue;  // Set the collection to "templates"
+      this.entryId = '1';  // Set the entry ID to selected value
       console.log(`Updated collectionHandle: ${this.collectionHandle}, entryId: ${this.entryId}`);
       if (this.collectionHandle && this.entryId) {
         this.fetchEntryData(); // Now, it should send the request to the correct "templates" URL
       }
-    }
+      // this.fetchEntryFields();
+    // }
   }
   captureFieldValue(value: string, index: number): void {
     if (!this.formData[index]) {
@@ -268,12 +279,24 @@ export class EditEntry implements OnInit {
       console.error('Navigation error:', error);
     });
   }
-  // chunkArray(array: any[], chunkSize: number): any[][] {
-  //   const result = [];
-  //   for (let i = 0; i < array.length; i += chunkSize) {
-  //     result.push(array.slice(i, i + chunkSize));
-  //   }
-  //   return result;
-  // }
+  // Function to format the display key
+  formatDisplayKey(key: string): string {
+    let displayKey = key;
+    // Remove specific prefixes
+    displayKey = displayKey.replace(/^(meta_|text_meta|date_|text|textarea_|file_)/, '');
+    // Handle relationship fields
+    displayKey = displayKey.replace(/^rel_/, '').replace(/_col_.+$/, '');
+    // Remove all occurrences of "_req" anywhere in the string
+    displayKey = displayKey.replace(/_req/g, '');
+    // Convert snake_case to title case
+    displayKey = displayKey
+      .replace(/_/g, ' ') // Replace underscores with spaces
+      .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of each word
+    return displayKey;
+  }
+
+  isRequiredField(key: string): boolean {
+    return key.includes('_req'); // Checks if '_req' exists anywhere in the key
+  }
   
 }

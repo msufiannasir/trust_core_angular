@@ -115,6 +115,7 @@ export class BlueprintComponent implements OnInit {
             fieldType: this.getFieldType(field),
             linkType: this.getLinkType(field),
             old_field_name: field,
+            isRequired: field.includes('_req')
           };
         });
         console.log("Processed Table Data:", tableData); // Debugging
@@ -129,6 +130,7 @@ export class BlueprintComponent implements OnInit {
   setLinkTypeOptions(): void {
     const staticOptions = [
       { value: 'user', title: 'User' },
+      { value: 'templates_collection' , title: 'Templates Collection' },
     ];
     const dynamicOptions = this.allCollections.map((collection) => ({
       value: collection.id,
@@ -171,7 +173,8 @@ export class BlueprintComponent implements OnInit {
   onCreateField(event: any): void {
     const handle = this.collectionHandle || '';
     const fieldData = event.newData;
-  
+     // Append _req if isRequired is true
+     let fieldName = fieldData.isRequired ? `${fieldData.fieldName}_req` : fieldData.fieldName;
     const payload = {
       field_name: fieldData.fieldName,
       field_type: fieldData.fieldType,
@@ -183,6 +186,8 @@ export class BlueprintComponent implements OnInit {
     if (fieldData.fieldType === 'relational') {
       if (fieldData.linkType === 'user') {
         payload['link_type'] = 'user';
+      } else if (fieldData.linkType  === 'templates_collection' ){
+        payload['link_type'] = 'templates_collection';
       } else {
         payload['link_type'] = 'collection';
         payload['collection_id'] = fieldData.linkType; // Collection ID
@@ -206,9 +211,11 @@ export class BlueprintComponent implements OnInit {
   // Update operation
   updateField(updatedField: any): void {
     const handle = this.collectionHandle || '';
+    // Append _req if isRequired is true
+    let newFieldName = updatedField.isRequired ? `${updatedField.fieldName}_req` : updatedField.fieldName;
     const payload: any = {
       old_field_name: updatedField.old_field_name,
-      new_field_name: updatedField.fieldName,
+      new_field_name: newFieldName,
       field_type: updatedField.fieldType,
       is_required: updatedField.isRequired || false,
       // status: 'active', // Adjust if needed
@@ -218,7 +225,10 @@ export class BlueprintComponent implements OnInit {
     if (updatedField.fieldType === 'relational') {
       if (updatedField.linkType === 'user') {
         payload['link_type'] = 'user';
-      } else {
+      } else if (updatedField.linkType === 'templates_collection' ){
+        payload['link_type'] = 'templates_collection';
+      }
+       else {
         payload['link_type'] = 'collection';
         payload['collection_id'] = updatedField.linkType; // Collection ID
       }
@@ -281,6 +291,8 @@ formatFieldName(fieldName: string): string {
     fieldName = fieldName.substring(0, colIndex); // Keep only the part before 'col_'
   }
 
+  // Remove all occurrences of '_req' in the field name
+  fieldName = fieldName.replace(/_req/g, '');
   // Split by underscores and filter out empty strings
   const parts = fieldName.split('_').filter(part => part.length > 0);
 

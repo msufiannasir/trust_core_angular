@@ -7,13 +7,14 @@
     </button>
   </nb-card-header>
   <nb-card-body>
-    <form>
+    <form #entryForm="ngForm" (ngSubmit)="onSubmit(entryForm)" novalidate>
       <div class="row "> 
         <ng-container *ngFor="let field of metaArray; let i = index">
           <div class="col-md-6" *ngIf="!isHidden(field.key)">
             <div class="form-group">
               <label [for]="field.key" class="label">
                 {{ field.displayKey | titlecase }}
+                <span *ngIf="isRequiredField(field.key)" class="text-danger">*</span> <!-- Show * if required -->
               </label>
 
               <!-- Text Input -->
@@ -24,9 +25,15 @@
                 [name]="field.key"
                 [placeholder]="'Enter ' + field.displayKey | titlecase"
                 [(ngModel)]="field.value"
+                #fieldModel="ngModel"
                 (blur)="captureFieldValue($event.target.value, i)"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
               />
-
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+    
               <!-- Textarea -->
               <textarea *ngIf="isTextareaField(field.key)"
                 class="w-100 form-control"
@@ -34,8 +41,16 @@
                 [name]="field.key"
                 [placeholder]="'Enter ' + field.displayKey | titlecase"
                 [(ngModel)]="field.value"
-                (blur)="captureFieldValue($event.target.value, i)">
+                #fieldModel="ngModel"
+                (blur)="captureFieldValue($event.target.value, i)"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
+                >
               </textarea>
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+    
 
               <!-- File Input -->
               <input *ngIf="isFileField(field.key)"
@@ -43,8 +58,15 @@
                 class="w-100 form-control"
                 [id]="field.key"
                 [name]="field.key"
+                #fieldModel="ngModel"
                 (change)="handleFileUpload($event, field.key, i)"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
               />
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+    
 
               <!-- Dropdown Select -->
               <select
@@ -53,12 +75,18 @@
               [(ngModel)]="field.value"
               (ngModelChange)="onDropdownChange(field.key, $event)"
               [name]="field.key"
+              #fieldModel="ngModel"
+              [ngModelOptions]="{ updateOn: 'blur' }"
+              [required]="isRequiredField(field.key)"
             >
               <option value="">Select an option</option>
               <option *ngFor="let option of field.allOptions" [value]="option.id" [selected]="option.id === field.value">
                 {{ option.display }}
               </option>
             </select>
+            <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+              This field is required.
+            </div>
             
 
               <!-- Date Input -->
@@ -67,7 +95,14 @@
               class="form-control"
               [(ngModel)]="field.value"
               [name]="field.key"
-              (ngModelChange)="captureFieldValue($event, i)">
+              #fieldModel="ngModel"
+              (ngModelChange)="captureFieldValue($event, i)"
+              [ngModelOptions]="{ updateOn: 'blur' }"
+              [required]="isRequiredField(field.key)">
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+    
             
               <!-- Default Text Input (fallback for unknown fields) -->
               <input *ngIf="!isTextField(field.key) && !isTextareaField(field.key) && !isFileField(field.key) && !isDropdownField(field.key) && !isDateField(field.key)"
@@ -77,7 +112,14 @@
                 [name]="field.key"
                 [placeholder]="'Enter ' + field.displayKey | titlecase"
                 [(ngModel)]="field.value"
+                #fieldModel="ngModel"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
               />
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+    
             </div>
           </div>
         </ng-container>
