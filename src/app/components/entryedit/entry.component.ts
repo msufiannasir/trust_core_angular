@@ -251,7 +251,7 @@ export class EditEntry implements OnInit {
     return key.startsWith('textarea_');
   }
   isFileField(key: string): boolean {
-    return key.startsWith('image_') || key.startsWith('file_');
+    return key.startsWith('image_') || key.startsWith('file_') || key.startsWith('files_') || key.startsWith('images_') || key.startsWith('upload_') || key.startsWith('uploads_');
   }
   isDropdownField(key: string): boolean {
     return key.startsWith('rel_');
@@ -283,7 +283,7 @@ export class EditEntry implements OnInit {
   formatDisplayKey(key: string): string {
     let displayKey = key;
     // Remove specific prefixes
-    displayKey = displayKey.replace(/^(meta_|text_meta|date_|text|textarea_|file_)/, '');
+    displayKey = displayKey.replace(/^(meta_|text_meta|date_|text_|textarea_|file_)/, '');
     // Handle relationship fields
     displayKey = displayKey.replace(/^rel_/, '').replace(/_col_.+$/, '');
     // Remove all occurrences of "_req" anywhere in the string

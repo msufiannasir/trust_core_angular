@@ -176,7 +176,7 @@ export class BlueprintComponent implements OnInit {
      // Append _req if isRequired is true
      let fieldName = fieldData.isRequired ? `${fieldData.fieldName}_req` : fieldData.fieldName;
     const payload = {
-      field_name: fieldData.fieldName,
+      field_name: fieldName,
       field_type: fieldData.fieldType,
       status: 'active',
       is_required: fieldData.isRequired || false,
