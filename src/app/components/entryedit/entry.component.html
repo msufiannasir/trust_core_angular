@@ -53,19 +53,16 @@
                 This field is required.
               </div>
     
-
-              <!-- File Input -->
-              <input *ngIf="isFileField(field.key)"
-                type="file"
-                class="w-100 form-control"
-                [id]="field.key"
-                [name]="field.key"
-                #fieldModel="ngModel"
-                (change)="handleFileUpload($event, field.key, i)"
-                [ngModelOptions]="{ updateOn: 'blur' }"
-                [ngClass]="{'error-border': validationErrors[field.key]}" 
-                [required]="isRequiredField(field.key)"
-              />
+              <div *ngIf="isFileField(field.key)" class="form-group">
+                <input
+                  type="file"
+                  class="form-control"
+                  [id]="field.key"
+                  [name]="field.key"
+                  (change)="handleFileUpload($event, field.key, i)"
+                  [ngClass]="{'error-border': validationErrors[field.key]}"
+                  [required]="isRequiredField(field.key)" />
+              </div>
               <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
                 This field is required.
               </div>

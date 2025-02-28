@@ -8,6 +8,7 @@ import { NbCardModule } from '@nebular/theme';
 import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
 import { UsersService } from '../../../services/users.service';
 import { Location } from '@angular/common'; 
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class CollectionTableComponent implements OnInit {
   metaArray: { key: string; value: any }[] = [];
   formData: { key: string; value: any }[] = []; // New array to hold form data
   source: LocalDataSource = new LocalDataSource();
+
   settings = {
     actions: {
       add: true,
@@ -283,19 +285,29 @@ export class CollectionTableComponent implements OnInit {
             .replace(/^textarea_/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
-        } else if (column.startsWith('file_')) {
+        } else if (column.startsWith('file_') || column.startsWith('image_')) {
           // File field
-          fieldType = 'files';
-            // File field
-            fieldType = 'file';
-            editor = {
-              type: 'custom', // Use custom editor type
-              component: FileUploadEditorComponent, // Specify editor component
+          if (column.includes('file') || column.includes('image') || column.includes('document')) {
+            fieldType = 'html';
+            valuePrepareFunction = (cell: any) => {
+              if (!cell) return 'No file';
+              
+              const fileUrl = `${environment.backendbaseEndpoint}${cell}`;
+              const fileExtension = cell.split('.').pop()?.toLowerCase();
+
+              if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+                return `<img src="${fileUrl}" alt="Image" width="50" height="50" style="border-radius: 5px;"/>`;
+              } else if (fileExtension === 'pdf') {
+                return `<a href="${fileUrl}" target="_blank" style="color: blue; text-decoration: underline;">View PDF</a>`;
+              } else {
+                return `<a href="${fileUrl}" target="_blank" style="color: green; text-decoration: underline;">Download File</a>`;
+              }
             };
-              formattedTitle = column
-            .replace(/^file_/, '')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, (char) => char.toUpperCase());
+          }
+          formattedTitle = column
+          .replace(/^date_/, '')
+          .replace(/_/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('date_')) {
           // Date field
           fieldType = 'date';

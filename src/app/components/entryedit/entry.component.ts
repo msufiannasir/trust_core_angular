@@ -166,20 +166,18 @@ export class EditEntry implements OnInit {
     }
     this.formData[index].value = value;
   }
-  handleFileUpload(event: Event, key: string, index: number): void {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      this.formData[index] = {
-        key,
-        value: fileInput.files[0] // Store the uploaded file
-      };
+  handleFileUpload(event: Event, key: string, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.metaArray[index].value = input.files[0]; // Store the file
     }
   }
+  
   validateFields(data) {
     this.validationErrors = {};
     let hasErrors = false;
     Object.keys(data).forEach((key) => {
-      if (key.endsWith('_req') && (!data[key] || data[key].trim() === '')) {
+      if (key.includes('_req') && (!data[key] || data[key].trim() === '')) {
         this.validationErrors[key] = true; // Mark field as invalid
         hasErrors = true;
       }
@@ -323,7 +321,7 @@ export class EditEntry implements OnInit {
     return key.startsWith('textarea_');
   }
   isFileField(key: string): boolean {
-    return key.startsWith('image_') || key.startsWith('file_') || key.startsWith('files_') || key.startsWith('images_') || key.startsWith('upload_') || key.startsWith('uploads_');
+    return key.startsWith('file_')  || key.startsWith('image_')  || key.startsWith('files_') || key.startsWith('images_') || key.startsWith('upload_') || key.startsWith('uploads_');
   }
   isDropdownField(key: string): boolean {
     return key.startsWith('rel_');

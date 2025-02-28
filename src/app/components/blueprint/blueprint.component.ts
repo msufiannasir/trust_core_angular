@@ -56,6 +56,9 @@ export class BlueprintComponent implements OnInit {
       linkType: {
         title: 'Relational Field',
         type: 'string',
+        valuePrepareFunction: (cell, row) => {
+          return row.linkTypeText ? row.linkTypeText : 'N/A'; 
+        },
         editor: {
           type: 'list',
           config: {
@@ -108,12 +111,46 @@ export class BlueprintComponent implements OnInit {
         const filteredFields = fields.filter((field: string) => !hiddenFields.includes(field));
 
         console.log("filteredFields " + filteredFields);
+
+        const allOptions = [
+          { value: 'user', title: 'User' },
+          { value: 'templates_collection', title: 'Templates Collection' },
+          ...this.allCollections.map((collection) => ({
+            value: collection.id,
+            title: collection.name,
+          })),
+        ];
+
         const tableData = filteredFields.map((field: string) => {
           const formattedFieldName = this.formatFieldName(field); // Declare the variable here
+          const extractedLinkType = this.getLinkType(field);
+          let selectedValue = null;
+          let selectedText = null;
+  
+          // 1️ Handle static options (users & collections)
+          if (extractedLinkType.toLowerCase() === 'users') {
+            selectedValue = 'user';
+            selectedText = 'User';
+          } else if (extractedLinkType.toLowerCase() === 'collections') {
+            selectedValue = 'templates_collection';
+            selectedText = 'Templates Collection';
+          } else {
+            // 2️ Match extracted text with the options text dynamically
+            const matchedOption = allOptions.find(
+              (option) => option.title.toLowerCase() === extractedLinkType.toLowerCase()
+            );
+  
+            if (matchedOption) {
+              selectedValue = matchedOption.value;
+              selectedText = matchedOption.title; // Ensure we store the display name
+            }
+          }
+  
           return {
             fieldName: formattedFieldName,
             fieldType: this.getFieldType(field),
-            linkType: this.getLinkType(field),
+            linkType: selectedValue, // Selected value (for saving)
+            linkTypeText: selectedText, // Displayed text in the table
             old_field_name: field,
             isRequired: field.includes('_req')
           };
@@ -315,22 +352,18 @@ formatFieldName(fieldName: string): string {
 
   getLinkType(fieldName: string): string {
     if (fieldName.startsWith('rel_')) {
-      // let valuePrepareFunction: (cell: any, row: any) => string | null = null; // For displaying the value in the table row
-
-      console.log("fieldName", fieldName);
-      
-      // Remove 'rel_' prefix and '_col' and anything after it, then replace underscores with spaces
-      const collectionName = fieldName
-        .replace(/^rel_/, '')  // Remove the 'rel_' prefix
-        .replace(/_col.*$/, '') // Remove '_col' and everything after it
-        .replace(/_/g, ' ')     // Replace underscores with spaces
-        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of each word
-      
-      return collectionName; // Return the cleaned up collection name
+      console.log("fieldName", fieldName); 
+      // Extract the part after `_col_`
+      const match = fieldName.match(/_col_(.+)/);
+      if (match && match[1]) {
+        // Replace underscores with spaces and capitalize each word
+        return match[1]
+          .replace(/_/g, ' ') // Replace underscores with spaces
+          .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of each word
+      }
     }
-    return 'N/A'; // Return 'None' if not a relational field
-  }
-  
+    return 'N/A'; // Return 'N/A' if not a relational field
+  }  
   goBack(): void {
     this.location.back();  // Navigate to the previous page
   }
