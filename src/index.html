@@ -5,7 +5,16 @@
   <title>ngx-admin Demo Application</title>
 
   <base href="/">
-
+  <script>
+    var version = "1.0.3"; // Change this on each deployment
+    var links = document.getElementsByTagName("link");
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].rel === "stylesheet") {
+        links[i].href += "?v=" + version;
+      }
+    }
+  </script>
+  
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">

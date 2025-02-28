@@ -2,6 +2,9 @@
 .action-btns{
   margin-left: 10px;;
 }
+.error-border {
+  border: 2px solid red;
+}
 @include nb-install-component() {
   button[nbTreeGridRowToggle] {
     background: transparent;

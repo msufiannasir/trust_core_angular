@@ -70,6 +70,7 @@ export class CollectionTableComponent implements OnInit {
     // Check if 'handle' exists in the current route
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
+      if(handle=='offers'){this.settings.actions.edit=false;}
       this.currentPath = this.router.url.split('?')[0]; // Remove query params
       // Define valid paths
       this.user_paths = {
@@ -392,7 +393,7 @@ export class CollectionTableComponent implements OnInit {
       this.collectionsService.deleteEntry(handle, entryId).subscribe(
         (response) => {
           console.log('Entry deleted successfully:', response);
-          event.confirm.resolve(); // Notify the table of success
+          // event.confirm.resolve(); // Notify the table of success
   
           // Show success alert
           window.alert('Entry deleted successfully!');

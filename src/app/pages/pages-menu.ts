@@ -16,6 +16,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Offers',
+    // icon: 'home-outline',
+    link: '/pages/offers',
+    home: true,
+  },
+  {
     title: 'Collections',
     // icon: 'home-outline',
     link: '/pages/collections/all',
@@ -26,33 +32,33 @@ export const MENU_ITEMS: NbMenuItem[] = [
     // icon: 'home-outline',
     link: '/pages/insurance-companies',
     home: true,
-  }, {
-    title: 'Insurance Types',
-    // icon: 'home-outline',
-    link: '/pages/insurance-type',
-    home: true,
-  }, {
-    title: 'Customers',
-    // icon: 'home-outline',
-    link: '/pages/customers',
-    home: true,
-  }, {
-    title: 'Offers',
-    // icon: 'home-outline',
-    link: '/pages/offers',
-    home: true,
-  }, {
-    title: 'Files Management',
-    // icon: 'home-outline',
-    link: '/pages/files',
-    home: true,
-  }, 
-  {
-    title: 'Templates',
-    // icon: 'home-outline',
-    link: '/pages/templates',
-    home: true,
-  }, 
+  },
+  // ,
+  //  {
+  //   title: 'Insurance Types',
+  //   // icon: 'home-outline',
+  //   link: '/pages/insurance-type',
+  //   home: true,
+  // }, 
+  // {
+  //   title: 'Customers',
+  //   // icon: 'home-outline',
+  //   link: '/pages/customers',
+  //   home: true,
+  // }, 
+
+  // , {
+  //   title: 'Files Management',
+  //   // icon: 'home-outline',
+  //   link: '/pages/files',
+  //   home: true,
+  // }, 
+  // {
+  //   title: 'Templates',
+  //   // icon: 'home-outline',
+  //   link: '/pages/templates',
+  //   home: true,
+  // }, 
   // {
   //   title: 'Communication',
   //   // icon: 'home-outline',

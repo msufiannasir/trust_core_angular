@@ -21,6 +21,11 @@ export class EditEntry implements OnInit {
   additionalForms: any[] = []; 
   showRedirectButton: boolean = false; 
   showBlueprintButton: boolean = false;
+  bufferID;
+  bufferHandle;
+  offerID='';
+  slug;
+  validationErrors: { [key: string]: boolean } = {};
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -37,6 +42,7 @@ export class EditEntry implements OnInit {
     console.log("Current Path:", this.currentPath);
     this.route.paramMap.subscribe((params) => {
       this.collectionHandle = params.get('handle');
+      this.slug=this.collectionHandle ;
       this.entryId = params.get('entryId');
       console.log("this.collectionHandle:", this.collectionHandle);
       console.log(" this.entryId",  this.entryId);
@@ -133,7 +139,9 @@ export class EditEntry implements OnInit {
       );
     }
   } 
+
   onDropdownChange(fieldKey: string, selectedValue: any): void {
+
     console.log("Dropdown changed:", { fieldKey, selectedValue });
     if (!fieldKey || selectedValue === undefined) {
       console.error("Error: fieldKey or selectedValue is undefined!", { fieldKey, selectedValue });
@@ -143,12 +151,12 @@ export class EditEntry implements OnInit {
     console.log("match " + match);
     // const match = rel_templates_col_collections;
     // if (match === "rel_templates_col_collections") {
-      this.collectionHandle = selectedValue;  // Set the collection to "templates"
-      this.entryId = '1';  // Set the entry ID to selected value
+      this.bufferHandle = selectedValue;  // Set the collection to "templates"
+      this.bufferID = '1';  // Set the entry ID to selected value
       console.log(`Updated collectionHandle: ${this.collectionHandle}, entryId: ${this.entryId}`);
-      if (this.collectionHandle && this.entryId) {
-        this.fetchEntryData(); // Now, it should send the request to the correct "templates" URL
-      }
+      // if (this.collectionHandle && this.entryId) {
+      //   this.fetchEntryData(); // Now, it should send the request to the correct "templates" URL
+      // }
       // this.fetchEntryFields();
     // }
   }
@@ -167,7 +175,39 @@ export class EditEntry implements OnInit {
       };
     }
   }
+  validateFields(data) {
+    this.validationErrors = {};
+    let hasErrors = false;
+    Object.keys(data).forEach((key) => {
+      if (key.endsWith('_req') && (!data[key] || data[key].trim() === '')) {
+        this.validationErrors[key] = true; // Mark field as invalid
+        hasErrors = true;
+      }
+    });
+
+    console.log('Validation Errors:', this.validationErrors);
+    return !hasErrors;
+  }
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+  loadTemplateData(){
+    if(this.collectionHandle=='offers'){
+      this.entryId=this.bufferID;
+      this.collectionHandle=this.bufferHandle;
+      this.fetchEntryData(); 
+    }
+  }
   onSubmit(event: Event, redirect: boolean = false): void {
+    var confirmed;
+    if(this.collectionHandle!='offers'){
+      confirmed = window.confirm("Are you sure you want to submit?");
+    }else{
+      confirmed = window.confirm("Once you go to next step, you wont be able to get back. Are you sure?");
+    }
+    if (!confirmed) {
+      return;
+    }
     event.preventDefault();
     if (!this.collectionHandle) {
       console.error('Missing collection handle or entry ID.');
@@ -175,6 +215,15 @@ export class EditEntry implements OnInit {
     }
     const updatedData = {};
     this.metaArray.forEach(field => updatedData[field.key] = field.value);
+    console.log(updatedData, 'updatedData');
+    var validateFields=this.validateFields(updatedData);
+    if(!validateFields){
+      alert('Please enter all required information');
+      return ;
+    }
+    if(this.slug=='offers' && this.collectionHandle!='offers' && this.offerID!=''){
+      updatedData['offerID']=this.offerID;
+    }
     // if (this.currentPath.startsWith('/pages/templates/entry/') || this.currentPath.startsWith('/pages/offers/entry/') || this.currentPath.startsWith('/pages/offers/create/') || this.currentPath.startsWith('/pages/templates/create/')) {
       if (redirect) {
         this.sendDataToAnotherUrl();
@@ -183,9 +232,20 @@ export class EditEntry implements OnInit {
     if (this.entryId) {
     this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
       (response) => {
+        console.log('updateEntry');
         console.log('Update Response:', response);
         window.alert(response.message || 'Entry updated successfully!');
-        this.fetchEntryData(); 
+        if(this.slug=='offers'){
+          this.loadTemplateData();
+        }
+        if(typeof response.offercreated !='undefined'){
+          if(response.offercreated){
+            this.router.navigateByUrl('/pages/offers').catch((error) => {
+              console.error('Navigation error:', error);
+            });
+          }
+        }
+
       },
       (error) => {
         console.error('Error updating entry:', error);
@@ -196,10 +256,22 @@ export class EditEntry implements OnInit {
     this.collectionsService.createEntry(this.collectionHandle, updatedData).subscribe(
       (response) => {
         // event.confirm.resolve(response); // Notify the table of success
-
+       console.log('createEntry');
         // Show success alert
-        window.alert('Entry created successfully!');
-
+        if(this.slug!='offers'){
+          window.alert('Entry created successfully!');
+        }
+        if(this.slug=='offers'){
+          this.offerID=response.id;
+          this.loadTemplateData();
+        }
+        if(typeof response.offercreated !='undefined'){
+          if(response.offercreated){
+            this.router.navigateByUrl('/pages/offers').catch((error) => {
+              console.error('Navigation error:', error);
+            });
+          }
+        }
         // Refresh the table data
         // this.fetchCollectionData(handle);
       },
