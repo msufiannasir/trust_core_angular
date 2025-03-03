@@ -217,7 +217,7 @@ onDeleteConfirm(event): void {
   }
   
   isHidden(key: string): boolean {
-    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings'];
+    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings', 'status'];
     return hiddenFields.includes(key);
   }
     // Check the route and decide if the blueprint button should be shown

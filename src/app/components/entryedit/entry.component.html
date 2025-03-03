@@ -1,7 +1,7 @@
 <nb-card>
   <nb-card-header> 
-    <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" *ngIf="collectionHandle=='offers'" (click)="goBack()">← Back</button>
-    <h1 style="text-transform: capitalize;">{{ collectionHandle }}</h1>
+    <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" *ngIf="slug=='offers'" (click)="goBack(collectionHandle)">← Back</button>
+    <h1 style="text-transform: capitalize;">{{ collectionHandleReadable }}</h1>
     <button *ngIf="showBlueprintButton" nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
       Edit Blueprint
     </button>
