@@ -22,9 +22,11 @@ export class EditEntry implements OnInit {
   showRedirectButton: boolean = false; 
   showBlueprintButton: boolean = false;
   bufferID;
+  bufferEntryID;
   bufferHandle;
   offerID='';
   slug;
+  collectionHandleReadable='';
   validationErrors: { [key: string]: boolean } = {};
   constructor(
     private route: ActivatedRoute,
@@ -34,16 +36,24 @@ export class EditEntry implements OnInit {
     private location: Location,
     private http: HttpClient
   ) {}
-  goBack(): void {
-    this.location.back();  // Navigate to the previous page
+  goBack(handle): void {
+    if(this.slug=='offers' && this.collectionHandle!='offers'){
+      this.collectionHandle=this.bufferHandle='offers';
+      this.setcollectionHandleReadable(this.collectionHandle);
+      this.bufferID=this.bufferEntryID;
+      this.loadTemplateData();
+    }else{
+      this.location.back();  // Navigate to the previous page
+    }
   }
   ngOnInit(): void {
     this.currentPath = this.router.url.split('?')[0]; 
     console.log("Current Path:", this.currentPath);
     this.route.paramMap.subscribe((params) => {
       this.collectionHandle = params.get('handle');
+      this.setcollectionHandleReadable(this.collectionHandle);
       this.slug=this.collectionHandle ;
-      this.entryId = params.get('entryId');
+      this.bufferEntryID=this.entryId = params.get('entryId');
       console.log("this.collectionHandle:", this.collectionHandle);
       console.log(" this.entryId",  this.entryId);
        // Check if any segment starts with "template_"
@@ -54,6 +64,9 @@ export class EditEntry implements OnInit {
         this.fetchEntryFields();
       }
     });
+  }
+  setcollectionHandleReadable(collectionHandle){
+    this.collectionHandleReadable=this.collectionHandle.replace(/_/g, " ");
   }
   isHidden(key: string): boolean {
     const hiddenFields = ['id', 'user_id', 'collection_id', 'created_at', 'updated_at', 'last_login', 'employee_assigned', 'settings'];
@@ -177,7 +190,8 @@ export class EditEntry implements OnInit {
     this.validationErrors = {};
     let hasErrors = false;
     Object.keys(data).forEach((key) => {
-      if (key.includes('_req') && (!data[key] || data[key].trim() === '')) {
+      console.log(key, ' Object.keys');
+      if (key.includes('_req') && (!data[key] || data[key] === '')) {
         this.validationErrors[key] = true; // Mark field as invalid
         hasErrors = true;
       }
@@ -193,6 +207,7 @@ export class EditEntry implements OnInit {
     if(this.collectionHandle=='offers'){
       this.entryId=this.bufferID;
       this.collectionHandle=this.bufferHandle;
+      this.setcollectionHandleReadable(this.collectionHandle);
       this.fetchEntryData(); 
     }
   }
@@ -201,7 +216,7 @@ export class EditEntry implements OnInit {
     if(this.collectionHandle!='offers'){
       confirmed = window.confirm("Are you sure you want to submit?");
     }else{
-      confirmed = window.confirm("Once you go to next step, you wont be able to get back. Are you sure?");
+      confirmed = window.confirm("Are you sure want to go to next step?");
     }
     if (!confirmed) {
       return;
@@ -228,12 +243,17 @@ export class EditEntry implements OnInit {
       }
     // }
     if (this.entryId) {
+      this.bufferHandle = updatedData['rel_templates_req_col_collections'];  // Set the collection to "templates"
+      this.bufferID = '1';  // Set the entry ID to selected value
     this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
       (response) => {
-        console.log('updateEntry');
+        console.log('updateEntry', this.collectionHandle);
         console.log('Update Response:', response);
-        window.alert(response.message || 'Entry updated successfully!');
+        if(this.slug!='offers' || (this.slug=='offers' && this.collectionHandle!='offers')){
+          window.alert(response.message || 'Entry updated successfully!');
+        }
         if(this.slug=='offers'){
+          this.offerID=response.offerID;
           this.loadTemplateData();
         }
         if(typeof response.offercreated !='undefined'){
