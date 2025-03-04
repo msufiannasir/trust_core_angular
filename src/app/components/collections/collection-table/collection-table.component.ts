@@ -306,11 +306,11 @@ export class CollectionTableComponent implements OnInit {
                 return `<a href="${fileUrl}" target="_blank" style="color: green; text-decoration: underline;">Download File</a>`;
               }
             };
-          }
-            formattedTitle = column
+          };
+              formattedTitle = column
             .replace(/^file_/, '')
-            .replace(/_/g, ' ')
             .replace(/_req*$/, '')
+            .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('date_')) {
           // Date field
@@ -341,6 +341,7 @@ export class CollectionTableComponent implements OnInit {
           valuePrepareFunction: valuePrepareFunction,
           };
       }
+    
     });
   
     // Merge dynamic columns into existing table settings
