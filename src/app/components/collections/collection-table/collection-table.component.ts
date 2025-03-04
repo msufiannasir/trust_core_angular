@@ -72,7 +72,7 @@ export class CollectionTableComponent implements OnInit {
     // Check if 'handle' exists in the current route
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
-      if(handle=='offers'){this.settings.actions.edit=false;}
+      // if(handle=='offers'){this.settings.actions.edit=false;}
       this.currentPath = this.router.url.split('?')[0]; // Remove query params
       // Define valid paths
       this.user_paths = {
@@ -219,6 +219,7 @@ export class CollectionTableComponent implements OnInit {
           const withoutRel = column
             .replace(/^rel_/, '')
             .replace(/_col.*$/, '')
+            .replace(/_req*$/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
           formattedTitle = withoutRel;
@@ -275,6 +276,7 @@ export class CollectionTableComponent implements OnInit {
           editor = { type: 'input' };
           formattedTitle = column
             .replace(/^text_/, '')
+            .replace(/_req*$/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('textarea_')) {
@@ -283,6 +285,7 @@ export class CollectionTableComponent implements OnInit {
           editor = { type: 'textarea' };
           formattedTitle = column
             .replace(/^textarea_/, '')
+            .replace(/_req*$/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('file_') || column.startsWith('image_')) {
@@ -304,10 +307,11 @@ export class CollectionTableComponent implements OnInit {
               }
             };
           }
-          formattedTitle = column
-          .replace(/^date_/, '')
-          .replace(/_/g, ' ')
-          .replace(/\b\w/g, (char) => char.toUpperCase());
+            formattedTitle = column
+            .replace(/^file_/, '')
+            .replace(/_/g, ' ')
+            .replace(/_req*$/, '')
+            .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('date_')) {
           // Date field
           fieldType = 'date';
@@ -317,6 +321,8 @@ export class CollectionTableComponent implements OnInit {
           };
           formattedTitle = column
             .replace(/^date_/, '')
+            .replace(/_req*$/, '')
+
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
         } else {
@@ -441,7 +447,7 @@ export class CollectionTableComponent implements OnInit {
   }
   
   isHidden(key: string): boolean {
-    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings'];
+    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings','status'];
     return hiddenFields.includes(key);
   }
     // Check the route and decide if the blueprint button should be shown
