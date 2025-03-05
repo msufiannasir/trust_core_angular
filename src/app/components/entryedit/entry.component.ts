@@ -204,9 +204,11 @@ export class EditEntry implements OnInit {
     return Object.keys(obj);
   }
   loadTemplateData(){
+    console.log('loadTemplateData', this.collectionHandle);
     if(this.collectionHandle=='offers'){
       this.entryId=this.bufferID;
       this.collectionHandle=this.bufferHandle;
+      console.log('loadTemplateData inner ', this.entryId, this.bufferHandle, this.bufferID);
       this.setcollectionHandleReadable(this.collectionHandle);
       this.fetchEntryData(); 
     }

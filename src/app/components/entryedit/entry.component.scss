@@ -5,16 +5,16 @@
 .error-border {
   border: 2px solid red;
 }
-input[ng-reflect-name="text_status"] {
-  display: none;
-}
-input[ng-reflect-name="file_pdf"] {
-  display: none;
-}
+// input[ng-reflect-name="text_status"] {
+//   display: none;
+// }
+// input[ng-reflect-name="file_pdf"] {
+//   display: none;
+// }
 label[for="text_status"]{
   display: none;
 }
-label[for="file_pdf"], #file_pdf{
+label[for="file_pdf"], #file_pdf, #text_status{
   display: none;
 }
 @include nb-install-component() {

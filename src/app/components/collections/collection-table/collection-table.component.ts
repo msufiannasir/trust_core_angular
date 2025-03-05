@@ -88,9 +88,9 @@ export class CollectionTableComponent implements OnInit {
           this.setTableTitle(handle);
           this.checkRouteForBlueprintButton();
         }else{
-        this.fetchCollectionData(handle);
-        this.setTableTitle(handle);
-        this.checkRouteForBlueprintButton();
+          this.fetchCollectionData(handle);
+          this.setTableTitle(handle);
+          this.checkRouteForBlueprintButton();
         }
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
@@ -159,6 +159,7 @@ export class CollectionTableComponent implements OnInit {
     const endpoint = `collections/show/${handle}`;
     this.collectionsService.getDynamicData(endpoint).subscribe(
       (response) => {
+        console.log('fetchCollectionData', response);
         if (response && response.columns && Array.isArray(response.columns)) {
           this.configureTableColumns(response.columns , response.data); // Dynamically configure columns
         }
@@ -312,6 +313,7 @@ export class CollectionTableComponent implements OnInit {
             .replace(/_req*$/, '')
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
+          
         } else if (column.startsWith('date_')) {
           // Date field
           fieldType = 'date';
@@ -340,8 +342,8 @@ export class CollectionTableComponent implements OnInit {
           filter: filter,
           valuePrepareFunction: valuePrepareFunction,
           };
-      }
-    
+      
+    }
     });
   
     // Merge dynamic columns into existing table settings
