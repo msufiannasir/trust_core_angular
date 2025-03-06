@@ -25,6 +25,11 @@ export class CollectionListingComponent implements OnInit {
   formData: { key: string; value: any }[] = []; // New array to hold form data
   source: LocalDataSource = new LocalDataSource();
   settings = {
+    actions: {
+      add: true,
+      edit: true,
+      delete: true, // Keep delete off if not needed
+    },
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -46,9 +51,10 @@ export class CollectionListingComponent implements OnInit {
     pager: {
       perPage: 10, // Default items per page
     },
+    mode: 'inline', // Default mode (will update in ngOnInit)
   };
   handle: string | null = null; // Store handle globally
-  allowedHandles = ['offers', 'contracts', 'settings']; // Define allowed handles
+  allowedHandles = ['offers', 'contracts', 'settings', 'templates']; // Define allowed handles
 
   showBlueprintButton: boolean = true;
   constructor(
@@ -59,6 +65,7 @@ export class CollectionListingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     // Check if 'handle' exists in the current route
     this.route.url.subscribe((segments) => {
       // const handle = params.get('handle');
@@ -81,6 +88,18 @@ export class CollectionListingComponent implements OnInit {
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
+      const urlSegments = segments.map(segment => segment.path);
+
+      // Check if any segment contains the target string
+      const containsTarget = urlSegments.some(segment => segment.includes('templates'));
+      if (containsTarget) {
+        this.settings.mode = 'external';
+        this.settings.actions.edit=false;
+      } else {
+        this.settings.mode = 'inline';
+      }
+      // Force table refresh
+      this.settings = { ...this.settings, mode: this.settings.mode };
     });
 
   }
@@ -186,7 +205,7 @@ onDeleteConfirm(event): void {
   if (confirm('Are you sure you want to delete this collection?')) {
     this.collectionsService.deleteCollection(collectionHandle).subscribe(
       (response) => {
-        event.confirm.resolve();
+        // event.confirm.resolve();
         window.alert(response.message); // Show API response message
         this.fetchAllCollection(this.handle); // Refresh data after deletion
       },
@@ -232,6 +251,16 @@ onDeleteConfirm(event): void {
       ];  
       // Check if the current URL contains any of the hidden routes
       this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
+    }
+    onCreate(event: any) {
+      this.route.url.subscribe((segments) => {
+        const urlSegments = segments.map(segment => segment.path);
+        const containsTarget = urlSegments.some(segment => segment.includes('templates'));
+        if (containsTarget) {
+            this.router.navigate([`/pages/templates/create`]);
+        } 
+      });
+      
     }
 
 }

@@ -14,12 +14,32 @@ export const MENU_ITEMS: NbMenuItem[] = [
     // icon: 'home-outline',
     link: '/pages/collections/templates/all',
     home: true,
+    children: [
+          {
+            title: 'Create Template',
+            link: '/pages/templates/create',
+          },
+          {
+            title: 'List Templates',
+            link: '/pages/collections/templates/all',
+          }
+    ]
   },
   {
     title: 'Offers',
     // icon: 'home-outline',
     link: '/pages/offers',
     home: true,
+    children: [
+      {
+        title: 'Create Offer',
+        link: '/pages/offers/create',
+      },
+      {
+        title: 'List Offers',
+        link: '/pages/offers',
+      }
+]
   },
   {
     title: 'Collections',

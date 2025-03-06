@@ -134,10 +134,11 @@
         class="appearance-filled size-medium shape-rectangle status-basic nb-transition mt-3"
         (click)="onSubmit($event, false)"
       >
-        {{ collectionHandle!='offers' ? 'Submit' : 'Next' }}
+      
+        {{ slug=='offers' ? 'Create Offer' : 'Save' }}
       </button>
               <!-- Submit & Redirect Button -->
-              <button
+              <!-- <button
               *ngIf="showRedirectButton"
               type="button"
               nbButton
@@ -146,7 +147,7 @@
               (click)="onSubmit($event, true)"
             >
               Submit and GO
-            </button>
+            </button> -->
     </form>
   </nb-card-body>
 </nb-card>

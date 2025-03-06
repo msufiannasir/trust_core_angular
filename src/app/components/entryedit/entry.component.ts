@@ -215,10 +215,11 @@ export class EditEntry implements OnInit {
   }
   onSubmit(event: Event, redirect: boolean = false): void {
     var confirmed;
+    var redirecturl="/pages/"+this.slug;
     if(this.collectionHandle!='offers'){
       confirmed = window.confirm("Are you sure you want to submit?");
     }else{
-      confirmed = window.confirm("Are you sure want to go to next step?");
+      confirmed = window.confirm("Are you sure want to go to create offer?");
     }
     if (!confirmed) {
       return;
@@ -245,26 +246,35 @@ export class EditEntry implements OnInit {
       }
     // }
     if (this.entryId) {
-      this.bufferHandle = updatedData['rel_templates_req_col_collections'];  // Set the collection to "templates"
-      this.bufferID = '1';  // Set the entry ID to selected value
-    this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
-      (response) => {
-        console.log('updateEntry', this.collectionHandle);
-        console.log('Update Response:', response);
-        if(this.slug!='offers' || (this.slug=='offers' && this.collectionHandle!='offers')){
-          window.alert(response.message || 'Entry updated successfully!');
-        }
-        if(this.slug=='offers'){
-          this.offerID=response.offerID;
-          this.loadTemplateData();
-        }
-        if(typeof response.offercreated !='undefined'){
-          if(response.offercreated){
-            this.router.navigateByUrl('/pages/offers').catch((error) => {
+        this.bufferHandle = updatedData['rel_templates_req_col_collections'];  // Set the collection to "templates"
+        this.bufferID = '1';  // Set the entry ID to selected value
+        this.collectionsService.updateEntry(this.collectionHandle, this.entryId, updatedData).subscribe(
+        (response) => {
+          console.log('updateEntry', this.collectionHandle, this.slug);
+          console.log('Update Response:', response);
+
+          // if(this.slug!='offers' || (this.slug=='offers' && this.collectionHandle!='offers')){ tempo close 1
+          //   window.alert(response.message || 'Entry updated successfully!');
+          // }
+          window.alert(response.message || 'Entry updated successfully!'); // temp enabled 1
+
+          // if(this.slug=='offers'){ temp close 2
+          //   this.offerID=response.offerID;
+          //   this.loadTemplateData();
+          // }
+
+
+          // if(typeof response.offercreated !='undefined'){ tempo close 3
+            // if(response.offercreated){ tempo close 3
+            if(this.slug=='templates' || this.slug.includes('template_')){
+               redirecturl="/pages/collections/templates/all";
+            }
+            this.router.navigateByUrl(redirecturl).catch((error) => {
               console.error('Navigation error:', error);
             });
-          }
-        }
+           
+          // }
+        // }
 
       },
       (error) => {
@@ -276,22 +286,29 @@ export class EditEntry implements OnInit {
     this.collectionsService.createEntry(this.collectionHandle, updatedData).subscribe(
       (response) => {
         // event.confirm.resolve(response); // Notify the table of success
-       console.log('createEntry');
+       console.log('createEntry', response.message, redirecturl);
         // Show success alert
-        if(this.slug!='offers'){
-          window.alert('Entry created successfully!');
-        }
-        if(this.slug=='offers'){
-          this.offerID=response.id;
-          this.loadTemplateData();
-        }
-        if(typeof response.offercreated !='undefined'){
-          if(response.offercreated){
-            this.router.navigateByUrl('/pages/offers').catch((error) => {
-              console.error('Navigation error:', error);
-            });
+
+        // if(this.slug!='offers'){ tempo close 5
+          window.alert(response.message || 'Entry updated successfully!'); 
+        // }
+
+
+        // if(this.slug=='offers'){ tempo close 4
+        //   this.offerID=response.id;
+        //   this.loadTemplateData();
+        // }
+
+        // if(typeof response.offercreated !='undefined'){ tempo close 6
+          // if(response.offercreated){  tempo close 6
+          if(this.slug=='templates' || this.slug.includes('template_')){
+            redirecturl="/pages/collections/templates/all";
           }
-        }
+          this.router.navigateByUrl(redirecturl).catch((error) => {
+            console.error('Navigation error:', error);
+          });
+          // }
+        // }
         // Refresh the table data
         // this.fetchCollectionData(handle);
       },

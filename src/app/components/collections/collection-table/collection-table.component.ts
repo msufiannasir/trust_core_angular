@@ -95,6 +95,9 @@ export class CollectionTableComponent implements OnInit {
       } else {
         console.warn('No handle provided in the route. Skipping data fetch.');
       }
+      if(handle=='offers'){
+        this.settings.actions.edit = false;
+      }
       // Dynamically update mode based on handle
       if (this.allowedHandles.includes(handle)) {
         this.settings.mode = 'external';
@@ -256,10 +259,21 @@ export class CollectionTableComponent implements OnInit {
         };
         valuePrepareFunction = (cell: any, row: any) => {
           // Check if the cell has a value and return it
-          console.log(row[column].selected.id, 'row.column');
-          const selectedOption = uniqueOptions.find(option => option.value == cell.selected.id);
+          // console.log(row[column].selected.handle, 'row.column');
+          var Cellselectedvalue='';
+          const selectedOption = uniqueOptions.find(option => option.value == (formattedTitle=='Templates'?cell.selected.display:cell.selected.id));
+          console.log(selectedOption, 'selectedOption');
+          if(typeof row[column].selected.handle !='undefined'){
+             Cellselectedvalue=cell.selected.handle.includes('template_')?cell.selected.handle:selectedOption.title;
+             console.log(Cellselectedvalue, 'Cellselectedvalue');
+          }
+
           if (cell) {
-            if(typeof selectedOption !='undefined'){
+            // if(Cellselectedvalue!=''){
+            //   return Cellselectedvalue;
+            // }
+            // else
+             if(typeof selectedOption !='undefined'){
               return selectedOption.title;
             }
             return 'N/A';
@@ -410,6 +424,7 @@ export class CollectionTableComponent implements OnInit {
   onDeleteConfirm(event): void {
     const handle = this.route.snapshot.paramMap.get('handle');
     const entryId = event.data.id;
+    console.log(handle, entryId, 'entryId');
     if (handle && entryId) {
       this.collectionsService.deleteEntry(handle, entryId).subscribe(
         (response) => {
