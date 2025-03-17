@@ -1,14 +1,27 @@
 <nb-card >
   <nb-card-header>
-    <h2>Users Setting</h2> 
+    <h2>{{ 'USER_SETTINGS.TITLE' | translate }}</h2>
+    <!-- <h2>Users Setting</h2>  -->
   <nb-card-header>
     <nb-card-body>
     <div class="header-container">
-      <label for="theme-select" class="mx-2">Select Theme: </label>
+      <label for="theme-select" class="mx-2">{{ 'USER_SETTINGS.SELECT_THEME' | translate }} </label>
       <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
         <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
       </nb-select>
     </div>
+
+     <!-- Language Selector -->
+     <label for="language-select" class="mx-2">Select Language:</label>
+     <div id="google_translate_element"></div>
+
+     <!-- <div class="language-selector mt-3">
+      <nb-select [selected]="currentLanguage" (selectedChange)="changeLanguage($event)" status="primary">
+        <nb-option value="en">English</nb-option>
+        <nb-option value="de">German</nb-option>
+        <nb-option value="fr">French</nb-option>
+      </nb-select>
+    </div> -->
     <nb-card-body>
 <nb-card >
   

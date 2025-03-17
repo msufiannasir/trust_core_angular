@@ -31,7 +31,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes) , FormsModule , ReactiveFormsModule,NbLayoutModule,NbSelectModule,NbCardModule,],
+  imports: [RouterModule.forChild(routes) , FormsModule , ReactiveFormsModule,NbLayoutModule,NbSelectModule,NbCardModule],
   exports: [RouterModule],
 })
 export class TablesRoutingModule { }

@@ -8,8 +8,10 @@ import { UsersService } from '../../services/users.service';
 import { environment } from '../../../environments/environment';
 import { NbThemeService } from '@nebular/theme';
 import { NbThemeModule, NbLayoutModule, NbSelectModule, NbCardModule } from '@nebular/theme';
-
+import { TranslateService } from '@ngx-translate/core';
 import { NgModule } from '@angular/core';
+declare const google: any; // Declare google globally
+
 @Component({
   selector: 'ngx-smart-table',
   templateUrl: './usersettings.component.html',
@@ -18,8 +20,10 @@ import { NgModule } from '@angular/core';
 
 export class UsersettingsComponent implements OnInit {
   source: LocalDataSource = new LocalDataSource();
+  currentLanguage: string = 'en';
   currentuser=localStorage.getItem('user');
   userId: any= ''; // Store user ID from API
+   google: any; 
   themes = [
     { value: 'default', name: 'Light' },
     { value: 'dark', name: 'Dark' },
@@ -37,8 +41,10 @@ export class UsersettingsComponent implements OnInit {
   newFieldName: string = '';  // Stores new field name
   fieldToDelete: string = ''; // Stores field to delete
 
-  constructor(private fb: FormBuilder, private UsersService: UsersService, private themeService: NbThemeService) {}
+  constructor(private fb: FormBuilder, private UsersService: UsersService, private themeService: NbThemeService,private translate: TranslateService) {}
   ngOnInit(): void {
+    this.translate.use(this.currentLanguage);
+    this.loadGoogleTranslate();
     this.fetchUserSettings();
         // Get the current theme from the service
     this.currentTheme = this.themeService.currentTheme;
@@ -49,6 +55,64 @@ export class UsersettingsComponent implements OnInit {
       });
   }
 
+  loadGoogleTranslate() {
+    if (!document.getElementById('google_translate_script')) {
+      const script = document.createElement('script');
+      script.id = 'google_translate_script';
+      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+    } else {
+      setTimeout(() => {
+        if (typeof (window as any).googleTranslateElementInit === 'function') {
+          (window as any).googleTranslateElementInit();
+        }
+      }, 500);
+    }
+
+    // (window as any).googleTranslateElementInit = this.googleTranslateElementInit.bind(this);
+  }
+
+  googleTranslateElementInit() {
+    if (typeof google !== 'undefined' && google.translate) {
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: 'en',
+          includedLanguages: 'en,de,fr,es,it,zh,hi', // Add English 'en' explicitly
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        },
+        'google_translate_element'
+      );
+
+      // Add English manually in dropdown after initialization
+      setTimeout(() => {
+        const langSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+        if (langSelect) {
+          const enOption = document.createElement("option");
+          enOption.value = "en";
+          enOption.text = "English";
+          langSelect.insertBefore(enOption, langSelect.firstChild);
+        }
+      }, 500);
+
+      //  Prevent Redirection to #googtrans
+      setTimeout(() => {
+        const langSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+        if (langSelect) {
+          langSelect.addEventListener("change", function () {
+            setTimeout(() => {
+              history.pushState({}, "", window.location.href.split("#")[0]); // Remove # from URL
+            }, 100);
+          });
+        }
+      }, 1000);
+    } else {
+      console.error("Google Translate script not loaded.");
+    }
+  }
+  
+  
   getStoredTheme(): string | null {
     const user = localStorage.getItem('user');
     if (user) {
@@ -106,4 +170,32 @@ export class UsersettingsComponent implements OnInit {
       }
     );
   }
+  // changeLanguage(language: string): void {
+  //   this.currentLanguage = language;
+  //   this.translate.use(language); // Change language dynamically
+  // }
+  // changeLanguage(lang: string): void {
+  //   this.currentLanguage = lang;
+  //   this.translate.use(lang); // Change language dynamically
+  //   // Manually trigger Google Translate without reloading
+  //   const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+  //   if (selectElement) {
+  //     selectElement.value = lang;
+  //     selectElement.dispatchEvent(new Event('change'));
+  //   }
+  // }
+  
+  
+  // changeLanguage(lang: string) {
+  //   Object.keys(this.content).forEach(key => {
+  //     this.translationService.translateText(this.content[key], lang).subscribe((response: any) => {
+  //       if (response.data && response.data.translations.length > 0) {
+  //         this.translatedContent[key] = response.data.translations[0].translatedText;
+  //       }
+  //     });
+  //   });
+  // }
+
+
 }
+

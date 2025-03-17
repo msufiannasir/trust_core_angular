@@ -45,6 +45,8 @@
     "@nebular/eva-icons": "11.0.1",
     "@nebular/security": "11.0.1",
     "@nebular/theme": "11.0.1",
+    "@ngx-translate/core": "^14.0.0",
+    "@ngx-translate/http-loader": "^7.0.0",
     "@swimlane/ngx-charts": "^14.0.0",
     "@types/ws": "^8.5.0",
     "angular2-chartjs": "0.4.1",

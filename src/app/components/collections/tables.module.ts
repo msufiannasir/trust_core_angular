@@ -5,6 +5,8 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { TablesRoutingModule, routedComponents } from './tables-routing.module';
 import { FormsModule , ReactiveFormsModule } from '@angular/forms';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
 // import { FsIconComponent } from './tree-grid/tree-grid.component';
 
 @NgModule({
@@ -19,7 +21,8 @@ import { FormsModule , ReactiveFormsModule } from '@angular/forms';
     NbLayoutModule,
     NbSelectModule,
     FormsModule , 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   declarations: [
     ...routedComponents,

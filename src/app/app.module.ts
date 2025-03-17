@@ -19,6 +19,14 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 // import { FileUploadEditorComponent } from './file-upload-editor.component';
 import { FileUploadEditorComponent } from './components/fileupload/file-upload-editor.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+// Function to load translation files
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 
 import {
   NbChatModule,
@@ -61,6 +69,14 @@ import { SitesettingsComponent } from './components/sitesettings/sitesettings.co
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+      defaultLanguage: 'en', // Set default language
+    }),
     // Configure NbAuthModule
     NbAuthModule.forRoot({
       strategies: [

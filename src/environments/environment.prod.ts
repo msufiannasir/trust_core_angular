@@ -6,5 +6,5 @@
 export const environment = {
   production: true,
   baseEndpoint: 'https://trustcode.techsolsint.com/trustcore-backend/public/api/',
-  backendbaseEndpoint: 'https://cp.techsolsint.com/trustcore-backend/public/',
+  backendbaseEndpoint: 'https://trustcode.techsolsint.com/trustcore-backend/public/',
 };

@@ -2,6 +2,21 @@
 .action-btns{
   margin-left: 10px;;
 }
+/* Hide Google Translate top banner */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Hide Google Translate floating bar */
+body > .skiptranslate {
+  display: none !important;
+}
+
+/* Ensure body does not shift down */
+body {
+  top: 0px !important;
+}
+
 @include nb-install-component() {
   button[nbTreeGridRowToggle] {
     background: transparent;
