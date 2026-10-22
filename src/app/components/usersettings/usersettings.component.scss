@@ -2,6 +2,28 @@
 .action-btns{
   margin-left: 10px;;
 }
+
+.header-container {
+  padding: 1rem 0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    min-width: 150px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  nb-select {
+    min-width: 200px;
+  }
+}
+
 @include nb-install-component() {
   button[nbTreeGridRowToggle] {
     background: transparent;

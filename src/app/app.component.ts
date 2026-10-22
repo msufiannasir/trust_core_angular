@@ -25,13 +25,14 @@ export class AppComponent implements OnInit {
   // Function to fetch and apply stored theme
   applyStoredTheme(): void {
     const user = localStorage.getItem('user');
+    console.log(user, 'from app component');
     if (user) {
       try {
         const parsedUser = JSON.parse(user);
         if (parsedUser.meta && parsedUser.meta.settings) {
           const settings = JSON.parse(parsedUser.meta.settings);
           const storedTheme = settings.theme_setting || 'default';
-
+          console.log(storedTheme, 'storedTheme');
           this.themeService.changeTheme(storedTheme); // Apply the theme
         }
       } catch (error) {

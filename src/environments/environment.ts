@@ -11,5 +11,6 @@
 export const environment = {
   production: false,
   baseEndpoint: 'http://127.0.0.1:8000/api/',
-  backendbaseEndpoint: 'http://127.0.0.1:8000/'
+  backendbaseEndpoint: 'http://127.0.0.1:8000/',
+  baseurl: 'http://localhost:4200'
 };

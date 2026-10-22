@@ -5,7 +5,7 @@ import { TablesComponent } from './tables.component';
 import { CollectionTableComponent } from './collection-table/collection-table.component';
 import { UsersComponent } from '../users/users.component';
 import { RolesComponent } from '../roles/roles.component';
-import { EditEntry } from '../entryedit/entry.component';
+import { EditEntryComponent } from '../entryedit/entry.component';
 import { FormsModule , ReactiveFormsModule } from '@angular/forms';
 import { SitesettingsComponent } from '../sitesettings/sitesettings.component';
 import { CollectionListingComponent } from '../collections/collection-listing/collection-listing.component';
@@ -40,7 +40,7 @@ export const routedComponents = [
   TablesComponent,
   CollectionTableComponent,
   UsersComponent,
-  EditEntry,
+  EditEntryComponent,
   CollectionListingComponent,
   UsersettingsComponent,
   SitesettingsComponent,

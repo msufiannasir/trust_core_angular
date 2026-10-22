@@ -1,16 +1,25 @@
-<nb-card >
+<nb-card>
   <nb-card-header>
-    <h2>Users Setting</h2> 
-  <nb-card-header>
-    <nb-card-body>
+    <h2>{{getTranslations('Dashboard Settings')}}</h2> 
+  </nb-card-header>
+  <nb-card-body>
     <div class="header-container">
-      <label for="theme-select" class="mx-2">Select Theme: </label>
-      <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
-        <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
-      </nb-select>
+      <div class="setting-row mb-3">
+        <label for="theme-select" class="mx-2">{{getTranslations('Select Theme')}}: </label>
+        <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
+          <nb-option *ngFor="let theme of themes" [value]="theme.value">{{ theme.name }}</nb-option>
+        </nb-select>
+      </div>
+      
+      <div class="setting-row mb-3">
+        <label for="language-select" class="mx-2">{{getTranslations('Select Language')}}: </label>
+        <nb-select [selected]="currentLanguage" (selectedChange)="changeLanguage($event)" status="primary">
+          <nb-option *ngFor="let language of languages" [value]="language.value">{{ language.name }}</nb-option>
+        </nb-select>
+      </div>
     </div>
-    <nb-card-body>
-<nb-card >
+  </nb-card-body>
+</nb-card>
   
 
 

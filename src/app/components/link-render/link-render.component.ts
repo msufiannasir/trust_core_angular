@@ -20,6 +20,8 @@ export class LinkRenderComponent {
     }
 
     const handle = this.rowData.handle;
+    console.log(handle), 'endpoint';
+
     if (handle.startsWith('template_')) {
       // Check if entries exist for this template
       const endpoint = `collections/show/${handle}`;

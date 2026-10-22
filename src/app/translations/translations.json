@@ -1,0 +1,1420 @@
+{
+    "12 Months Report Summary": {
+      "en": "12 Months Report Summary",
+      "fr": "Résumé des 12 mois",
+      "de": "12 Monate Bericht Zusammenfassung",
+      "it": "Riepilogo 12 mesi"
+    },
+    "Offers Created": {
+      "en": "Offers Created",
+      "fr": "Offres créées",
+      "de": "Angebote erstellt",
+      "it": "Offerte create"
+    },
+    "Customers": {
+      "en": "Customers",
+      "fr": "Clients",
+      "de": "Kunden",
+      "it": "Clienti"
+    },
+    "Males": {
+      "en": "Males",
+      "fr": "Hommes",
+      "de": "Männer",
+      "it": "Maschi"
+    },
+    "Females": {
+      "en": "Females",
+      "fr": "Femmes",
+      "de": "Frauen",
+      "it": "Femmine"
+    },
+    "Customers older than 40": {
+      "en": "Customers older than 40",
+      "fr": "Clients plus de 40 ans",
+      "de": "Kunden älter als 40 Jahre",
+      "it": "Clienti più di 40 anni"
+    },
+    "Back": {
+      "en": "Back",
+      "fr": "Retour",
+      "de": "Zurück",
+      "it": "Indietro"
+    },
+    "Edit Blueprint": {
+      "en": "Edit Blueprint",
+      "fr": "Modifier le blueprint",
+      "de": "Blueprint bearbeiten",
+      "it": "Modifica blueprint"
+    },
+    "This field is required.": {
+      "en": "This field is required.",
+      "fr": "Ce champ est obligatoire.",
+      "de": "Dieses Feld ist erforderlich.",
+      "it": "Questo campo è obbligatorio."
+    },
+    "Select an option": {
+      "en": "Select an option",
+      "fr": "Sélectionner une option",
+      "de": "Option auswählen",
+      "it": "Seleziona un'opzione"
+    },
+    "Create Offer": {
+      "en": "Create Offer",
+      "fr": "Créer une offre",
+      "de": "Angebot erstellen",
+      "it": "Crea offerta"
+    },
+    "Save": {
+      "en": "Save",
+      "fr": "Enregistrer",
+      "de": "Speichern",
+      "it": "Salvare"
+    },
+    "Id": {
+        "fr": "Id",
+        "de": "Id",
+        "it": "Id"
+    },
+    "Title": {
+        "fr": "Titre",
+        "de": "Titel",
+        "it": "Titolo"
+    },
+    "title": {
+        "fr": "Titre",
+        "de": "Titel",
+        "it": "Titolo"
+    },
+    "Meta Title": {
+        "fr": "Titre",
+        "de": "Titel",
+        "it": "Titolo"
+    },
+    "Payment Method": {
+        "fr": "Méthode De Paiement",
+        "de": "Zahlungsmethode",
+        "it": "Metodo Di Pagamento"
+    },
+    "Invoicing": {
+        "fr": "Facturation",
+        "de": "Rechnungsstellung",
+        "it": "Fatturazione"
+    },
+    "Occupational Status": {
+        "fr": "Statut Professionnel",
+        "de": "Berufsstatus",
+        "it": "Stato Professionale"
+    },
+    "Other Occupational Data": {
+        "fr": "Autres Données Professionnelles",
+        "de": "Andere Berufsdaten",
+        "it": "Altri Dati Professionali"
+    },
+    "Franchise Data": {
+        "fr": "Données De Franchise",
+        "de": "Franchise Daten",
+        "it": "Dati Di Franchigia"
+    },
+    "Collection Id": {
+        "fr": "Id De Collection",
+        "de": "Sammlungs Id",
+        "it": "Id Di Collezione"
+    },
+    "Created At": {
+        "fr": "Créé Le",
+        "de": "Erstellt Am",
+        "it": "Creato Il"
+    },
+    "Updated At": {
+        "fr": "Mis À Jour Le",
+        "de": "Aktualisiert Am",
+        "it": "Aggiornato Il"
+    },
+    "LAMal KVG Basic Insurance": {
+        "fr": "Assurance De Base LAMal KVG",
+        "de": "LAMal KVG Grundversicherung",
+        "it": "Assicurazione Base LAMal KVG"
+    },
+    "Come Into Effect": {
+        "fr": "D'Entrée En Vigueur",
+        "de": "Datum Des Inkrafttretens",
+        "it": "Data Di Entrata In Vigore"
+    },
+    "Basic Insurance KVG Insurance Type": {
+        "fr": "Type D'Assurance De Base KVG",
+        "de": "KVG Grundversicherungstyp",
+        "it": "Tipo Di Assicurazione Base KVG"
+    },
+    "LCA VVG Supplemental Insurance": {
+        "fr": "Assurance Complémentaire LCA VVG",
+        "de": "LCA VVG Zusatzversicherung",
+        "it": "Assicurazione Integrativa LCA VVG"
+    },
+    "Global Range": {
+        "fr": "Gamme Globale",
+        "de": "Globaler Bereich",
+        "it": "Gamma Globale"
+    },
+    "Si With Global": {
+        "fr": "Si Avec Global",
+        "de": "Si Mit Global",
+        "it": "Si Con Globale"
+    },
+    "Insurance Model GSI": {
+        "fr": "Modèle D'Assurance GSI",
+        "de": "GSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione GSI"
+    },
+    "Level Coverage GSI": {
+        "fr": "Niveau De Couverture GSI",
+        "de": "GSI Deckungsstufe",
+        "it": "Livello Di Copertura GSI"
+    },
+    "Deductible Coverage GSI": {
+        "fr": "Franchise De Couverture GSI",
+        "de": "GSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura GSI"
+    },
+    "Insurance Model HLSI": {
+        "fr": "Modèle D'Assurance HLSI",
+        "de": "HLSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HLSI"
+    },
+    "Hospitalisation": {
+        "fr": "Hospitalisation",
+        "de": "Hospitalisierung",
+        "it": "Ospedalizzazione"
+    },
+    "Insurance Model HSI": {
+        "fr": "Modèle D'Assurance HSI",
+        "de": "HSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HSI"
+    },
+    "Level Coverage HSI": {
+        "fr": "Niveau De Couverture HSI",
+        "de": "HSI Deckungsstufe",
+        "it": "Livello Di Copertura HSI"
+    },
+    "Deductible Coverage HSI": {
+        "fr": "Franchise De Couverture HSI",
+        "de": "HSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura HSI"
+    },
+    "Entry Into Force HSI": {
+        "fr": "D'Entrée En Vigueur HSI",
+        "de": "HSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HSI"
+    },
+    "Travel Insurance": {
+        "fr": "Assurance Voyage",
+        "de": "Reiseversicherung",
+        "it": "Assicurazione Viaggio"
+    },
+    "Mundo TSI": {
+        "fr": "Mundo TSI",
+        "de": "Mundo TSI",
+        "it": "Mundo TSI"
+    },
+    "Mundo": {
+        "fr": "Mundo",
+        "de": "Mundo",
+        "it": "Mundo"
+    },
+    "Insurance Model MTSI": {
+        "fr": "Modèle D'Assurance Mundo",
+        "de": "Mundo Versicherungsmodell",
+        "it": "Modello Di Assicurazione Mundo"
+    },
+    "Level Coverage MTSI": {
+        "fr": "Niveau De Couverture Mundo",
+        "de": "Mundo Deckungsstufe",
+        "it": "Livello Di Copertura Mundo"
+    },
+    "Entry Into Force Mundo": {
+        "fr": "D'Entrée En Vigueur Mundo",
+        "de": "Mundo Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore Mundo"
+    },
+    "Dental Insurance": {
+        "fr": "Assurance Dentaire",
+        "de": "Zahnversicherung",
+        "it": "Assicurazione Dentale"
+    },
+    "Dentaire Plus": {
+        "fr": "Dentaire Plus",
+        "de": "Dentaire Plus",
+        "it": "Dentaire Plus"
+    },
+    "Insurance Model DSI": {
+        "fr": "Modèle D'Assurance DSI",
+        "de": "DSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione DSI"
+    },
+    "Level Coverage DSI": {
+        "fr": "Niveau De Couverture DSI",
+        "de": "DSI Deckungsstufe",
+        "it": "Livello Di Copertura DSI"
+    },
+    "Entry Into Force DSI": {
+        "fr": "D'Entrée En Vigueur DSI",
+        "de": "DSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore DSI"
+    },
+    "Supplemental Health Insurance": {
+        "fr": "Assurance Maladie Complémentaire",
+        "de": "Zusatzversicherung",
+        "it": "Assicurazione Sanitaria Integrativa"
+    },
+    "Alterna": {
+        "fr": "Alterna",
+        "de": "Alterna",
+        "it": "Alterna"
+    },
+    "Insurance Model AHSI": {
+        "fr": "Modèle D'Assurance AHSI",
+        "de": "AHSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione AHSI"
+    },
+    "Level Coverage AHSI": {
+        "fr": "Niveau De Couverture AHSI",
+        "de": "AHSI Deckungsstufe",
+        "it": "Livello Di Copertura AHSI"
+    },
+    "Entry Into Force AHSI": {
+        "fr": "D'Entrée En Vigueur AHSI",
+        "de": "AHSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore AHSI"
+    },
+    "Special Care": {
+        "fr": "Soins Spéciaux",
+        "de": "Spezialpflege",
+        "it": "Cure Speciali"
+    },
+    "Insurance Model SCSI": {
+        "fr": "Modèle D'Assurance SCSI",
+        "de": "SCSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione SCSI"
+    },
+    "Entry Into Force SCSI": {
+        "fr": "D'Entrée En Vigueur SCSI",
+        "de": "SCSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore SCSI"
+    },
+    "Insurance Model SHI": {
+        "fr": "Modèle D'Assurance HSI",
+        "de": "HSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HSI"
+    },
+    "Level Coverage SHI": {
+        "fr": "Niveau De Couverture HSI",
+        "de": "HSI Deckungsstufe",
+        "it": "Livello Di Copertura HSI"
+    },
+    "Deductible Coverage SHI": {
+        "fr": "Franchise De Couverture HSI",
+        "de": "HSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura HSI"
+    },
+    "Entry Into Force SHI": {
+        "fr": "D'Entrée En Vigueur HSI",
+        "de": "HSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HSI"
+    },
+    "Facilitated Transfer SHI": {
+        "fr": "Transfert Facilité SHI",
+        "de": "Erleichterter Transfer SHI",
+        "it": "Trasferimento Facilitato SHI"
+    },
+    "Legal Protection": {
+        "fr": "Protection Juridique",
+        "de": "Rechtsschutz",
+        "it": "Protezione Legale"
+    },
+    "Legis": {
+        "fr": "Legis",
+        "de": "Legis",
+        "it": "Legis"
+    },
+    "rel_occupational_status_req_col_occupational_status": {
+        "fr": "Statut Professionnel",
+        "de": "Berufsstatus",
+        "it": "Stato Professionale"
+    },
+    "text_other_occupational_data": {
+        "fr": "Autres Données Professionnelles",
+        "de": "Andere Berufsdaten",
+        "it": "Altri Dati Professionali"
+    },
+    "rel_franchise_data_col_franchise_data": {
+        "fr": "Données De Franchise",
+        "de": "Franchise Daten",
+        "it": "Dati Di Franchigia"
+    },
+    "collection_id": {
+        "fr": "Id De Collection",
+        "de": "Sammlungs Id",
+        "it": "Id Di Collezione"
+    },
+    "created_at": {
+        "fr": "Créé Le",
+        "de": "Erstellt Am",
+        "it": "Creato Il"
+    },
+    "updated_at": {
+        "fr": "Mis À Jour Le",
+        "de": "Aktualisiert Am",
+        "it": "Aggiornato Il"
+    },
+    "label_LAMal/KVG_basic_insurance": {
+        "fr": "Assurance De Base LAMal KVG",
+        "de": "LAMal KVG Grundversicherung",
+        "it": "Assicurazione Base LAMal KVG"
+    },
+    "date_come_into_effect_req": {
+        "fr": "D'Entrée En Vigueur",
+        "de": "Datum Des Inkrafttretens",
+        "it": "Data Di Entrata In Vigore"
+    },
+    "rel_basic_insurance_kvg_col_insurance_type": {
+        "fr": "Type D'Assurance De Base KVG",
+        "de": "KVG Grundversicherungstyp",
+        "it": "Tipo Di Assicurazione Base KVG"
+    },
+    "label_LCA/VVG_supplemental_insurance": {
+        "fr": "Assurance Complémentaire LCA VVG",
+        "de": "LCA VVG Zusatzversicherung",
+        "it": "Assicurazione Integrativa LCA VVG"
+    },
+    "label_Global_range": {
+        "fr": "Gamme Globale",
+        "de": "Globaler Bereich",
+        "it": "Gamma Globale"
+    },
+    "rel_si_with_global_col_boolean": {
+        "fr": "Si Avec Global",
+        "de": "Si Mit Global",
+        "it": "Si Con Globale"
+    },
+    "insurance model gsi": {
+        "fr": "Modèle D'Assurance GSI",
+        "de": "GSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione GSI"
+    },
+    "level coverage gsi": {
+        "fr": "Niveau De Couverture GSI",
+        "de": "GSI Deckungsstufe",
+        "it": "Livello Di Copertura GSI"
+    },
+    "deductible coverage gsi": {    
+        "fr": "Franchise De Couverture GSI",
+        "de": "GSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura GSI"
+    },
+    "insurance model hlsi": {
+        "fr": "Modèle D'Assurance HLSI",
+        "de": "HLSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HLSI"
+    },
+    "label_Hospitalisation": {
+        "fr": "Hospitalisation",
+        "de": "Hospitalisierung",
+        "it": "Ospedalizzazione"
+    },
+    "hospitalisation": {
+        "fr": "Hospitalisation",
+        "de": "Hospitalisierung",
+        "it": "Ospedalizzazione"
+    },
+    "insurance model hsi": {
+        "fr": "Modèle D'Assurance HSI",
+        "de": "HSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HSI"
+    },
+    "level coverage hsi": {
+        "fr": "Niveau De Couverture HSI",
+        "de": "HSI Deckungsstufe",
+        "it": "Livello Di Copertura HSI"
+    },
+    "deductible coverage hsi": {
+        "fr": "Franchise De Couverture HSI",
+        "de": "HSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura HSI"
+    },
+    "date_entry_into_force_hsi": {
+        "fr": "D'Entrée En Vigueur HSI",
+        "de": "HSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HSI"
+    },
+    "label_Travel_insurance": {
+        "fr": "Assurance Voyage",
+        "de": "Reiseversicherung",
+        "it": "Assicurazione Viaggio"
+    },
+    "mundo tsi": {
+        "fr": "Mundo TSI",
+        "de": "Mundo TSI",
+        "it": "Mundo TSI"
+    },
+    "label_Mundo": {
+        "fr": "Mundo",
+        "de": "Mundo",
+        "it": "Mundo"
+    },
+    "insurance model mtsi": {
+        "fr": "Modèle D'Assurance Mundo",
+        "de": "Mundo Versicherungsmodell",
+        "it": "Modello Di Assicurazione Mundo"
+    },
+    "level coverage mtsi": {
+        "fr": "Niveau De Couverture Mundo",
+        "de": "Mundo Deckungsstufe",
+        "it": "Livello Di Copertura Mundo"
+    },
+    "date_entry_into_force_mundo": {
+        "fr": "D'Entrée En Vigueur Mundo",
+        "de": "Mundo Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore Mundo"
+    },
+    "label_Dental_insurance": {
+        "fr": "Assurance Dentaire",
+        "de": "Zahnversicherung",
+        "it": "Assicurazione Dentale"
+    },
+    "dentaire plus": {
+        "fr": "Dentaire Plus",
+        "de": "Dentaire Plus",
+        "it": "Dentaire Plus"
+    },
+    "label_Dentaire_plus": {
+        "fr": "Dentaire Plus",
+        "de": "Dentaire Plus",
+        "it": "Dentaire Plus"
+    },
+    "insurance model dsi": {
+        "fr": "Modèle D'Assurance DSI",
+        "de": "DSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione DSI"
+    },
+    "level coverage dsi": {
+        "fr": "Niveau De Couverture DSI",
+        "de": "DSI Deckungsstufe",
+        "it": "Livello Di Copertura DSI"
+    },
+    "date_entry_into_force_dsi": {
+        "fr": "D'Entrée En Vigueur DSI",
+        "de": "DSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore DSI"
+    },
+    "label_Supplemental_health_insurance": {
+        "fr": "Assurance Maladie Complémentaire",
+        "de": "Zusatzversicherung",
+        "it": "Assicurazione Sanitaria Integrativa"
+    },
+    "alterna": {
+        "fr": "Alterna",
+        "de": "Alterna",
+        "it": "Alterna"
+    },
+    "label_Alterna": {
+        "fr": "Alterna",
+        "de": "Alterna",
+        "it": "Alterna"
+    },
+    "insurance model ahsi": {
+        "fr": "Modèle D'Assurance AHSI",
+        "de": "AHSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione AHSI"
+    },
+    "level coverage ahsi": {
+        "fr": "Niveau De Couverture AHSI",
+        "de": "AHSI Deckungsstufe",
+        "it": "Livello Di Copertura AHSI"
+    },
+    "date_entry_into_force_ahsi": {
+        "fr": "D'Entrée En Vigueur AHSI",
+        "de": "AHSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore AHSI"
+    },
+    "label_Special_care": {
+        "fr": "Soins Spéciaux",
+        "de": "Spezialpflege",
+        "it": "Cure Speciali"
+    },
+    "special care": {
+        "fr": "Soins Spéciaux",
+        "de": "Spezialpflege",
+        "it": "Cure Speciali"
+    },
+    "insurance model scsi": {
+        "fr": "Modèle D'Assurance SCSI",
+        "de": "SCSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione SCSI"
+    },
+    "date_entry_into_force_scsi": {
+        "fr": "D'Entrée En Vigueur SCSI",
+        "de": "SCSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore SCSI"
+    },
+    "label_supplemental_health_insurance_s": {
+        "fr": "Assurance Maladie Complémentaire",
+        "de": "Zusatzversicherung",
+        "it": "Assicurazione Sanitaria Integrativa"
+    },
+    "supplemental health insurance": {
+        "fr": "Assurance Maladie Complémentaire",
+        "de": "Zusatzversicherung",
+        "it": "Assicurazione Sanitaria Integrativa"
+    },
+    "insurance model shi": {
+        "fr": "Modèle D'Assurance HSI",
+        "de": "HSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HSI"
+    },
+    "level coverage shi": {
+        "fr": "Niveau De Couverture HSI",
+        "de": "HSI Deckungsstufe",
+        "it": "Livello Di Copertura HSI"
+    },
+    "deductible coverage shi": {
+        "fr": "Franchise De Couverture HSI",
+        "de": "HSI Selbstbehalt Deckung",
+        "it": "Franchigia Di Copertura HSI"
+    },
+    "date_entry_into_force_shi": {
+        "fr": "D'Entrée En Vigueur HSI",
+        "de": "HSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HSI"
+    },
+    "facilitated transfer shi": {
+        "fr": "rel_transfert_facilité_shi_col_booléen",
+        "de": "rel_erleichterter_transfer_shi_col_boolean",
+        "it": "rel_trasferimento_facilitato_shi_col_boolean"
+    },
+    "label_Legal_protection": {
+        "fr": "Protection Juridique",
+        "de": "Rechtsschutz",
+        "it": "Protezione Legale"
+    },
+    "legis": {
+        "fr": "Legis",
+        "de": "Legis",
+        "it": "Legis"
+    },
+    "label_Legis": {
+        "fr": "Legis",
+        "de": "Legis",
+        "it": "Legis"
+    },
+    "insurance model lsi": {
+        "fr": "Modèle D'Assurance LSI",
+        "de": "LSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LSI"
+    },
+    "level coverage lsi": {
+        "fr": "Niveau De Couverture LSI",
+        "de": "LSI Deckungsstufe",
+        "it": "Livello Di Copertura LSI"
+    },
+    "criterion lsi": {
+        "fr": "Critère LSI",
+        "de": "LSI Kriterium",
+        "it": "Criterio LSI"
+    },
+    "date_entry_into_force_lsi": {
+        "fr": "D'Entrée En Vigueur LSI",
+        "de": "LSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSI"
+    },
+    "label_Legis_sana": {
+        "fr": "Legis Sana",
+        "de": "Legis Sana",
+        "it": "Legis Sana"
+    },
+    "legis sana": {
+        "fr": "Legis Sana",
+        "de": "Legis Sana",
+        "it": "Legis Sana"
+    },
+    "insurance model lssi": {
+        "fr": "Modèle D'Assurance LSSI",
+        "de": "LSSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LSSI"
+    },
+    "date_entry_into_force_lssi": {
+        "fr": "D'Entrée En Vigueur LSSI",
+        "de": "LSSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSSI"
+    },
+    "label_Daily_allowance": {
+        "fr": "Indemnité Journalière",
+        "de": "Tagegeld",
+        "it": "Indennità Giornaliera"
+    },
+    "daily allowance": {
+        "fr": "rel_indemnité_journalière_col_booléen",
+        "de": "rel_tagegeld_col_boolean",
+        "it": "rel_indennità_giornaliera_col_boolean"
+    },
+    "label_Daily allowance": {
+        "fr": "Indemnité Journalière",
+        "de": "Tagegeld",
+        "it": "Indennità Giornaliera"
+    },
+    "insurance model dasi": {
+        "fr": "Modèle D'Assurance DASI",
+        "de": "DASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione DASI"
+    },
+    "health insurer dasi": {
+        "fr": "Assureur Santé DASI",
+        "de": "DASI Krankenversicherer",
+        "it": "Assicuratore Sanitario DASI"
+    },
+    "level coverage dasi": {
+        "fr": "Niveau De Couverture DASI",
+        "de": "DASI Deckungsstufe",
+        "it": "Livello Di Copertura DASI"
+    },
+    "accident coverage dasi": {
+        "fr": "Couverture Accident DASI",
+        "de": "DASI Unfalldeckung",
+        "it": "Copertura Infortuni DASI"
+    },
+    "waiting period dasi": {
+        "fr": "Délai D'Attente DASI",
+        "de": "DASI Wartezeit",
+        "it": "Periodo Di Attesa DASI"
+    },
+    "text_daily_amount_dasi": {
+        "fr": "texte_montant_journalier_dasi",
+        "de": "text_taglicher_betrag_dasi",
+        "it": "testo_importo_giornaliero_dasi"
+    },
+    "date_entry_into_force_dasi": {
+        "fr": "D'Entrée En Vigueur DASI",
+        "de": "DASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore DASI"
+    },
+    "label_Incapacity_for_housework": {
+        "fr": "Incapacité Travaux Ménagers",
+        "de": "Arbeitsunfähigkeit Hausarbeit",
+        "it": "Incapacità Lavori Domestici"
+    },
+    "rel_incapacity_for_housework_col_boolean": {
+        "fr": "rel_incapacité_travaux_ménagers_col_booléen",
+        "de": "rel_arbeitsunfähigkeit_hausarbeit_col_boolean",
+        "it": "rel_incapacità_lavori_domestici_col_boolean"
+    },
+    "insurance model isi": {
+        "fr": "Modèle D'Assurance ISI",
+        "de": "ISI Versicherungsmodell",
+        "it": "Modello Di Assicurazione ISI"
+    },
+    "level coverage isi": {
+        "fr": "Niveau De Couverture ISI",
+        "de": "ISI Deckungsstufe",
+        "it": "Livello Di Copertura ISI"
+    },
+    "waiting period isi": {
+        "fr": "Délai D'Attente ISI",
+        "de": "ISI Wartezeit",
+        "it": "Periodo Di Attesa ISI"
+    },
+    "date_entry_into_force_isi": {
+        "fr": "D'Entrée En Vigueur ISI",
+        "de": "ISI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore ISI"
+    },
+    "label_Hospitalisation_allowance": {
+        "fr": "Indemnité Hospitalisation",
+        "de": "Hospitalisierungszulage",
+        "it": "Indennità Ospedalizzazione"
+    },
+    "hospitalisation allowance": {
+        "fr": "rel_indemnité_hospitalisation_col_booléen",
+        "de": "rel_hospitalisierungszulage_col_boolean",
+        "it": "rel_indennità_ospedalizzazione_col_boolean"
+    },
+    "insurance model hadsi": {
+        "fr": "Modèle D'Assurance HADSI",
+        "de": "HADSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HADSI"
+    },
+    "text_daily_amount_hadsi": {
+        "fr": "texte_montant_journalier_hadsi",
+        "de": "text_taglicher_betrag_hadsi",
+        "it": "testo_importo_giornaliero_hadsi"
+    },
+    "date_entry_into_force_hadsi": {
+        "fr": "D'Entrée En Vigueur HADSI",
+        "de": "HADSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HADSI"
+    },
+    "label_Accident_insurance": {
+        "fr": "Assurance Accident",
+        "de": "Unfallversicherung",
+        "it": "Assicurazione Infortuni"
+    },
+    "accident insurance": {
+        "fr": "rel_assurance_accident_col_booléen",
+        "de": "rel_unfallversicherung_col_boolean",
+        "it": "rel_assicurazione_infortuni_col_boolean"
+    },
+    "label_Accident insurance": {
+        "fr": "Assurance Accident",
+        "de": "Unfallversicherung",
+        "it": "Assicurazione Infortuni"
+    },
+    "insurance model asi": {
+        "fr": "Modèle D'Assurance ASI",
+        "de": "ASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione ASI"
+    },
+    "date_entry_into_force_asi": {
+        "fr": "D'Entrée En Vigueur ASI",
+        "de": "ASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore ASI"
+    },
+    "label_Insurance for risks and disputes on the Internet": {
+        "fr": "Assurance Risques Litiges Internet",
+        "de": "Versicherung Risiken Streitigkeiten Internet",
+        "it": "Assicurazione Rischi Controversie Internet"
+    },
+    "cyberprotect": {
+        "fr": "rel_cyberprotect_col_booléen",
+        "de": "rel_cyberprotect_col_boolean",
+        "it": "rel_cyberprotect_col_boolean"
+    },
+    "label_CyberProtect": {
+        "fr": "CyberProtect",
+        "de": "CyberProtect",
+        "it": "CyberProtect"
+    },
+    "insurance model cpsi": {
+        "fr": "Modèle D'Assurance CPSI",
+        "de": "CPSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione CPSI"
+    },
+    "criterion cpsi": {
+        "fr": "Critère CPSI",
+        "de": "CPSI Kriterium",
+        "it": "Criterio CPSI"
+    },
+    "date_entry_into_force_cpsi": {
+        "fr": "D'Entrée En Vigueur CPSI",
+        "de": "CPSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore CPSI"
+    },
+    "label_Lump-sum in the event of disability or death.": {
+        "fr": "Somme Forfaitaire Invalidité Décès",
+        "de": "Pauschalbetrag Invalidität Tod",
+        "it": "Somma Forfettaria Invalidità Morte"
+    },
+    "accident": {
+        "fr": "rel_accident_col_booléen",
+        "de": "rel_unfall_col_boolean",
+        "it": "rel_incidente_col_boolean"
+    },
+    "label_Accident": {
+        "fr": "Accident",
+        "de": "Unfall",
+        "it": "Incidente"
+    },
+    "insurance model lasi": {
+        "fr": "Modèle D'Assurance LASI",
+        "de": "LASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LASI"
+    },
+    "level coverage lasi": {
+        "fr": "Niveau De Couverture LASI",
+        "de": "LASI Deckungsstufe",
+        "it": "Livello Di Copertura LASI"
+    },
+    "date_entry_into_force_lasi": {
+        "fr": "D'Entrée En Vigueur LASI",
+        "de": "LASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LASI"
+    },
+    "label_Illness/Accident": {
+        "fr": "Maladie Accident",
+        "de": "Krankheit Unfall",
+        "it": "Malattia Incidente"
+    },
+    "illness accident": {
+        "fr": "rel_maladie_accident_col_booléen",
+        "de": "rel_krankheit_unfall_col_boolean",
+        "it": "rel_malattia_incidente_col_boolean"
+    },
+    "insurance model liasi": {
+        "fr": "Modèle D'Assurance LIASI",
+        "de": "LIASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LIASI"
+    },
+    "level coverage liasi": {
+        "fr": "Niveau De Couverture LIASI",
+        "de": "LIASI Deckungsstufe",
+        "it": "Livello Di Copertura LIASI"
+    },
+    "accident coverage liasi": {
+        "fr": "Couverture Accident LIASI",
+        "de": "LIASI Unfalldeckung",
+        "it": "Copertura Infortuni LIASI"
+    },
+    "date_entry_into_force_liasi": {
+        "fr": "D'Entrée En Vigueur LIASI",
+        "de": "LIASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LIASI"
+    },
+    "label_Accident or sudden illness": {
+        "fr": "Accident Maladie Soudaine",
+        "de": "Unfall Plötzliche Krankheit",
+        "it": "Incidente Malattia Improvvisa"
+    },
+    "accident or sudden illness": {
+        "fr": "rel_accident_maladie_soudaine_col_booléen",
+        "de": "rel_unfall_plötzliche_krankheit_col_boolean",
+        "it": "rel_incidente_malattia_improvvisa_col_boolean"
+    },
+    "insurance model lsisi": {
+        "fr": "Modèle D'Assurance LSISI",
+        "de": "LSISI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LSISI"
+    },
+    "level coverage lsisi": {
+        "fr": "Niveau De Couverture LSISI",
+        "de": "LSISI Deckungsstufe",
+        "it": "Livello Di Copertura LSISI"
+    },
+    "date_entry_into_force_lsisi": {
+        "fr": "D'Entrée En Vigueur LSISI",
+        "de": "LSISI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSISI"
+    },
+    "textarea_template_description": {
+        "fr": "zone_texte_description_modèle",
+        "de": "textbereich_vorlagen_beschreibung",
+        "it": "area_testo_descrizione_modello"
+    },
+    "company": {
+        "fr": "Entreprise",
+        "de": "Unternehmen",
+        "it": "Azienda"
+    },
+    "payment method": {
+        "fr": "Méthode De Paiement",
+        "de": "Zahlungsmethode",
+        "it": "Metodo Di Pagamento"
+    },
+    "invoicing": {
+        "fr": "Facturation",
+        "de": "Rechnungsstellung",
+        "it": "Fatturazione"
+    },
+    "Entry Into Force LSI": {
+        "fr": "D'Entrée En Vigueur LSI",
+        "de": "LSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSI"
+    },
+    "Insurance Model LSSI": {
+        "fr": "Modèle D'Assurance LSSI",
+        "de": "LSSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LSSI"
+    },
+    "Entry Into Force LSSI": {
+        "fr": "D'Entrée En Vigueur LSSI",
+        "de": "LSSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSSI"
+    },
+    "Daily Allowance": {
+        "fr": "Indemnité Journalière",
+        "de": "Tagegeld",
+        "it": "Indennità Giornaliera"
+    },
+    "Insurance Model DASI": {
+        "fr": "Modèle D'Assurance DASI",
+        "de": "DASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione DASI"
+    },
+    "Health Insurer DASI": {
+        "fr": "Assureur Santé DASI",
+        "de": "DASI Krankenversicherer",
+        "it": "Assicuratore Sanitario DASI"
+    },
+    "Level Coverage DASI": {
+        "fr": "Niveau De Couverture DASI",
+        "de": "DASI Deckungsstufe",
+        "it": "Livello Di Copertura DASI"
+    },
+    "Accident Coverage DASI": {
+        "fr": "Couverture Accident DASI",
+        "de": "DASI Unfalldeckung",
+        "it": "Copertura Infortuni DASI"
+    },
+    "Waiting Period DASI": {
+        "fr": "Délai D'Attente DASI",
+        "de": "DASI Wartezeit",
+        "it": "Periodo Di Attesa DASI"
+    },
+    "Daily Amount DASI": {
+        "fr": "Montant Journalier DASI",
+        "de": "DASI Täglicher Betrag",
+        "it": "Importo Giornaliero DASI"
+    },
+    "Entry Into Force DASI": {
+        "fr": "D'Entrée En Vigueur DASI",
+        "de": "DASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore DASI"
+    },
+    "Incapacity For Housework": {
+        "fr": "Incapacité Travaux Ménagers",
+        "de": "Arbeitsunfähigkeit Hausarbeit",
+        "it": "Incapacità Lavori Domestici"
+    },
+    "Insurance Model ISI": {
+        "fr": "Modèle D'Assurance ISI",
+        "de": "ISI Versicherungsmodell",
+        "it": "Modello Di Assicurazione ISI"
+    },
+    "Level Coverage ISI": {
+        "fr": "Niveau De Couverture ISI",
+        "de": "ISI Deckungsstufe",
+        "it": "Livello Di Copertura ISI"
+    },
+    "Waiting Period ISI": {
+        "fr": "Délai D'Attente ISI",
+        "de": "ISI Wartezeit",
+        "it": "Periodo Di Attesa ISI"
+    },
+    "Entry Into Force ISI": {
+        "fr": "D'Entrée En Vigueur ISI",
+        "de": "ISI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore ISI"
+    },
+    "Hospitalisation Allowance": {
+        "fr": "Indemnité Hospitalisation",
+        "de": "Hospitalisierungszulage",
+        "it": "Indennità Ospedalizzazione"
+    },
+    "Insurance Model HADSI": {
+        "fr": "Modèle D'Assurance HADSI",
+        "de": "HADSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione HADSI"
+    },
+    "Daily Amount HADSI": {
+        "fr": "Montant Journalier HADSI",
+        "de": "HADSI Täglicher Betrag",
+        "it": "Importo Giornaliero HADSI"
+    },
+    "Entry Into Force HADSI": {
+        "fr": "D'Entrée En Vigueur HADSI",
+        "de": "HADSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore HADSI"
+    },
+    "Accident Insurance": {
+        "fr": "Assurance Accident",
+        "de": "Unfallversicherung",
+        "it": "Assicurazione Infortuni"
+    },
+    "Insurance Model ASI": {
+        "fr": "Modèle D'Assurance ASI",
+        "de": "ASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione ASI"
+    },
+    "Entry Into Force ASI": {
+        "fr": "D'Entrée En Vigueur ASI",
+        "de": "ASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore ASI"
+    },
+    "Insurance For Risks And Disputes On The Internet": {
+        "fr": "Assurance Risques Litiges Internet",
+        "de": "Versicherung Risiken Streitigkeiten Internet",
+        "it": "Assicurazione Rischi Controversie Internet"
+    },
+    "CyberProtect": {
+        "fr": "CyberProtect",
+        "de": "CyberProtect",
+        "it": "CyberProtect"
+    },
+    "Insurance Model CPSI": {
+        "fr": "Modèle D'Assurance CPSI",
+        "de": "CPSI Versicherungsmodell",
+        "it": "Modello Di Assicurazione CPSI"
+    },
+    "Criterion CPSI": {
+        "fr": "Critère CPSI",
+        "de": "CPSI Kriterium",
+        "it": "Criterio CPSI"
+    },
+    "Entry Into Force CPSI": {
+        "fr": "D'Entrée En Vigueur CPSI",
+        "de": "CPSI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore CPSI"
+    },
+    "Lump Sum In The Event Of Disability Or Death": {
+        "fr": "Somme Forfaitaire Invalidité Décès",
+        "de": "Pauschalbetrag Invalidität Tod",
+        "it": "Somma Forfettaria Invalidità Morte"
+    },
+    "Accident": {
+        "fr": "Accident",
+        "de": "Unfall",
+        "it": "Incidente"
+    },
+    "Insurance Model LASI": {
+        "fr": "Modèle D'Assurance LASI",
+        "de": "LASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LASI"
+    },
+    "Level Coverage LASI": {
+        "fr": "Niveau De Couverture LASI",
+        "de": "LASI Deckungsstufe",
+        "it": "Livello Di Copertura LASI"
+    },
+    "Entry Into Force LASI": {
+        "fr": "D'Entrée En Vigueur LASI",
+        "de": "LASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LASI"
+    },
+    "Illness Accident": {
+        "fr": "Maladie Accident",
+        "de": "Krankheit Unfall",
+        "it": "Malattia Incidente"
+    },
+    "Insurance Model LIASI": {
+        "fr": "Modèle D'Assurance LIASI",
+        "de": "LIASI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LIASI"
+    },
+    "Level Coverage LIASI": {
+        "fr": "Niveau De Couverture LIASI",
+        "de": "LIASI Deckungsstufe",
+        "it": "Livello Di Copertura LIASI"
+    },
+    "Accident Coverage LIASI": {
+        "fr": "Couverture Accident LIASI",
+        "de": "LIASI Unfalldeckung",
+        "it": "Copertura Infortuni LIASI"
+    },
+    "Entry Into Force LIASI": {
+        "fr": "D'Entrée En Vigueur LIASI",
+        "de": "LIASI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LIASI"
+    },
+    "Accident Or Sudden Illness": {
+        "fr": "Accident Maladie Soudaine",
+        "de": "Unfall Plötzliche Krankheit",
+        "it": "Incidente Malattia Improvvisa"
+    },
+    "Insurance Model LSISI": {
+        "fr": "Modèle D'Assurance LSISI",
+        "de": "LSISI Versicherungsmodell",
+        "it": "Modello Di Assicurazione LSISI"
+    },
+    "Level Coverage LSISI": {
+        "fr": "Niveau De Couverture LSISI",
+        "de": "LSISI Deckungsstufe",
+        "it": "Livello Di Copertura LSISI"
+    },
+    "Entry Into Force LSISI": {
+        "fr": "D'Entrée En Vigueur LSISI",
+        "de": "LSISI Inkrafttretensdatum",
+        "it": "Data Di Entrata In Vigore LSISI"
+    },
+    "Template Description": {
+        "fr": "Description Modèle",
+        "de": "Vorlagen Beschreibung",
+        "it": "Descrizione Modello"
+    },
+    "Customer": {
+        "fr": "Client",
+        "de": "Kunde",
+        "it": "Cliente"
+    },
+    "Templates": {
+        "fr": "Modèle",
+        "de": "Vorlage",
+        "it": "Modello"
+    },
+   "offers": {
+        "fr": "Offres",
+        "de": "Angebote",
+        "it": "Offerte"
+    },
+    "Offers": {
+        "fr": "Offres",
+        "de": "Angebote",
+        "it": "Offerte"
+    },
+    "Status": {
+        "fr": "Statut",
+        "de": "Status",
+        "it": "Stato"
+    },
+    "Choose Blueprints": {
+        "fr": "Choisir Modèles",
+        "de": "Vorlagen Auswählen",
+        "it": "Modelli Selezionati"
+    },
+    "Copy Data": {
+        "fr": "Copier Données",
+        "de": "Daten Kopieren",
+        "it": "Copia Dati"
+    },
+    "Assign To": {
+        "fr": "Assigner à",
+        "de": "Zuweisen zu",
+        "it": "Assegnare a"
+    },
+    "Assigned to": {
+        "fr": "Assigné à",
+        "de": "Zugewiesen zu",
+        "it": "Assegnato a"
+    },
+    "templates": {
+        "fr": "Modèles",
+        "de": "Vorlagen",
+        "it": "Modelli"
+    },
+    "Company Credentials": {
+        "fr": "Informations Entreprise",
+        "de": "Unternehmensinformationen",
+        "it": "Informazioni Azienda"
+    },
+    "Company Name": {
+        "fr": "Nom Entreprise",
+        "de": "Unternehmensname",
+        "it":"Aggiornato Il"
+    },
+    "User Name": {
+        "fr": "Nom d'utilisateur",
+        "de": "Benutzername",
+        "it": "Nome utente"
+    }, 
+    "Password": {
+        "fr": "Mot de passe",
+        "de": "Passwort",
+        "it": "Password"
+    },
+    "Mobile": {
+        "fr": "Mobile",
+        "de": "Mobil",
+        "it": "Cellulare"
+    },
+    "Slug": {
+        "fr": "Slug",
+        "de": "Slug",
+        "it": "Slug"
+    },
+    "name": {
+        "fr": "Nom",
+        "de": "Name",
+        "it": "Nome"
+    },
+    "Dashboard Settings": {
+        "fr": "Paramètres Tableau de bord",
+        "de": "Dashboard Einstellungen",
+        "it": "Impostazioni Dashboard"
+    },
+    "Select Theme": {
+        "fr": "Sélectionner Thème",
+        "de": "Thema Auswählen",
+        "it": "Seleziona Tema"
+    },
+    "Select Language": {
+        "fr": "Sélectionner Langue",
+        "de": "Sprache Auswählen",
+        "it": "Seleziona Lingua"
+    },
+    "Submit": {
+        "fr": "Soumettre",
+        "de": "Einreichen",
+        "it": "Inviare"
+    },
+    "Change your password": {
+        "fr": "Changer votre mot de passe",
+        "de": "Passwort ändern",
+        "it": "Cambiare la password"
+    },
+    "Your Profile": {
+        "fr": "Votre Profil",
+        "de": "Ihr Profil",
+        "it": "Il tuo profilo"
+    },
+    "Edit Profile": {
+        "fr": "Modifier le profil",
+        "de": "Profil bearbeiten",
+        "it": "Modifica profilo"
+    },
+    "Create Profile": {
+        "fr": "Créer un profil",
+        "de": "Profil erstellen",
+        "it": "Crea profilo"
+    },
+    "Employee Assigned": {
+        "fr": "Employé assigné",
+        "de": "Mitarbeiter zugewiesen",
+        "it": "Impiegato assegnato"
+    },
+
+    "Current Insurer": {
+        "fr": "Assureur actuel",
+        "de": "Aktueller Versicherer",
+        "it": "Assicurato attuale"
+    },
+    "VVG Insurer": {
+        "fr": "Assureur VVG",
+        "de": "VVG Versicherer",
+        "it": "Assicurato VVG"
+    },
+    "Gender": {
+        "fr": "Genre",
+        "de": "Geschlecht",
+        "it": "Genere"  
+    },
+    "Nationality": {
+        "fr": "Nationalité",
+        "de": "Nationalität",
+        "it": "Nazionalità"
+    },
+    "Permit": {
+        "fr": "Permis",
+        "de": "Führerschein",
+        "it": "Permesso"
+    },
+    "Select Role": {
+        "fr": "Sélectionner Rôle",
+        "de": "Rôle Auswählen",
+        "it": "Seleziona Ruolo"
+    },
+    "Download Excel": {
+        "fr": "Télécharger Excel",
+        "de": "Excel herunterladen",
+        "it": "Scarica Excel"
+    },
+    "Users": {
+        "fr": "Utilisateurs",
+        "de": "Benutzer",
+        "it": "Utenti"
+    },
+    "Insurer": {
+        "fr": "Assureur",
+        "de": "Versicherer",
+        "it": "Assicurato"
+    },
+    "Email": {
+        "fr": "Email",
+        "de": "Email",
+        "it": "Email"
+    },
+    "email": {
+        "fr": "Email",
+        "de": "Email",
+        "it": "Email"
+    },
+    "Phone": {
+        "fr": "Téléphone",
+        "de": "Telefon",
+        "it": "Telefono"
+    },
+    "Roles Name": {
+        "fr": "Rôles",
+        "de": "Rollen",
+        "it": "Ruoli"
+    },
+    "Roles Id": {
+        "fr": "Rôles",
+        "de": "Rollen",
+        "it": "Ruoli"
+    },
+    "Role": {
+        "fr": "Rôle",
+        "de": "Rolle",
+        "it": "Ruolo"
+    },
+    "First Name": {
+        "fr": "Prénom",
+        "de": "Vorname",
+        "it":   "Nome"
+    },
+    "Last Name": {
+        "fr": "Nom",
+        "de": "Nachname",
+        "it": "Cognome"
+    },
+    "Address": {
+        "fr": "Adresse",
+        "de": "Adresse",
+        "it": "Indirizzo"
+    },
+    "City": {
+        "fr": "Ville",
+        "de": "Stadt",
+        "it": "Città"
+    },
+    "Postcode": {
+        "fr": "Code Postal",
+        "de": "Postleitzahl",
+        "it": "CAP"
+    },
+    "Birthdate": {
+        "fr": "Date de naissance",
+        "de": "Geburtsdatum",
+        "it": "Data di nascita"
+    },
+    "gender": {
+        "fr": "Genre",
+        "de": "Geschlecht",
+        "it": "Genere"
+    },
+    "Home Phone": {
+        "fr": "Téléphone Maison",
+        "de": "Telefon Privat",
+        "it": "Telefono Casa"
+    },
+    "Work Phone": {
+        "fr": "Téléphone Professionnel",
+        "de": "Telefon Arbeit",
+        "it": "Telefono Lavoro"
+    },
+    "Doctors Name": {
+        "fr": "Nom Médecin",
+        "de": "Nachname Arzt",
+        "it": "Cognome Medico"
+    },
+    "Doctors First Name": {
+        "fr": "Prénom Médecin",
+        "de": "Vorname Arzt",
+        "it": "Nome Medico"
+    },
+    "Doctors Zip Code": {
+        "fr": "Code Postal Médecin",
+        "de": "Postleitzahl Arzt",
+        "it": "CAP Medico"
+    },
+    "Doctors City": {
+        "fr": "Ville Médecin",
+        "de": "Stadt Arzt",
+        "it": "Città Medico"
+    },
+    "Doctors Address": {
+        "fr": "Adresse Médecin",
+        "de": "Adresse Arzt",
+        "it": "Indirizzo    Medico"
+    },
+    "List Offers": {
+        "fr": "Liste Offres",
+        "de": "Angebote Liste",
+        "it": "Lista Offerte"
+    },
+    "Create Template": {
+        "fr": "Créer Modèle",
+        "de": "Vorlage erstellen",
+        "it": "Crea Modello"
+    },
+    "Collections": {
+        "fr": "Collections",
+        "de": "Sammlungen",
+        "it": "Collezioni"
+    }
+}

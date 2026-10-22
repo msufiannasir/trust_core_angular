@@ -49,6 +49,7 @@ export class BlueprintComponent implements OnInit {
               { value: 'date', title: 'Date' },
               { value: 'textarea', title: 'Textarea' },
               { value: 'relational', title: 'Relational' },
+              { value: 'label', title: 'Label' },
             ],
           },
         },
@@ -347,6 +348,7 @@ formatFieldName(fieldName: string): string {
     if (fieldName.startsWith('file_')) return 'file';
     if (fieldName.startsWith('date_')) return 'date';
     if (fieldName.startsWith('textarea_')) return 'textarea';
+    if (fieldName.startsWith('label_')) return 'label';
     return 'Unknown';
   }
 

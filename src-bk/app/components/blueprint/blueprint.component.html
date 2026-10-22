@@ -1,0 +1,19 @@
+<nb-card>
+  <nb-card-header>
+    <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="goBack()">← Back</button>
+    {{ ' Blueprint' }} 
+  </nb-card-header>
+
+  <nb-card-body>
+
+
+<ng2-smart-table
+  [settings]="settings"
+  [source]="source"
+  (editConfirm)="onFieldTypeChange($event)"
+  (createConfirm)="onCreateField($event)"
+  (deleteConfirm)="onDeleteField($event)"
+></ng2-smart-table>
+
+</nb-card-body>
+</nb-card>

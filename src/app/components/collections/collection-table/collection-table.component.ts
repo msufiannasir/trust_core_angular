@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 
 
+
 @Component({
   selector: 'ngx-smart-table',
   templateUrl: './collection-table.component.html',
@@ -26,7 +27,6 @@ export class CollectionTableComponent implements OnInit {
   metaArray: { key: string; value: any }[] = [];
   formData: { key: string; value: any }[] = []; // New array to hold form data
   source: LocalDataSource = new LocalDataSource();
-
   settings = {
     actions: {
       add: true,
@@ -60,6 +60,8 @@ export class CollectionTableComponent implements OnInit {
   allowedHandles = ['offers', 'contracts', 'templates']; // Define allowed handles
    // Dynamically set mode based on route
   showBlueprintButton: boolean = true;
+  currentUser=JSON.parse(localStorage.getItem('user'));
+  rolename='';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -69,6 +71,7 @@ export class CollectionTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.rolename=this.currentUser.roles[0].name;
     // Check if 'handle' exists in the current route
     this.route.paramMap.subscribe((params) => {
       const handle = params.get('handle');
@@ -126,7 +129,9 @@ export class CollectionTableComponent implements OnInit {
       }
     );
   }
-
+  getTranslations(key: string): string {
+    return this.usersService.getTranslations(key);
+  }
   fetchAllCollection(handle: string): void {
     this.collectionsService.getCollections().subscribe((response) => {
       if (response && response.collection && Array.isArray(response.collection)) {
@@ -201,8 +206,10 @@ export class CollectionTableComponent implements OnInit {
     let filter: any=true;
     const dynamicColumns: any = {};
     columns.forEach((column) => {
+      filter="";
       // Define columns to exclude or hide
-      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at']; 
+      const hiddenColumns = ['id', 'collection_id', 'created_at', 'updated_at', 'rel_created_by_col_users']; 
+      
       if (!hiddenColumns.includes(column)) {
         let formattedTitle: string;
         let fieldType: string = 'string'; // Default field type
@@ -210,13 +217,17 @@ export class CollectionTableComponent implements OnInit {
         let valuePrepareFunction: (cell: any, row: any) => string | null = null; // For displaying the value in the table row
   
         if (column.startsWith('rel_')) {
-          filter= {
-            type: 'list', // Specify filter type as 'list' for dropdown
-            config: {
-              selectText: 'Select option', // Placeholder text
-              list: []
-            },
-          };
+          // filter= {
+          //   type: 'list', // Specify filter type as 'list' for dropdown
+          //   config: {
+          //     selectText: 'Select option', // Placeholder text
+          //     list: []
+          //   },
+          // };
+          if (column.includes('customer') || column.includes('templates') ) {
+            filter= false;
+          }
+          
           // Relational dropdown field
           fieldType = 'dropdown';
           // Format title by removing the "rel_" prefix and cleaning up
@@ -246,7 +257,7 @@ export class CollectionTableComponent implements OnInit {
         const uniqueOptions = Array.from(
           new Map(options.map((option) => [option.value, option])).values()
         );
-        filter.config.list=uniqueOptions;
+        // filter.config.list=uniqueOptions;
         // Default "Please select an option" as the first dropdown item
         editor = {
           type: 'list',
@@ -257,35 +268,34 @@ export class CollectionTableComponent implements OnInit {
             ],
           },
         };
+        
         valuePrepareFunction = (cell: any, row: any) => {
           // Check if the cell has a value and return it
-          // console.log(row[column].selected.handle, 'row.column');
           var Cellselectedvalue='';
           const selectedOption = uniqueOptions.find(option => option.value == (formattedTitle=='Templates'?cell.selected.display:cell.selected.id));
-          console.log(selectedOption, 'selectedOption');
+          
           if(typeof row[column].selected.handle !='undefined'){
-             Cellselectedvalue=cell.selected.handle.includes('template_')?cell.selected.handle:selectedOption.title;
-             console.log(Cellselectedvalue, 'Cellselectedvalue');
+             Cellselectedvalue=cell.selected.handle.includes('template_')?cell.selected.handle:selectedOption?.title;
           }
 
           if (cell) {
-            // if(Cellselectedvalue!=''){
-            //   return Cellselectedvalue;
-            // }
-            // else
-             if(typeof selectedOption !='undefined'){
+            if(typeof selectedOption !='undefined'){
               return selectedOption.title;
             }
+            // Skip row if customer column returns 'N/A'
+            // if (formattedTitle.toLowerCase() === 'customer' && (!selectedOption || selectedOption.title === 'N/A')) {
+            //   return null; // This will hide the row
+            // }
             return 'N/A';
-          }else{
-              console.log(selectedOption, 'else cell.selectedOption.id');
-              // if(typeof selectedOption !='undefined'){
-                  return row[column].selected.id;
-                // }
-              }
-          };       
-        }
+          } else {
+            return row[column].selected.id;
+          }
+        };    
+      }
         else if (column.startsWith('text_')) {
+          filter= {
+            type: 'text', // Specify filter type as 'list' for dropdown
+          };
           // Text field
           fieldType = 'text';
           editor = { type: 'input' };
@@ -295,6 +305,9 @@ export class CollectionTableComponent implements OnInit {
             .replace(/_/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
         } else if (column.startsWith('textarea_')) {
+          filter= {
+            type: 'text', // Specify filter type as 'list' for dropdown
+          };
           // Textarea field
           fieldType = 'textarea';
           editor = { type: 'textarea' };
@@ -329,6 +342,9 @@ export class CollectionTableComponent implements OnInit {
             .replace(/\b\w/g, (char) => char.toUpperCase());
           
         } else if (column.startsWith('date_')) {
+          filter= {
+            type: 'date', // Specify filter type as 'list' for dropdown
+          };
           // Date field
           fieldType = 'date';
           editor = {
@@ -350,7 +366,7 @@ export class CollectionTableComponent implements OnInit {
   
         // Assign column configuration
         dynamicColumns[column] = {
-          title: formattedTitle,
+          title: this.usersService.getTranslations(formattedTitle.trim()),
           type: fieldType,
           editor: editor,
           filter: filter,
@@ -479,7 +495,7 @@ export class CollectionTableComponent implements OnInit {
         'pages/collections',  // Another route
       ];  
       // Check if the current URL contains any of the hidden routes
-      this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
+      this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route)) && this.rolename=='admin';
     }
 
      // Override Create button behavior

@@ -1,0 +1,153 @@
+<nb-card>
+  <nb-card-header>
+    <h1>Create User</h1>
+  </nb-card-header>
+  <nb-card-body>
+    <form #userForm="ngForm" (ngSubmit)="onSubmit($event)" novalidate>
+      <div class="row">
+        <ng-container *ngFor="let field of metaArray; let i = index">
+          <div class="col-md-6" *ngIf="!isHidden(field.key)">
+            <div class="form-group">
+              <label [for]="field.key" class="label">
+                {{ field.displayKey | titlecase }}
+                <span *ngIf="isRequiredField(field.key)" class="text-danger">*</span>
+              </label>
+
+              <!-- Text Input -->
+              <input *ngIf="isTextField(field.key)"
+                type="text"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+                #fieldModel="ngModel"
+                (blur)="captureFieldValue($event.target.value, i)"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [ngClass]="{'error-border': validationErrors[field.key]}"
+                [required]="isRequiredField(field.key)"
+              />
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+
+              <!-- Textarea -->
+              <textarea *ngIf="isTextareaField(field.key)"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+                #fieldModel="ngModel"
+                (blur)="captureFieldValue($event.target.value, i)"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [ngClass]="{'error-border': validationErrors[field.key]}"
+                [required]="isRequiredField(field.key)"
+              ></textarea>
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+
+              <!-- File Input -->
+              <div *ngIf="isFileField(field.key)" class="form-group">
+                <input
+                  type="file"
+                  class="form-control"
+                  [id]="field.key"
+                  [name]="field.key"
+                  (change)="handleFileUpload($event, field.key, i)"
+                  [ngClass]="{'error-border': validationErrors[field.key]}"
+                  [required]="isRequiredField(field.key)"
+                />
+              </div>
+
+              <!-- Dropdown Select -->
+              <select
+                *ngIf="isDropdownField(field.key)"
+                class="form-control"
+                [(ngModel)]="field.value"
+                [name]="field.key"
+                #fieldModel="ngModel"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [ngClass]="{'error-border': validationErrors[field.key]}"
+                [required]="isRequiredField(field.key)"
+              >
+                <option value="" disabled>Select an option</option>
+                <ng-container *ngIf="field.groups">
+                  <ng-container *ngFor="let group of objectKeys(field.groups)">
+                    <optgroup *ngIf="field.groups[group]" [label]="group">
+                      <option *ngFor="let option of field.groups[group]" [value]="option.id">
+                        {{ option.display }}
+                      </option>
+                    </optgroup>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!field.groups || field.groups.length === 0">
+                  <option *ngFor="let option of field.allOptions" [value]="option.id">
+                    {{ option.display }}
+                  </option>
+                </ng-container>
+              </select>
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+
+              <!-- Date Input -->
+              <input *ngIf="isDateField(field.key)"
+                type="date"
+                class="form-control"
+                [(ngModel)]="field.value"
+                [name]="field.key"
+                #fieldModel="ngModel"
+                (ngModelChange)="captureFieldValue($event, i)"
+                [ngClass]="{'error-border': validationErrors[field.key]}"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
+              />
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+
+              <!-- Default Text Input -->
+              <input *ngIf="!isTextField(field.key) && !isTextareaField(field.key) && !isFileField(field.key) && !isDropdownField(field.key) && !isDateField(field.key)"
+                type="text"
+                class="w-100 form-control"
+                [id]="field.key"
+                [name]="field.key"
+                [placeholder]="'Enter ' + field.displayKey | titlecase"
+                [(ngModel)]="field.value"
+                [ngClass]="{'error-border': validationErrors[field.key]}"
+                #fieldModel="ngModel"
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                [required]="isRequiredField(field.key)"
+              />
+              <div *ngIf="fieldModel?.invalid && fieldModel?.touched" class="text-danger">
+                This field is required.
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <button
+        type="button"
+        nbButton
+        status="success"
+        class="appearance-filled size-medium shape-rectangle status-basic nb-transition mt-3"
+        (click)="onSubmit($event)"
+      >
+        Create User
+      </button>
+
+      <button
+        type="button"
+        nbButton
+        status="basic"
+        class="appearance-filled size-medium shape-rectangle status-basic nb-transition mt-3 ml-2"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+    </form>
+  </nb-card-body>
+</nb-card> 

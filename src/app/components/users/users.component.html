@@ -1,14 +1,15 @@
-<nb-card *ngIf="currentPath==user_paths.listings">
+<nb-card *ngIf="currentPath===user_paths.listings || currentPath===user_paths.all"> 
     <nb-card-header>
-      <h2>Users</h2> 
-      <button nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
-        Edit Blueprint
+      <h2 *ngIf="rolename==='admin'" style="margin: 20px 0px;">{{getTranslations('Users')}}</h2> 
+      <h2 *ngIf="rolename!=='admin'" style="margin: 20px 0px;">{{getTranslations('Customers')}}</h2> 
+      <button *ngIf="rolename==='admin'"  nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
+        {{getTranslations('Edit Blueprint')}}
       </button>
-      <button mat-button nbbutton (click)="exportToPdf()" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
+      <!-- <button mat-button nbbutton (click)="exportToPdf()" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
         Download PDF
-      </button>
+      </button> -->
       <button mat-button nbbutton (click)="exportToExcel()" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
-        Download Excel
+        {{getTranslations('Download Excel')}}
       </button>
       <!-- <button nbButton status="primary" (click)="exportaction('excel')" class="action-btns appearance-filled size-medium shape-rectangle status-basic nb-transition">
          Excel 
@@ -22,6 +23,9 @@
       <ng2-smart-table 
       [settings]="settings" 
       [source]="source" 
+      (create)="onCreate($event)"
+      (edit)="onEdit($event)"
+      (delete)="onDeleteConfirm($event)"
       (deleteConfirm)="onDeleteConfirm($event)"
       (createConfirm)="onCreateUpdateConfirm($event)"
       (editConfirm)="onCreateUpdateConfirm($event)"
@@ -29,10 +33,14 @@
       </ng2-smart-table>
     </nb-card-body>
   </nb-card>
-  <nb-card *ngIf="currentPath==user_paths.profile">
-    <nb-card-header>Your Profile</nb-card-header>
+  <nb-card *ngIf="currentPath.includes('profile')">
+    <nb-card-header>
+      <ng-container *ngIf="currentPath === '/user/profile'">{{getTranslations('Your Profile')}}</ng-container>
+      <ng-container *ngIf="currentPath.includes('/user/profile/') && !currentPath.includes('/create')">{{getTranslations('Edit Profile')}} {{singleuserdata?.meta_text_first_name}} {{singleuserdata?.meta_text_last_name}}</ng-container>
+      <ng-container *ngIf="currentPath.includes('/user/profile/create')">{{getTranslations('Create Profile')}}</ng-container>
+    </nb-card-header>
     <nb-card-body>
-      <form class="form-horizontal" >
+      <form class="form-horizontal user-form" >
         <!-- <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
@@ -48,36 +56,168 @@
           </div>
         </div> -->
         <div class="row">
-          <div class="col-sm-6" *ngFor="let field of metaArray; let i = index">
+          <div class="col-sm-6" *ngFor="let field of metaArray; let i = index" [hidden]="isHidden(field.key)">
             <div class="form-group">
-              <label [hidden]="isHidden(field.key)" [for]="field.key" class="label">{{ field.displayKey  | titlecase }}</label>
+              <label  [for]="field.key" class="label">{{ (field.displayKey)  | titlecase }} </label>
               <input nbInput fullWidth 
               type="text"
+              class="notranslate"
+              maxLength="100"
               nbInput
               fullWidth
               [id]="field.key"
-              [placeholder]="'Enter ' + field.key | titlecase"
               [value]="field.value"
-              [hidden]="isHidden(field.key)"
+              [placeholder]="'Enter ' + getTranslations(field.displayKey) | titlecase"
               (blur)="captureFieldValue($event.target.value, i)"
+              formfield
               >
+            </div>
+          </div>
+        <!-- </div> -->
+        <!-- <div class="row"> -->
+            <div class="col-sm-6" *ngIf="currentPath !== '/pages/user/profile' && rolename==='admin'">
+            <div class="form-group">
+              <label for="99" class="label">{{getTranslations('Employee Assigned')}} </label>
+              <select nbInput fullWidth
+                class="form-control notranslate"
+                (change)="captureFieldValue($event.target.value, 99)"
+                [value]="getUserValue()" 
+                id="99"
+                
+              >
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let user of allusers?.data | filter:'roles_name':'employee'" [value]="user.meta_user_id" [selected]="user.meta_user_id === getUserValue()">
+                  {{ user.meta_text_first_name }} {{ user.meta_text_last_name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="currentPath!=='/pages/user/profile'">
+            <div class="form-group">
+              <label for="meta_rel_current_insurer_req_col_current_insurer_id" class="label">{{getTranslations('Current Insurer')}} </label>
+              <select nbInput fullWidth
+              formfield
+                class="form-control notranslate"
+                id="meta_rel_current_insurer_req_col_current_insurer_id"
+                [value]="getCurrentInsurerValue()"
+                (change)="captureFieldValue($event.target.value, 'meta_rel_current_insurer_req_col_current_insurer')">
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let insurer of meta_rel_current_insurer_req_col_current_insurer" [value]="insurer.id" [selected]="insurer.id === getCurrentInsurerValue()">
+                  {{ insurer.display }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="currentPath!=='/pages/user/profile'">
+            <div class="form-group">
+              <label for="meta_rel_current_vvg_insurer_req_col_current_insurer_id" class="label">{{getTranslations('VVG Insurer')}} </label>
+              <select nbInput fullWidth
+              formfield
+                class="form-control notranslate"
+                id="meta_rel_current_vvg_insurer_req_col_current_insurer_id"
+                (change)="captureFieldValue($event.target.value, 'meta_rel_current_vvg_insurer_req_col_current_insurer')"
+                [value]="getVvgInsurerValue()"
+                
+              >
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let insurer of meta_rel_current_vvg_insurer_req_col_current_insurer" [value]="insurer.id" [selected]="insurer.id === getVvgInsurerValue()">
+                  {{ insurer.display }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="currentPath!=='/pages/user/profile'">
+            <div class="form-group">
+              <label for="meta_rel_gender_req_col_gender_id" class="label">{{getTranslations('Gender')}} </label>
+              <select nbInput fullWidth
+              formfield
+                class="form-control"
+                id="meta_rel_gender_req_col_gender_id"
+                (change)="captureFieldValue($event.target.value, 'meta_rel_gender_req_col_gender')"
+                [value]="getGenderValue()"
+                  
+              >
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let gender of meta_rel_gender_req_col_gender" [value]="gender.id" [selected]="gender.id === getGenderValue()">
+                  {{ gender.display }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="currentPath !== '/pages/user/profile'"> 
+            <div class="form-group">
+              <label for="meta_rel_nationality_col_country_id" class="label">{{getTranslations('Nationality')}} </label>
+              <select nbInput fullWidth
+              formfield
+                class="form-control notranslate"
+                id="meta_rel_nationality_col_country_id"
+                (change)="captureFieldValue($event.target.value, 'meta_rel_nationality_col_country')"
+                [value]="getNationalityValue()"
+              >
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let country of meta_rel_nationality_col_country" [value]="country.id" [selected]="country.id === getNationalityValue()">
+                  {{ country.display }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="currentPath !== '/pages/user/profile'">
+            <div class="form-group">
+              <label for="meta_rel_permit_col_permit_id" class="label">{{getTranslations('Permit')}} </label>
+              <select nbInput fullWidth
+              formfield
+                class="form-control notranslate"
+                id="meta_rel_permit_col_permit_id"
+                (change)="captureFieldValue($event.target.value, 'meta_rel_permit_col_permit')"
+                [value]="getPermitValue()"
+                
+              >
+                <option value="">{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let permit of meta_rel_permit_req_col_permit" [value]="permit.id"   [selected]="permit.id === getPermitValue()">
+                  {{ permit.display }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6" *ngIf="currentPath !== '/pages/user/profile' && rolename==='admin'">
+            <div class="form-group">
+              <label for="88" class="label">{{getTranslations('Select Role')}}</label>
+              <select nbInput fullWidth
+                class="form-control notranslate"
+                [id]="88"
+                (change)="captureFieldValue($event.target.value, 88)"
+                [value]="getRoleValue()"
+                  
+              >
+                <option value="" disabled>{{getTranslations('Select an option')}}</option>
+                <option *ngFor="let role of roles?.data" [value]="role.id" [selected]="role.id === getRoleValue()">
+                  {{ role.name | titlecase }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label class="label">Change your password</label>
+              <label for="password" class="label">{{getTranslations('Change your password')}}</label>
               <input nbInput fullWidth id="inputWebsite"
               type="password"
               nbInput
               fullWidth
+              id="password"
+              class="notranslate"
               (blur)="captureFieldValue($event.target.value,'password')"
               >
             </div>
           </div>
         </div>
-        <button type="button" nbButton status="success" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="updateProfile()">Submit</button>
+        <button type="button" nbButton status="success" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="updateProfile()">{{getTranslations('Submit')}}</button>
     </form>
     </nb-card-body>
   </nb-card>

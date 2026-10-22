@@ -1,8 +1,8 @@
 <nb-card>
     <nb-card-header>
-      {{ settings.tableTitle || 'Default Title' }} 
+      {{ getTranslations(settings.tableTitle) || 'Default Title' }} 
       <button *ngIf="showBlueprintButton" nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
-        Edit Blueprint
+        getTranslations('Edit Blueprint')
       </button>
     </nb-card-header>
   

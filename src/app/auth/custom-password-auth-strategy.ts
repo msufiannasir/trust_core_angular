@@ -5,6 +5,7 @@ import { NbPasswordAuthStrategy, NbAuthResult } from '@nebular/auth';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
@@ -37,6 +38,9 @@ export class CustomPasswordAuthStrategy extends NbPasswordAuthStrategy {
         localStorage.setItem('user', JSON.stringify(response.user));
         localStorage.setItem('AuthToken', response.token);
         localStorage.setItem('token', response.token);
+        const router = this.injector.get<Router>(Router);
+        // router.navigate(['/pages/dashboard']);
+        window.location.href = '/pages/dashboard';
         // if (token.isValid()) {
           // this.getTokenService().set(token); // Dynamically get and use NbTokenService
           return new NbAuthResult(

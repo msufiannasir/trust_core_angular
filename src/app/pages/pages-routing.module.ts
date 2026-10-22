@@ -10,10 +10,12 @@ import { CollectionListingComponent } from '../components/collections/collection
 import { UsersComponent } from '../components/users/users.component';
 import { RolesComponent } from '../components/roles/roles.component';
 import { BlueprintComponent } from '../components/blueprint/blueprint.component';
-import { EditEntry} from '../components/entryedit/entry.component';
+import { EditEntryComponent } from '../components/entryedit/entry.component';
 import { SitesettingsComponent } from '../components/sitesettings/sitesettings.component';
 import { UsersettingsComponent } from '../components/usersettings/usersettings.component';
 import { AuthGuard } from '../auth.guard';
+import { CreateUserComponent } from '../../app/pages/users/create-user/create-user.component';
+import { EditUserComponent } from '../../app/pages/users/edit-user/edit-user.component';
 
 const routes: Routes = [{
   path: '',
@@ -23,6 +25,7 @@ const routes: Routes = [{
       path: 'dashboard',
       component: ECommerceComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'dashboard' } 
     },
     {
       path: 'collections/templates/all',
@@ -30,6 +33,7 @@ const routes: Routes = [{
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       canActivate: [AuthGuard],
+      data: { permission: 'templates' } 
     },
     {
       path: 'collections/all',
@@ -37,6 +41,7 @@ const routes: Routes = [{
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       canActivate: [AuthGuard],
+      data: { permission: 'collections' } 
     },
 
         // Static routes should come first
@@ -46,6 +51,7 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: SitesettingsComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'settings' } 
     },
     {
       path: 'settings/user',
@@ -53,6 +59,7 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: UsersettingsComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'settings' } 
     },
     {
       path: ':handle',
@@ -60,6 +67,8 @@ const routes: Routes = [{
       loadChildren: () => import('../components/collections/tables.module')
         .then(m => m.TablesModule),
       canActivate: [AuthGuard],
+      data: { permission: ':handle' } 
+
     },
     {
       path: ':handle/blueprint',
@@ -67,29 +76,38 @@ const routes: Routes = [{
       .then(m => m.TablesModule),
       component: BlueprintComponent, // Only for ':handle' routes
       canActivate: [AuthGuard],
+      data: { permission: 'blueprints' } 
+
     },
 
     {
       path: ':handle/entry/:entryId',
       loadChildren: () => import('../components/collections/tables.module')
       .then(m => m.TablesModule),
-      component: EditEntry, // Only for ':handle' routes
+      component: EditEntryComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'pagesEdit' } 
+
     },
     {
       path: ':handle/create',
       loadChildren: () => import('../components/collections/tables.module')
       .then(m => m.TablesModule),
-      component: EditEntry, // Only for ':handle' routes
+      component: EditEntryComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'pagesCreate' } 
+
     },
     {
       path: ':handle/edit/:id',
       loadChildren: () => import('../components/collections/tables.module')
       .then(m => m.TablesModule),
-      component: EditEntry, // Only for ':handle' routes
+      component: EditEntryComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'pagesEdit' } 
+
     },
+  
 
     {
       path: 'customers',
@@ -97,6 +115,8 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'users' } 
+
 
     },
     {
@@ -105,6 +125,8 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: CollectionTableComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'reports' } 
+
     },
     {
       path: 'users/list',
@@ -112,6 +134,16 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: UsersComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'users' } 
+
+    },
+    {
+      path: 'users/list/all',
+      loadChildren: () => import('../components/collections/tables.module')
+        .then(m => m.TablesModule),
+      component: UsersComponent,
+      canActivate: [AuthGuard],
+      data: { permission: 'users' } 
 
     },
     {
@@ -120,6 +152,26 @@ const routes: Routes = [{
         .then(m => m.TablesModule),
       component: UsersComponent,
       canActivate: [AuthGuard],
+      data: { permission: 'profile' } 
+
+
+    },
+    {
+      path: 'user/profile/create',
+      loadChildren: () => import('../components/collections/tables.module')
+      .then(m => m.TablesModule),
+      component: UsersComponent,
+      canActivate: [AuthGuard],
+      data: { permission: 'profile' } 
+
+    },
+    {
+      path: 'user/profile/:id',  
+      loadChildren: () => import('../components/collections/tables.module')
+      .then(m => m.TablesModule),
+      component: UsersComponent,
+      canActivate: [AuthGuard],
+      data: { permission: 'profile' } 
 
     },
     {

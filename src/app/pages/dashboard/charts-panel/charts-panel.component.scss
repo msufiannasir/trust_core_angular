@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+.orders-chart-container {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  overflow: visible;
+}
+
+::ng-deep {
+  .orders-chart {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1rem;
+    overflow: visible !important;
+  }
+
+  .echarts {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1rem;
+    overflow: visible !important;
+  }
+} 

@@ -19,6 +19,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 // import { FileUploadEditorComponent } from './file-upload-editor.component';
 import { FileUploadEditorComponent } from './components/fileupload/file-upload-editor.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { SharedModule } from './shared/shared.module';
 
 import {
   NbChatModule,
@@ -49,6 +50,7 @@ import { SitesettingsComponent } from './components/sitesettings/sitesettings.co
     FormsModule, // Add this line
     ReactiveFormsModule,
     AppRoutingModule,
+    SharedModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     // FormsModule,

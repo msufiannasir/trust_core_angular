@@ -10,6 +10,7 @@ import { NbThemeService } from '@nebular/theme';
       [xAxis]="showXAxis"
       [yAxis]="showYAxis"
       [legend]="showLegend"
+      [autoScale]="true"
       [showXAxisLabel]="showXAxisLabel"
       [showYAxisLabel]="showYAxisLabel"
       [xAxisLabel]="xAxisLabel"

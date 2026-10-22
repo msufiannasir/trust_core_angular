@@ -1,10 +1,10 @@
 <nb-card>
     <nb-card-header>
-      <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="goBack()">← Back</button>
+      <button nbButton status="primary" class="appearance-filled size-medium shape-rectangle status-basic nb-transition" (click)="goBack()">← {{getTranslations('Back')}}</button>
 
-      {{ settings.tableTitle || 'Default Title' }} 
+      {{ getTranslations(settings.tableTitle) || 'Default Title' }} 
       <button *ngIf="showBlueprintButton" nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
-        Edit Blueprint
+        {{getTranslations('Edit Blueprint')}}
       </button>
     </nb-card-header>
   

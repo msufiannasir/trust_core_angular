@@ -61,7 +61,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
       grid: {
         left: 40,
         top: 20,
-        right: 0,
+        right: 40,
         bottom: 40,
       },
       tooltip: {
@@ -131,9 +131,9 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
         },
       },
       series: [
-        this.getFirstLine(eTheme),
-        this.getSecondLine(eTheme),
+        // this.getFirstLine(eTheme),
         this.getThirdLine(eTheme),
+        this.getSecondLine(eTheme),
       ],
     };
   }

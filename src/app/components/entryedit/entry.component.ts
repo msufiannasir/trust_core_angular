@@ -11,12 +11,23 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './entry.component.html',
   styleUrls: ['./entry.component.scss'],
 })
-export class EditEntry implements OnInit {
+export class EditEntryComponent implements OnInit {
   source: LocalDataSource = new LocalDataSource();
   currentPath: string;
   collectionHandle: string | null = null;
   entryId: string | null = null;
-  metaArray: { key: string; value: any }[] = [];
+  metaArray: { 
+    key: string; 
+    value: any; 
+    displayKey: string; 
+    isRequiredField: boolean; 
+    allOptions: any[]; 
+    groups?: any; 
+    key_en: string; 
+    key_fr: string; 
+    key_de: string; 
+    key_it: string; 
+  }[] = [];
   formData: { key: string; value: any }[] = [];
   additionalForms: any[] = []; 
   showRedirectButton: boolean = false; 
@@ -27,15 +38,58 @@ export class EditEntry implements OnInit {
   offerID='';
   slug;
   collectionHandleReadable='';
+  allowedPrefixes: string[] = [ 'template_'];
   validationErrors: { [key: string]: boolean } = {};
+  currentUser=JSON.parse(localStorage.getItem('user'));
+  rolename='';
+  currentLanguage: string = 'en'; // Default to English
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private collectionsService: CollectionsService,
     private cdr: ChangeDetectorRef,
     private location: Location,
-    private http: HttpClient
+    private http: HttpClient,
+    private usersService: UsersService
   ) {}
+
+  // Get the current language from user settings
+  getCurrentLanguage(): string {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (parsedUser.meta && parsedUser.meta.settings) {
+        const settings = JSON.parse(parsedUser.meta.settings);
+        return settings.language_setting || 'en';
+      }
+    }
+    return 'en';
+  }
+  getTranslations(key: string): string {
+    return this.usersService.getTranslations(key) || key;
+  }
+  // Get translated label based on current language
+  getTranslatedLabel(field: any): string {
+    const translatedLabel = this.getTranslations(this.formatDisplayKey(field.key).trim());
+    // console.log(field.key, 'translatedLabel');
+    return translatedLabel;
+    // console.log(field, 'getTranslatedLabel');
+    // const language = this.getCurrentLanguage();
+    // // Try to get the translated label
+    // switch (language) {
+    //   case 'fr':
+    //     return (field.key_fr) || field.displayKey;
+    //   case 'de':
+    //     return (field.key_de) || field.displayKey;
+    //   case 'it':
+    //     return (field.key_it) || field.displayKey;
+    //   case 'en':
+    //   default:
+    //     return (field.key_en) || field.displayKey;
+    // }
+  }
+
   goBack(handle): void {
     if(this.slug=='offers' && this.collectionHandle!='offers'){
       this.collectionHandle=this.bufferHandle='offers';
@@ -47,7 +101,9 @@ export class EditEntry implements OnInit {
     }
   }
   ngOnInit(): void {
-    this.currentPath = this.router.url.split('?')[0]; 
+    this.rolename=this.currentUser.roles[0].name;
+    this.currentLanguage = this.getCurrentLanguage(); // Set current language
+    this.currentPath = this.router.url.split('?')[0];
     console.log("Current Path:", this.currentPath);
     this.route.paramMap.subscribe((params) => {
       this.collectionHandle = params.get('handle');
@@ -57,8 +113,8 @@ export class EditEntry implements OnInit {
       console.log("this.collectionHandle:", this.collectionHandle);
       console.log(" this.entryId",  this.entryId);
        // Check if any segment starts with "template_"
-       this.showBlueprintButton = this.collectionHandle?.startsWith('template_') || false;
-       if (this.collectionHandle && this.entryId) {
+       this.showBlueprintButton = (this.collectionHandle?.startsWith('template_') && this.rolename=='admin') || false;
+      if (this.collectionHandle && this.entryId) {
         this.fetchEntryData();
       }else if (this.collectionHandle){
         this.fetchEntryFields();
@@ -66,40 +122,53 @@ export class EditEntry implements OnInit {
     });
   }
   setcollectionHandleReadable(collectionHandle){
-    this.collectionHandleReadable=this.collectionHandle.replace(/_/g, " ");
+    this.collectionHandleReadable=this.getTranslations(this.collectionHandle.replace(/_/g, " "));
   }
   isHidden(key: string): boolean {
     const hiddenFields = ['id', 'user_id', 'collection_id', 'created_at', 'updated_at', 'last_login', 'employee_assigned', 'settings'];
+    if(this.rolename!='admin'){
+      hiddenFields.push('rel_created_by_col_users');
+    }
     return hiddenFields.includes(key);
+  }
+  startsWithAllowed(): boolean {
+    return this.allowedPrefixes.some(prefix => this.collectionHandle.startsWith(prefix));
   }
   fetchEntryData(): void {
     if (this.collectionHandle && this.entryId) {
       this.collectionsService.getEntryDetail(this.collectionHandle, this.entryId).subscribe(
         (response) => {
-          console.log('API Response:', response);
+          // console.log('API Response:', response);
           // Map response to metaArray
           this.metaArray = Object.entries(response.entry).map(([key, value]) => {
             if (this.isDropdownField(key) && typeof value === 'object' && value !== null) {
               const val = value as any; // Bypass TypeScript's strict checks
+              const groups=typeof val.groups!='undefined'?val.groups:'';
+              console.log( val.allOptions, 'val.groups');
               return {
                 key,
                 value: val.selected ? val.selected.id : '', // Access selected ID safely
                 displayKey: this.formatDisplayKey(key), // Call the separate function
-                // displayKey: key.replace(/_/g, ' '),
                 isRequiredField: this.isRequiredField(key),
-                allOptions: val.allOptions || [] // Ensure allOptions exist
+                allOptions: val.allOptions || [], // Ensure allOptions exist
+                groups: groups || {}, // Ensure allOptions exist
+                key_en: response.translations?.[this.formatDisplayKey(key)]?.en || val.key_en || '',
+                key_fr: response.translations?.[this.formatDisplayKey(key)]?.fr || val.key_fr || '',
+                key_de: response.translations?.[this.formatDisplayKey(key)]?.de || val.key_de || '',
+                key_it: response.translations?.[this.formatDisplayKey(key)]?.it || val.key_it || ''
               };
             }
 
-          
-  
             return {
               key,
               value: value ?? '', // Default to empty string if value is null
               displayKey: this.formatDisplayKey(key), // Call the separate function
-              // displayKey: key.replace(/_/g, ' '),
               isRequiredField: this.isRequiredField(key),
-              allOptions: [] // Empty array for non-dropdown fields
+              allOptions: [], // Empty array for non-dropdown fields
+              key_en: response.translations?.[this.formatDisplayKey(key)]?.en || '',
+              key_fr: response.translations?.[this.formatDisplayKey(key)]?.fr || '',
+              key_de: response.translations?.[this.formatDisplayKey(key)]?.de || '',
+              key_it: response.translations?.[this.formatDisplayKey(key)]?.it || ''
             };
           });
           this.showRedirectButton = this.collectionHandle === "templates";
@@ -128,8 +197,11 @@ export class EditEntry implements OnInit {
                 value: val.selected ? val.selected.id : '', // Access selected ID safely
                 displayKey: this.formatDisplayKey(key), // Call the separate function
                 isRequiredField: this.isRequiredField(key),
-                // displayKey: key.replace(/_/g, ' '),
-                allOptions: val.allOptions || [] // Ensure allOptions exist
+                allOptions: val.allOptions || [], // Ensure allOptions exist
+                key_en: val.key_en || '',
+                key_fr: val.key_fr || '',
+                key_de: val.key_de || '',
+                key_it: val.key_it || ''
               };
             }
             return {
@@ -137,8 +209,11 @@ export class EditEntry implements OnInit {
               value: value ?? '', // Default to empty string if value is null
               displayKey: this.formatDisplayKey(key), // Call the separate function
               isRequiredField: this.isRequiredField(key),
-              // displayKey: key.replace(/_/g, ' '),
-              allOptions: [] // Empty array for non-dropdown fields
+              allOptions: [], // Empty array for non-dropdown fields
+              key_en: '',
+              key_fr: '',
+              key_de: '',
+              key_it: ''
             };
           });
           this.showRedirectButton = this.collectionHandle === "templates";
@@ -353,6 +428,9 @@ export class EditEntry implements OnInit {
   isTextField(key: string): boolean {
     return key.startsWith('text_');
   }
+  isLabelField(key: string): boolean {
+    return key.startsWith('label_');
+  }
   isDateField(key: string): boolean {
     return key.startsWith('date_');
   }
@@ -392,11 +470,11 @@ export class EditEntry implements OnInit {
   formatDisplayKey(key: string): string {
     let displayKey = key;
     // Remove specific prefixes
-    displayKey = displayKey.replace(/^(meta_|text_meta|date_|text_|textarea_|file_)/, '');
+    displayKey = displayKey.replace(/^(meta_|text_meta|date_|text_|textarea_|file_|label_)/, '');
     // Handle relationship fields
     displayKey = displayKey.replace(/^rel_/, '').replace(/_col_.+$/, '');
     // Remove all occurrences of "_req" anywhere in the string
-    displayKey = displayKey.replace(/_req/g, '');
+    displayKey = displayKey.replace(/_req/g, '').replace(/created_by/g, 'Assign to');
     // Convert snake_case to title case
     displayKey = displayKey
       .replace(/_/g, ' ') // Replace underscores with spaces

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { NbMediaBreakpoint, NbMediaBreakpointsService, NbThemeService } from '@nebular/theme';
 import { takeWhile } from 'rxjs/operators';
-
+import { UsersService } from '../../../../services/users.service';
 
 @Component({
   selector: 'ngx-chart-panel-header',
@@ -23,7 +23,8 @@ export class ChartPanelHeaderComponent implements OnDestroy {
   currentTheme: string;
 
   constructor(private themeService: NbThemeService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService,
+              private usersService: UsersService) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
@@ -45,16 +46,16 @@ export class ChartPanelHeaderComponent implements OnDestroy {
     this.chartLegend = [
       {
         iconColor: orderProfitLegend.firstItem,
-        title: 'Payment',
+        title: this.usersService.getTranslations('Offers Created'),
       },
       {
         iconColor: orderProfitLegend.secondItem,
-        title: 'Canceled',
+        title: this.usersService.getTranslations('Customers'),
       },
-      {
-        iconColor: orderProfitLegend.thirdItem,
-        title: 'All orders',
-      },
+      // {
+      //   iconColor: orderProfitLegend.thirdItem,
+      //   title: 'All orders',
+      // },
     ];
   }
 

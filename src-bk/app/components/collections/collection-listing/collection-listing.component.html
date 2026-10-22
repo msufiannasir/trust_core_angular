@@ -1,0 +1,23 @@
+<nb-card>
+    <nb-card-header>
+      {{ settings.tableTitle || 'Default Title' }} 
+      <button *ngIf="showBlueprintButton" nbButton status="primary" (click)="navigateToBlueprint()" class="appearance-filled size-medium shape-rectangle status-basic nb-transition">
+        Edit Blueprint
+      </button>
+    </nb-card-header>
+  
+    <nb-card-body>
+      <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (createConfirm)="onCreateConfirm($event)"
+      (create)="onCreate($event)"
+      (editConfirm)="onEditConfirm($event)"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (delete)="onDeleteConfirm($event)"
+    ></ng2-smart-table>
+    
+    
+    </nb-card-body>
+  </nb-card>
+  

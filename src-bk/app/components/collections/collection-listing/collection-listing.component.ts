@@ -1,0 +1,279 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CollectionsService } from '../../../services/collections.service';
+import { LocalDataSource } from 'ng2-smart-table';
+import { MENU_ITEMS } from '../../../pages/pages-menu';
+import { DatepickerComponent } from '../../../pages/forms/datepicker/datepicker.component'
+import { NbCardModule } from '@nebular/theme';
+import { FileUploadEditorComponent } from '../../fileupload/file-upload-editor.component';
+import { UsersService } from '../../../services/users.service';
+import { LinkRenderComponent } from '../../link-render/link-render.component';
+
+@Component({
+  selector: 'ngx-smart-table',
+  templateUrl: './collection-listing.component.html',
+  styleUrls: ['./collection-listing.component.scss'],
+})
+export class CollectionListingComponent implements OnInit {
+  collectionHandle: string | null = null;
+  roles:any;
+  userslist:any;
+  currentPath: string;
+  user_paths={offers:'', contracts:''};
+  singleuserdata=[];
+  metaArray: { key: string; value: any }[] = [];
+  formData: { key: string; value: any }[] = []; // New array to hold form data
+  source: LocalDataSource = new LocalDataSource();
+  settings = {
+    actions: {
+      add: true,
+      edit: true,
+      delete: true, // Keep delete off if not needed
+    },
+    add: {
+      addButtonContent: '<i class="nb-plus"></i>',
+      createButtonContent: '<i class="nb-checkmark"></i>',
+      confirmCreate: true,
+      cancelButtonContent: '<i class="nb-close"></i>',
+    },
+    edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true, 
+    },
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      confirmDelete: true,
+    },
+    tableTitle: '', 
+    columns: {}, // Initially empty, populated dynamically
+    pager: {
+      perPage: 10, // Default items per page
+    },
+    mode: 'inline', // Default mode (will update in ngOnInit)
+  };
+  handle: string | null = null; // Store handle globally
+  allowedHandles = ['offers', 'contracts', 'settings', 'templates']; // Define allowed handles
+  rolename: string;
+  showBlueprintButton: boolean = true;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private collectionsService: CollectionsService,
+    private usersService: UsersService
+  ) {}
+
+  ngOnInit(): void {
+    this.rolename=JSON.parse(localStorage.getItem('user')).roles[0].name;
+    // Check if 'handle' exists in the current route
+    this.route.url.subscribe((segments) => {
+      // const handle = params.get('handle');
+    // Extract the first segment (collections) and the second segment (all)
+    const handle = segments.length > 0 ? segments[0].path : null;
+      // Define valid paths
+      this.user_paths = {
+        offers: '/pages/offers',
+        contracts: '/pages/contracts'
+      };
+      console.log("Current Path:", this.currentPath);
+      console.log("Current Path:", this.handle);
+      // Ensure only requests with a valid 'handle' are processed
+      if (handle) {
+        if(handle == 'collections'){
+          this.fetchAllCollection(handle);
+          this.setTableTitle(handle);
+          this.checkRouteForBlueprintButton();
+        }
+      } else {
+        console.warn('No handle provided in the route. Skipping data fetch.');
+      }
+      const urlSegments = segments.map(segment => segment.path);
+
+      // Check if any segment contains the target string
+      const containsTarget = urlSegments.some(segment => segment.includes('templates'));
+      if (containsTarget) {
+        // this.settings.mode = 'external'; 
+        this.settings.actions.add=false;
+      } else {
+        this.settings.mode = 'inline';
+      }
+      // Force table refresh
+      this.settings = { ...this.settings, mode: this.settings.mode };
+    });
+
+  }
+
+  fetchAllCollection(handle: string): void {
+    this.collectionsService.getCollections().subscribe((response) => {
+      if (response && response.collection && Array.isArray(response.collection)) {
+        const isTemplateRoute = this.router.url.includes('templates');
+
+              // Filter collections based on the route
+      const filteredData = response.collection.filter((item: any) => {
+        return isTemplateRoute ? item.handle.startsWith('template_') : !item.handle.startsWith('template_');
+      });
+
+      const formattedData = filteredData.map((item: any) => ({
+        name: item.name,
+        link: item.handle.startsWith('template_') 
+          ? `/pages/${item.handle}` 
+          : `/pages/${item.handle}`, 
+        handle: item.handle,
+        created_by: item.created_by_name,
+      }));
+      
+        this.source.load(formattedData); // Load formatted data into the table
+        // Update table settings dynamically
+        this.settings = {
+          ...this.settings,
+          columns: {
+            handle: {
+              title: 'Slug',
+              type: 'custom',
+              renderComponent: LinkRenderComponent,
+              editable: false, 
+            },
+            name: {
+              title: 'name',
+              type: 'string',
+            },
+            ...(this.rolename === 'admin' ? {
+              created_by: {
+                title: 'Assigned to',
+                type: 'string',
+                editable: false
+              }
+            } : {})
+          },
+        };
+      } else {
+        console.warn('Invalid response format:', response);
+      }
+    }, (error) => {
+      console.error('Error fetching collections:', error);
+    });
+  }
+  
+
+  setTableTitle(handle: string): void {
+    console.log('Handle:', handle); // Log the handle
+    const menuItem = MENU_ITEMS.find(item => item.link.includes(handle));
+    if (menuItem) {
+      this.settings.tableTitle = menuItem.title;
+    }
+  }
+
+  
+// Create Collection
+onCreateConfirm(event): void {
+  // Check if the current route contains 'templates'
+    const isTemplateCollection = this.router.url.includes('templates');
+    // Prepare the request payload
+    const requestData = {
+      name: event.newData.name,
+      is_template_collection: isTemplateCollection, // Append the template flag
+    };
+    this.collectionsService.createCollection(requestData).subscribe(
+    (response) => {
+      event.confirm.resolve(response);
+      window.alert(response.message); // Show API response message
+      this.fetchAllCollection(this.handle); // Refresh table after creation
+    },
+    (error) => {
+      console.error('Error:', error);
+      window.alert(error.error.message || 'Failed to create collection.'); // Show API error message
+      event.confirm.reject();
+    }
+  );
+}
+
+// Update Collection
+onEditConfirm(event): void {
+  const collectionHandle = event.newData.handle;
+   // Check if the current route contains 'templates'
+   const isTemplateCollection = this.router.url.includes('templates');
+   // Prepare the request payload
+   const requestData = {
+     name: event.newData.name,
+     is_template_collection: isTemplateCollection, // Append the template flag
+   };
+  this.collectionsService.updateCollection(requestData, collectionHandle).subscribe(
+    (response) => {
+      event.confirm.resolve(response);
+      window.alert(response.message); // Show API response message
+      this.fetchAllCollection(this.handle); // Refresh data after update
+    },
+    (error) => {
+      console.error('Error:', error);
+      window.alert(error.error.message || 'Failed to update collection.'); // Show API error message
+      event.confirm.reject();
+    }
+  );
+}
+
+// Delete Collection
+onDeleteConfirm(event): void {
+  const collectionHandle = event.data.handle;
+  if (confirm('Are you sure you want to delete this collection?')) {
+    this.collectionsService.deleteCollection(collectionHandle).subscribe(
+      (response) => {
+        // event.confirm.resolve();
+        window.alert(response.message); // Show API response message
+        this.fetchAllCollection(this.handle); // Refresh data after deletion
+      },
+      (error) => {
+        console.error('Error:', error);
+        window.alert(error.error.message || 'Failed to delete collection.'); // Show API error message
+        event.confirm.reject();
+      }
+    );
+  } else {
+    event.confirm.reject();
+  }
+}
+
+
+  
+  navigateToBlueprint(): void {
+    const currentUrl = this.route.snapshot.url.map(segment => segment.path).join('/');
+    console.log("currentUrl: " + currentUrl);
+  
+    const blueprintUrl = `/pages/${currentUrl}/blueprint`; // Construct the correct URL explicitly
+    console.log("blueprintUrl: " + blueprintUrl);
+  
+    // Navigate to the constructed absolute path
+    this.router.navigateByUrl(blueprintUrl).catch((error) => {
+      console.error('Navigation error:', error);
+    });
+  }
+  
+  isHidden(key: string): boolean {
+    const hiddenFields = ['id', 'user_id', 'created_at', 'collection_id', 'updated_at', 'last_login', 'employee_assigned','settings', 'status'];
+    return hiddenFields.includes(key);
+  }
+    // Check the route and decide if the blueprint button should be shown
+    checkRouteForBlueprintButton(): void {
+      const currentUrl = this.router.url; 
+      // Define an array of routes where the button should be hidden
+      const hiddenRoutes = [
+        'pages/settings',  // Example route where button should be hidden
+        'pages/permissions',  // Another example route
+        'pages/reports', 
+        'pages/collections',  // Another route
+      ];  
+      // Check if the current URL contains any of the hidden routes
+      this.showBlueprintButton = !hiddenRoutes.some(route => currentUrl.includes(route));
+    }
+    onCreate(event: any) {
+      this.route.url.subscribe((segments) => {
+        const urlSegments = segments.map(segment => segment.path);
+        const containsTarget = urlSegments.some(segment => segment.includes('templates'));
+        if (containsTarget) {
+            this.router.navigate([`/pages/templates/create`]);
+        } 
+      });
+      
+    }
+
+}

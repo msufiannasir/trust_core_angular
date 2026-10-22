@@ -55,7 +55,7 @@ export class CollectionListingComponent implements OnInit {
   };
   handle: string | null = null; // Store handle globally
   allowedHandles = ['offers', 'contracts', 'settings', 'templates']; // Define allowed handles
-
+  rolename: string;
   showBlueprintButton: boolean = true;
   constructor(
     private route: ActivatedRoute,
@@ -65,7 +65,7 @@ export class CollectionListingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
+    this.rolename=JSON.parse(localStorage.getItem('user')).roles[0].name;
     // Check if 'handle' exists in the current route
     this.route.url.subscribe((segments) => {
       // const handle = params.get('handle');
@@ -93,8 +93,8 @@ export class CollectionListingComponent implements OnInit {
       // Check if any segment contains the target string
       const containsTarget = urlSegments.some(segment => segment.includes('templates'));
       if (containsTarget) {
-        this.settings.mode = 'external';
-        this.settings.actions.edit=false;
+        // this.settings.mode = 'external'; 
+        this.settings.actions.add=false;
       } else {
         this.settings.mode = 'inline';
       }
@@ -103,7 +103,9 @@ export class CollectionListingComponent implements OnInit {
     });
 
   }
-
+  getTranslations(key: string): string {
+    return this.usersService.getTranslations(key);
+  }
   fetchAllCollection(handle: string): void {
     this.collectionsService.getCollections().subscribe((response) => {
       if (response && response.collection && Array.isArray(response.collection)) {
@@ -120,6 +122,7 @@ export class CollectionListingComponent implements OnInit {
           ? `/pages/${item.handle}` 
           : `/pages/${item.handle}`, 
         handle: item.handle,
+        created_by: item.created_by_name,
       }));
       
         this.source.load(formattedData); // Load formatted data into the table
@@ -127,11 +130,23 @@ export class CollectionListingComponent implements OnInit {
         this.settings = {
           ...this.settings,
           columns: {
-            name: {
-              title: 'Collection Name',
-              type: 'custom', // Use custom component
-              renderComponent: LinkRenderComponent, // Use the custom link component
+            handle: {
+              title: this.getTranslations('Slug'),
+              type: 'custom',
+              renderComponent: LinkRenderComponent,
+              editable: false, 
             },
+            name: {
+              title: this.getTranslations('name'),
+              type: 'string',
+            },
+            ...(this.rolename === 'admin' ? {
+              created_by: {
+                title: this.getTranslations('Assigned to'),
+                type: 'string',
+                editable: false
+              }
+            } : {})
           },
         };
       } else {

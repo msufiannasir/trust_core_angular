@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { delay, takeWhile } from 'rxjs/operators';
 import { LayoutService } from '../../../../@core/utils/layout.service';
+import { UsersService } from '../../../../services/users.service';
 
 
 @Component({
@@ -18,14 +19,22 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
   option: any = {};
   chartLegend: { iconColor: string; title: string }[];
   echartsIntance: any;
+  chartdata:any;
+  males:any;
+  females:any;
+  old:any;
+  customersOlderThan40:any;
 
   constructor(private theme: NbThemeService,
-              private layoutService: LayoutService) {
+              private layoutService: LayoutService,
+              private usersService:UsersService
+            ) {
     this.layoutService.onSafeChangeLayoutSize()
       .pipe(
         takeWhile(() => this.alive),
       )
       .subscribe(() => this.resizeChart());
+      this.customersOlderThan40=this.usersService.getTranslations('Customers older than 40');
   }
 
   ngAfterViewInit() {
@@ -40,18 +49,48 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
 
         this.setOptions(variables);
         this.setLegendItems(visitorsPieLegend);
+        this.getOrdersChartData('month');
     });
+    
   }
 
+  getOrdersChartData(period: string) {
+    this.usersService.pullReports()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(ordersChartData => {
+        console.log(ordersChartData, 'ordersChartData');
+        this.chartdata = ordersChartData;
+        
+        // Get total count of males and females
+        const total = ordersChartData.Males + ordersChartData.Females;
+        
+        // Calculate percentages
+        this.males = total > 0 ? Math.round((ordersChartData.Males / total) * 100) : 0;
+        this.females = total > 0 ? Math.round((ordersChartData.Females / total) * 100) : 0;
+        this.old=ordersChartData['Customers older than 40 years old'];
+        console.log(this.males, this.females, 'male female');
+
+        // Update chart options with new values
+        this.theme.getJsTheme()
+          .pipe(
+            takeWhile(() => this.alive),
+            delay(1),
+          )
+          .subscribe(config => {
+            const variables: any = config.variables;
+            this.setOptions(variables);
+          });
+      });
+  }
   setLegendItems(visitorsPieLegend) {
     this.chartLegend = [
       {
-        iconColor: visitorsPieLegend.firstSection,
-        title: 'New Visitors',
+        iconColor: '#1890ff', // Light blue to match male segment
+        title: this.usersService.getTranslations('Males'),
       },
       {
-        iconColor: visitorsPieLegend.secondSection,
-        title: 'Return Visitors',
+        iconColor: '#52c41a', // Light green to match female segment
+        title: this.usersService.getTranslations('Females'),
       },
     ];
   }
@@ -62,24 +101,24 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
     this.option = {
       tooltip: {
         trigger: 'item',
-        formatter: '',
+        formatter: '{b}: {c}%',
       },
       series: [
         {
-          name: ' ',
+          name: 'Gender Distribution',
           clockWise: true,
           hoverAnimation: false,
           type: 'pie',
           center: ['50%', '50%'],
-          radius: visitorsPie.firstPieRadius,
+          radius: ['50%', '70%'],
           data: [
             {
-              value: this.value,
-              name: ' ',
+              value: this.males,
+              name: this.usersService.getTranslations('Males'),
               label: {
                 normal: {
                   position: 'center',
-                  formatter: '',
+                  formatter: `${this.males}%`,
                   textStyle: {
                     fontSize: '22',
                     fontFamily: variables.fontSecondary,
@@ -89,21 +128,21 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
                 },
               },
               tooltip: {
-                show: false,
+                show: true,
               },
               itemStyle: {
                 normal: {
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                     {
                       offset: 0,
-                      color: visitorsPie.firstPieGradientLeft,
+                      color: '#1890ff', // Light blue
                     },
                     {
                       offset: 1,
-                      color: visitorsPie.firstPieGradientRight,
+                      color: '#096dd9', // Darker blue
                     },
                   ]),
-                  shadowColor: visitorsPie.firstPieShadowColor,
+                  shadowColor: 'rgba(0, 0, 0, 0.1)',
                   shadowBlur: 0,
                   shadowOffsetX: 0,
                   shadowOffsetY: 3,
@@ -112,62 +151,10 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
               hoverAnimation: false,
             },
             {
-              value: 100 - this.value,
-              name: ' ',
+              value: this.females,
+              name: this.usersService.getTranslations('Females'),
               tooltip: {
-                show: false,
-              },
-              label: {
-                normal: {
-                  position: 'inner',
-                },
-              },
-              itemStyle: {
-                normal: {
-                  color: variables.layoutBg,
-                },
-              },
-            },
-          ],
-        },
-        {
-          name: ' ',
-          clockWise: true,
-          hoverAnimation: false,
-          type: 'pie',
-          center: ['50%', '50%'],
-          radius: visitorsPie.secondPieRadius,
-          data: [
-            {
-              value: this.value,
-              name: ' ',
-              label: {
-                normal: {
-                  position: 'center',
-                  formatter: '',
-                  textStyle: {
-                    fontSize: '22',
-                    fontFamily: variables.fontSecondary,
-                    fontWeight: '600',
-                    color: variables.fgHeading,
-                  },
-                },
-              },
-              tooltip: {
-                show: false,
-              },
-              itemStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1),
-                },
-              },
-              hoverAnimation: false,
-            },
-            {
-              value: 100 - this.value,
-              name: ' ',
-              tooltip: {
-                show: false,
+                show: true,
               },
               label: {
                 normal: {
@@ -179,17 +166,17 @@ export class ECommerceVisitorsStatisticsComponent implements AfterViewInit, OnDe
                   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                     {
                       offset: 0,
-                      color: visitorsPie.secondPieGradientLeft,
+                      color: '#52c41a', // Light green
                     },
                     {
                       offset: 1,
-                      color: visitorsPie.secondPieGradientRight,
+                      color: '#389e0d', // Darker green
                     },
                   ]),
-                  shadowColor: visitorsPie.secondPieShadowColor,
+                  shadowColor: 'rgba(0, 0, 0, 0.1)',
                   shadowBlur: 0,
-                  shadowOffsetX: visitorsPie.shadowOffsetX,
-                  shadowOffsetY: visitorsPie.shadowOffsetY,
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 3,
                 },
               },
             },
